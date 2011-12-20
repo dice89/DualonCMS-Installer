@@ -8,6 +8,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.wb.swt.layout.grouplayout.GroupLayout;
+import org.eclipse.wb.swt.layout.grouplayout.LayoutStyle;
 
 public class UploadSourceWidget extends Composite {
 	private Text inputFolderPath;
@@ -19,15 +23,17 @@ public class UploadSourceWidget extends Composite {
 	 */
 	public UploadSourceWidget(Composite parent, int style) {
 		super(parent, style);
+		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Group grpQuelle = new Group(this, SWT.NONE);
 		grpQuelle.setText("Quelle");
-		grpQuelle.setBounds(10, 10, 263, 54);
+		grpQuelle.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		inputFolderPath = new Text(grpQuelle, SWT.BORDER);
-		inputFolderPath.setBounds(10, 20, 219, 21);
+		Composite composite = new Composite(grpQuelle, SWT.NONE);
 		
-		Button buttonBrowseFolder = new Button(grpQuelle, SWT.NONE);
+		inputFolderPath = new Text(composite, SWT.BORDER);
+		
+		Button buttonBrowseFolder = new Button(composite, SWT.NONE);
 		buttonBrowseFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -41,8 +47,30 @@ public class UploadSourceWidget extends Composite {
 				}
 			}
 		});
-		buttonBrowseFolder.setBounds(232, 18, 21, 25);
 		buttonBrowseFolder.setText("...");
+		GroupLayout gl_composite = new GroupLayout(composite);
+		gl_composite.setHorizontalGroup(
+			gl_composite.createParallelGroup(GroupLayout.LEADING)
+				.add(GroupLayout.TRAILING, gl_composite.createSequentialGroup()
+					.addContainerGap()
+					.add(inputFolderPath, GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+					.add(18)
+					.add(buttonBrowseFolder)
+					.addContainerGap())
+		);
+		gl_composite.setVerticalGroup(
+			gl_composite.createParallelGroup(GroupLayout.LEADING)
+				.add(gl_composite.createSequentialGroup()
+					.add(gl_composite.createParallelGroup(GroupLayout.LEADING)
+						.add(gl_composite.createSequentialGroup()
+							.addContainerGap()
+							.add(buttonBrowseFolder))
+						.add(gl_composite.createSequentialGroup()
+							.add(17)
+							.add(inputFolderPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(243, Short.MAX_VALUE))
+		);
+		composite.setLayout(gl_composite);
 
 	}
 
