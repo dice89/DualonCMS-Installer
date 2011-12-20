@@ -12,6 +12,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.wb.swt.layout.grouplayout.GroupLayout;
 import org.eclipse.wb.swt.layout.grouplayout.LayoutStyle;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class UploadSourceWidget extends Composite {
 	private Text inputFolderPath;
@@ -27,13 +29,12 @@ public class UploadSourceWidget extends Composite {
 		
 		Group grpQuelle = new Group(this, SWT.NONE);
 		grpQuelle.setText("Quelle");
-		grpQuelle.setLayout(new FillLayout(SWT.HORIZONTAL));
+		grpQuelle.setLayout(new GridLayout(2, false));
 		
-		Composite composite = new Composite(grpQuelle, SWT.NONE);
+		inputFolderPath = new Text(grpQuelle, SWT.BORDER);
+		inputFolderPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		inputFolderPath = new Text(composite, SWT.BORDER);
-		
-		Button buttonBrowseFolder = new Button(composite, SWT.NONE);
+		Button buttonBrowseFolder = new Button(grpQuelle, SWT.NONE);
 		buttonBrowseFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -48,29 +49,6 @@ public class UploadSourceWidget extends Composite {
 			}
 		});
 		buttonBrowseFolder.setText("...");
-		GroupLayout gl_composite = new GroupLayout(composite);
-		gl_composite.setHorizontalGroup(
-			gl_composite.createParallelGroup(GroupLayout.LEADING)
-				.add(GroupLayout.TRAILING, gl_composite.createSequentialGroup()
-					.addContainerGap()
-					.add(inputFolderPath, GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
-					.add(18)
-					.add(buttonBrowseFolder)
-					.addContainerGap())
-		);
-		gl_composite.setVerticalGroup(
-			gl_composite.createParallelGroup(GroupLayout.LEADING)
-				.add(gl_composite.createSequentialGroup()
-					.add(gl_composite.createParallelGroup(GroupLayout.LEADING)
-						.add(gl_composite.createSequentialGroup()
-							.addContainerGap()
-							.add(buttonBrowseFolder))
-						.add(gl_composite.createSequentialGroup()
-							.add(17)
-							.add(inputFolderPath, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(243, Short.MAX_VALUE))
-		);
-		composite.setLayout(gl_composite);
 
 	}
 
