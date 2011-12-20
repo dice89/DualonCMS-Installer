@@ -26,7 +26,7 @@ public class FTPClient {
 		
 		@Override
 		public String getPassword() {
-			return "XWNKyuBQqKgKrTmc";
+			return "BeePublishedTest";
 		}
 		
 		@Override

@@ -27,16 +27,26 @@ public class FTPTarget {
 		this.loginInformation = loginInformation;
 	}
 	
-	public void connect() throws SocketException, IOException{
+	public void connect() throws SocketException, IOException {
 		// TODO create method description
 		// TODO create test case
 		// TODO implement method
 		
 		ftpClient = new FTPClient();
 		ftpClient.connect(loginInformation.getHost(), loginInformation.getPort());
-		ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());
-		
-		//throw new RuntimeException("Not yet implemented!");
+	}
+	
+	public boolean login() throws IOException{
+		// TODO create method description
+		// TODO create test case
+		// TODO implement method
+		assert(isConnected());
+		return ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());		
+	}
+	
+	public void logout() throws IOException{
+		assert(isConnected());
+		ftpClient.logout();
 	}
 	
 	public void disconnect() throws IOException{
@@ -84,6 +94,12 @@ public class FTPTarget {
 	
 	public boolean isConnected(){
 		return ftpClient.isConnected();
+	}
+	
+	public boolean isLogedIn() throws IOException{
+		boolean lout = ftpClient.logout();
+		boolean lin =  ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());
+		return lin;
 	}
 	
 	public boolean containsFile(String filename) throws IOException{
