@@ -18,10 +18,7 @@ public class  REST_CMS_Installation extends LightweightService {
 		methodKeyValuePairs.add(new BasicNameValuePair("DBLogin", dBLogin));
 
 	}
-	@Override
-	public String getServiceMethodName() {
-		return "";
-	}
+
 
 	@Override
 	public Class<? extends ServiceResponse> getResponseClass() {

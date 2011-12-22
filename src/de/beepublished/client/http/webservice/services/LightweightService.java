@@ -26,12 +26,7 @@ public abstract class LightweightService extends Service {
 	{
 		
 	}
-	
-	/**
-	 * @return Returns the service method name which is supplied in the HTTP POST header
-	 */
-	public abstract String getServiceMethodName();
-	
+
 	/**
 	 * @return The method's key-value-pairs in form of a list
 	 */
