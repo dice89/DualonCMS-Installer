@@ -76,7 +76,7 @@ public class WebManager {
 		};
 		
 		try {
-			handler.processRequestAsynch(new HTTP_CMS_FileDownload("archive.zip","", "http://localhost/Zip/archive.zip"), responseListener);
+			handler.processRequestAsynch(new HTTP_CMS_FileDownload("archive.zip","", url), responseListener);
 		} catch (ServiceException e) {
 			
 		}
