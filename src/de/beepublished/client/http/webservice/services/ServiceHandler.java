@@ -1,12 +1,17 @@
 package de.beepublished.client.http.webservice.services;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -81,7 +86,11 @@ public class ServiceHandler {
 			Thread thread = new Thread(new LightweightConnectionTask(this, lwService, lwResponseHandler, responseListener,postMethod, httpclient));
 			thread.start();
 
-		} 
+		} else if(service instanceof  FileService){
+			
+			Thread thread = new Thread(new HttpDowloaderTask((FileService) service, responseListener));
+			thread.start();
+		}
 		
 	}
 	
@@ -96,6 +105,31 @@ public class ServiceHandler {
 	 * 
 	 *
 	 */
+	
+	private class HttpDowloaderTask implements Runnable{
+		
+			private FileService service;
+			private ResponseListener responseListener;
+			//private String url;
+			//private String filedestination;
+		
+		public HttpDowloaderTask(FileService service , ResponseListener responseListener) {
+				super();
+				this.service = service;
+				this.responseListener = responseListener;
+		}
+			
+		@Override
+		public void run() {
+			 try {
+				responseListener.onResponseSuccessful("FileService", FileService.handleResponse(service));
+			} catch (ServiceException e) {
+				responseListener.onResponseFailed("FileService", e);
+			}
+		}//run
+	}
+	
+	
 	private class LightweightConnectionTask implements Runnable 
 	{
 		//attributes
@@ -155,11 +189,12 @@ public class ServiceHandler {
 				}
 				if(httpResponse == null)
 				{
-					responseListener.onResponseFailed(lwService.getServiceMethodName(), se);
+					responseListener.onResponseFailed(lwService.getServiceURL(), se);
 				
 				}
 				//handle the response content
 				HttpEntity entity = httpResponse.getEntity();
+			
 				if(entity != null) {
 					ServiceResponse serviceResponse = responseHandler.handleResponse(lwService.getResponseClass(), entity.getContent());				
 					entity.consumeContent();

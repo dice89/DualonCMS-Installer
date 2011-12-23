@@ -45,10 +45,7 @@ public class LWResponseHandler extends ResponseHandler {
 		
 		contentBIS = new ByteArrayInputStream(inputBuffer.toString().getBytes());
 		
-		if (ServiceFileStreamResponse.class.isAssignableFrom(responseClass)){
-			//File Answer expected
-			
-		} else {
+
 			//XML Answer expected
 			//invoke the SIMPLE API to create an object mapping from XML to DAO
 			
@@ -78,7 +75,7 @@ public class LWResponseHandler extends ResponseHandler {
 				}
 			}
 			}//XML Answer end
-		}
+		
 		
 		return (ServiceResponse)responseObject;
 	}

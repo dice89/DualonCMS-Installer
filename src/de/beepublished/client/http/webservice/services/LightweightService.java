@@ -26,7 +26,7 @@ public abstract class LightweightService extends Service {
 	{
 		
 	}
-
+	protected String serviceMethod ="";
 	/**
 	 * @return The method's key-value-pairs in form of a list
 	 */
@@ -47,6 +47,11 @@ public abstract class LightweightService extends Service {
 			}
 		}
 		throw(new NoSuchElementException("No such element for key " + key));
+	}
+
+	public String getServiceMethodName() {
+		
+		return serviceMethod;
 	}
 	
 }
