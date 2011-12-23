@@ -8,6 +8,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 
 
 public class FTPLoginInformationWidget extends Composite {
@@ -23,38 +29,35 @@ public class FTPLoginInformationWidget extends Composite {
 	 */
 	public FTPLoginInformationWidget(Composite parent, int style) {
 		super(parent, style);
+		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Group grpFtpLoginInformation = new Group(this, SWT.NONE);
 		grpFtpLoginInformation.setText("FTP Login Information");
-		grpFtpLoginInformation.setBounds(10, 10, 172, 137);
-		
-		inputHost = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputHost.setBounds(82, 22, 76, 21);
-		
-		inputPort = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputPort.setBounds(82, 49, 76, 21);
-		
-		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputUserName.setBounds(82, 76, 76, 21);
-		
-		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputPassword.setBounds(82, 103, 76, 21);
+		grpFtpLoginInformation.setLayout(new GridLayout(2, false));
 		
 		Label lblHost = new Label(grpFtpLoginInformation, SWT.RIGHT);
-		lblHost.setBounds(21, 25, 55, 15);
 		lblHost.setText("Host");
 		
-		Label lblPassword = new Label(grpFtpLoginInformation, SWT.RIGHT);
-		lblPassword.setText("Password");
-		lblPassword.setBounds(21, 106, 55, 15);
+		inputHost = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPort = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblPort.setText("Port");
-		lblPort.setBounds(21, 52, 55, 15);
+		
+		inputPort = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblUsername = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblUsername.setText("UserName");
-		lblUsername.setBounds(21, 79, 55, 15);
+		
+		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		Label lblPassword = new Label(grpFtpLoginInformation, SWT.RIGHT);
+		lblPassword.setText("Password");
+		
+		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}
 

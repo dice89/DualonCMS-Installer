@@ -8,6 +8,12 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.wb.swt.layout.grouplayout.GroupLayout;
+import org.eclipse.wb.swt.layout.grouplayout.LayoutStyle;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class UploadSourceWidget extends Composite {
 	private Text inputFolderPath;
@@ -19,13 +25,14 @@ public class UploadSourceWidget extends Composite {
 	 */
 	public UploadSourceWidget(Composite parent, int style) {
 		super(parent, style);
+		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Group grpQuelle = new Group(this, SWT.NONE);
 		grpQuelle.setText("Quelle");
-		grpQuelle.setBounds(10, 10, 263, 54);
+		grpQuelle.setLayout(new GridLayout(2, false));
 		
 		inputFolderPath = new Text(grpQuelle, SWT.BORDER);
-		inputFolderPath.setBounds(10, 20, 219, 21);
+		inputFolderPath.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Button buttonBrowseFolder = new Button(grpQuelle, SWT.NONE);
 		buttonBrowseFolder.addSelectionListener(new SelectionAdapter() {
@@ -41,7 +48,6 @@ public class UploadSourceWidget extends Composite {
 				}
 			}
 		});
-		buttonBrowseFolder.setBounds(232, 18, 21, 25);
 		buttonBrowseFolder.setText("...");
 
 	}

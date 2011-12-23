@@ -14,6 +14,7 @@ import de.beepublished.client.widget.UploadSourceWidget;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import de.beepublished.client.widget.DBLoginInformationWidget;
 
 
 //TODO create class description
@@ -54,14 +55,14 @@ public class MainWindow {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(310, 337);
+		shell.setSize(310, 486);
 		shell.setText("SWT Application");
 		
 		final FTPLoginInformationWidget loginInformationWidget = new FTPLoginInformationWidget(shell, SWT.NONE);
-		loginInformationWidget.setBounds(10, 80, 182, 147);
+		loginInformationWidget.setBounds(10, 96, 283, 124);
 		
 		final UploadSourceWidget uploadSourceWidget = new UploadSourceWidget(shell, SWT.NONE);
-		uploadSourceWidget.setBounds(10, 10, 273, 64);
+		uploadSourceWidget.setBounds(10, 10, 283, 64);
 		
 		final Button btnUpload = new Button(shell, SWT.NONE);
 		btnUpload.addSelectionListener(new SelectionAdapter() {
@@ -80,8 +81,11 @@ public class MainWindow {
 				}
 			}
 		});
-		btnUpload.setBounds(20, 233, 273, 64);
+		btnUpload.setBounds(15, 382, 283, 64);
 		btnUpload.setText("UPLOAD");
+		
+		DBLoginInformationWidget loginInformationWidget_1 = new DBLoginInformationWidget(shell, SWT.NONE);
+		loginInformationWidget_1.setBounds(10, 242, 283, 118);
 
 	}
 }
