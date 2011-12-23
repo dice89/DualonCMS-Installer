@@ -26,12 +26,7 @@ public abstract class LightweightService extends Service {
 	{
 		
 	}
-	
-	/**
-	 * @return Returns the service method name which is supplied in the HTTP POST header
-	 */
-	public abstract String getServiceMethodName();
-	
+	protected String serviceMethod ="";
 	/**
 	 * @return The method's key-value-pairs in form of a list
 	 */
@@ -52,6 +47,11 @@ public abstract class LightweightService extends Service {
 			}
 		}
 		throw(new NoSuchElementException("No such element for key " + key));
+	}
+
+	public String getServiceMethodName() {
+		
+		return serviceMethod;
 	}
 	
 }

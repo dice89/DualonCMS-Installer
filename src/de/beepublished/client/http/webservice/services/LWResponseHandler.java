@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload_response;
 import de.beepublished.client.http.webservice.services.ServiceException.ServiceErrorType;
 
 
@@ -40,18 +41,21 @@ public class LWResponseHandler extends ResponseHandler {
 	
 		
 		ByteArrayInputStream contentBIS = null;
-
-		contentBIS = new ByteArrayInputStream(inputBuffer.toString().getBytes());
-
-		//invoke the SIMPLE API to create an object mapping from XML to DAO
 		Object responseObject = null;
-		try 
-		{
-			responseObject = ServiceHandler.getSimplePersister().read(responseClass, contentBIS, false);
-		} 
-		catch(Exception e) 
-		{
+		
+		contentBIS = new ByteArrayInputStream(inputBuffer.toString().getBytes());
+		
+
+			//XML Answer expected
+			//invoke the SIMPLE API to create an object mapping from XML to DAO
 			
+			try 
+			{
+				responseObject = ServiceHandler.getSimplePersister().read(responseClass, contentBIS, false);
+			} 
+				catch(Exception e) 
+			{
+				
 			try
 			{
 				System.out.println( e.getMessage() + "\n"+ inputBuffer.toString());
@@ -70,7 +74,8 @@ public class LWResponseHandler extends ResponseHandler {
 					throw(new ServiceException(ServiceErrorType.PARSING_ERROR, ee));
 				}
 			}
-		}
+			}//XML Answer end
+		
 		
 		return (ServiceResponse)responseObject;
 	}
