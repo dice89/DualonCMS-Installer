@@ -93,7 +93,7 @@ public class WebManager {
 		//wmanager.installCMS("test", "test", "test", "test", "http://www.ms-mediagroup.de/Installation/", new RestWebServiceListener());
 	}
 	
-	private static HttpClient createHttpClient() {
+	public static HttpClient createHttpClient() {
 		// TODO Auto-generated method stub
 		//set proxy if available
 		/*if(proxyHostname != null)

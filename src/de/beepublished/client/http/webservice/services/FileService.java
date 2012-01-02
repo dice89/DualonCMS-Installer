@@ -33,12 +33,12 @@ public abstract class FileService extends Service{
 		  OutputStream out = null;
 		   URLConnection conn = null;
 		   InputStream in = null;
-
+		   File f =null;
 		   try {
 		    // Get the URL
 		    URL uri =  new URL(service.getServiceURL());
 		    // Open an output stream to the destination file on our local filesystem
-		    File f = new File(service.getFiledestination()+"" + service.getFilename());
+		    f = new File(service.getFiledestination()+"" + service.getFilename());
 		    f.createNewFile();
 		    out = new BufferedOutputStream(new FileOutputStream(f));
 		    conn = uri.openConnection();
@@ -59,7 +59,6 @@ public abstract class FileService extends Service{
 		   } catch (Exception e) {
 			throw new ServiceException(-1);
 		}
-		   File f = new File(service.getFiledestination()+"" + service.getFilename());
-		return new ServiceFileStreamResponse(service.getFilename(), f);
+		return new ServiceFileStreamResponse(service.getFilename(),f);
 	}
 }
