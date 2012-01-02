@@ -64,7 +64,7 @@ public class MainWindow implements WebServiceListener {
 	FTPLoginInformationWidget loginInformationWidget;
 	UploadSourceWidget uploadSourceWidget;
 	Button btnUpload;
-
+	WebManager wmanager;
 	/**
 	 * Create contents of the window.
 	 */
@@ -88,7 +88,7 @@ public class MainWindow implements WebServiceListener {
 				
 				HttpClient hclient = WebManager.createHttpClient();
 				ServiceHandler shandler = new ServiceHandler(hclient);
-				WebManager wmanager = new WebManager(shandler);
+				wmanager = new WebManager(shandler);
 				
 
 				wmanager.downloadZIPFile("http://www.ms-mediagroup.de/archive.zip",  MainWindow.this);
@@ -145,8 +145,11 @@ public class MainWindow implements WebServiceListener {
 			target.uploadFolder(extractTo+"/cms","");
 			target.logout();
 			target.disconnect();
+			
+			wmanager.installCMS("dualon-cms.brickit-mod.de", "d012d73c", "d012d73c", "d012d73c", "http://dualon-cms.brickit-mod.de/cms/services/installation", this);
+			
 			System.out.println("Upload finished!");
-			btnUpload.setText("Success");
+			//btnUpload.setText("Success");
 		} catch (FileNotFoundException e1) {
 			btnUpload.setText(e1.toString());
 		} catch (IOException e1) {
@@ -156,20 +159,21 @@ public class MainWindow implements WebServiceListener {
 
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
-		// TODO Auto-generated method stub
+		
+		System.out.println("onRestZipDownloadFailed");
 		
 	}
 
 	@Override
 	public void onRestInstallationSuccess(
 			REST_CMS_Installation_response response) {
-		// TODO Auto-generated method stub
+		System.out.println("onRestInstallationSuccess");
 		
 	}
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
-		// TODO Auto-generated method stub
+		System.out.println("onRestInstallationFailed");
 		
 	}
 }
