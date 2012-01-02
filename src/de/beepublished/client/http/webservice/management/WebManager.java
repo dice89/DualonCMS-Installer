@@ -76,7 +76,7 @@ public class WebManager {
 		};
 		
 		try {
-			handler.processRequestAsynch(new HTTP_CMS_FileDownload("archive.zip","", "http://localhost/Zip/archive.zip"), responseListener);
+			handler.processRequestAsynch(new HTTP_CMS_FileDownload("archive.zip","", url), responseListener);
 		} catch (ServiceException e) {
 			
 		}
@@ -93,7 +93,7 @@ public class WebManager {
 		//wmanager.installCMS("test", "test", "test", "test", "http://www.ms-mediagroup.de/Installation/", new RestWebServiceListener());
 	}
 	
-	private static HttpClient createHttpClient() {
+	public static HttpClient createHttpClient() {
 		// TODO Auto-generated method stub
 		//set proxy if available
 		/*if(proxyHostname != null)
