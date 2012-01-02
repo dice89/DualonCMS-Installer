@@ -38,7 +38,7 @@ public class RestWebServiceListener implements WebServiceListener {
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
-		System.out.println("");
+		System.out.println("blupp");
 		
 	}
 	@Override
