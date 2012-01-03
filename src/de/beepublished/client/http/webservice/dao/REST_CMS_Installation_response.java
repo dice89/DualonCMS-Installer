@@ -30,9 +30,9 @@ public class  REST_CMS_Installation_response extends ServiceResponse {
 	/**
 	 * @return Returns the service response code
 	 */
-/*	public int getResponseCode()
+	public int getResponseCode()
 	{
 		return responseCode;
-	}*/
+	}
 	
 }
