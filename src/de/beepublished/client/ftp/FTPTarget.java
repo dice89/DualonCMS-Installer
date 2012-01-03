@@ -3,6 +3,7 @@ package de.beepublished.client.ftp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.SocketException;
@@ -95,7 +96,7 @@ public class FTPTarget {
 				this.uploadFolder(f.getAbsolutePath(), f.getAbsolutePath());
 				ftpClient.changeToParentDirectory();
 			}	
-		}
+		}		
 	}
 	
 	public void uploadFolder(String localFolderPath, String remoteFolderPath) throws FileNotFoundException, IOException{
@@ -124,6 +125,37 @@ public class FTPTarget {
 		System.out.println(localFolderPath+" uploaded");
 
 	//	throw new RuntimeException("Not yet implemented!");
+	}
+	
+	/**
+	 * Lädt die Datei aus dem aktuellen FTP-Verzeichniss in das aktuelle Arbeitsverzeichnis
+	 * @param remoteFilename
+	 * @throws IOException 
+	 */
+	public void downloadFile(String remoteFilename,File localTarget) throws IOException{
+		FileOutputStream stream = new FileOutputStream(localTarget);
+		System.out.println(ftpClient.retrieveFile(remoteFilename, stream));
+		stream.flush();
+		stream.close();
+	}
+	
+	public void downloadFTP(File localFolder) throws IOException{
+		downloadDirectory(localFolder, "");
+	}
+	
+	public void downloadDirectory(File localTargetDirectory, String remoteDirectory) throws IOException{
+		if(!remoteDirectory.equals("")){
+			System.out.println(ftpClient.changeWorkingDirectory(remoteDirectory));
+			System.out.println(localTargetDirectory.mkdirs());
+		}
+		FTPFile[] files = ftpClient.listFiles();
+		for(FTPFile f : files){
+			if(f.isFile())
+				this.downloadFile(f.getName(), new File(localTargetDirectory+"/"+f.getName()));
+			if(f.isDirectory() && !f.getName().equals(".") && !f.getName().equals(".."))
+				this.downloadDirectory(new File(localTargetDirectory+"/"+f.getName()), f.getName());
+		}
+		System.out.println(ftpClient.changeToParentDirectory());
 	}
 	
 	public boolean isConnected(){

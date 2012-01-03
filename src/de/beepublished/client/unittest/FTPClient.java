@@ -1,13 +1,17 @@
 package de.beepublished.client.unittest;
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.zip.ZipEntry;
 
 import org.junit.Test;
 
+import de.beepublished.client.exceptions.ZipVocationException;
 import de.beepublished.client.ftp.FTPLoginInformation;
 import de.beepublished.client.ftp.FTPTarget;
+import de.beepublished.client.zip.ZipEngine;
 
 
 public class FTPClient {
@@ -32,6 +36,29 @@ public class FTPClient {
 		@Override
 		public String getHost() {
 			return "dualon-cms.brickit-mod.de";
+		}
+	};
+	
+	private static FTPLoginInformation loginLocalhost = new FTPLoginInformation() {
+		
+		@Override
+		public String getUserName() {
+			return "newuser";
+		}
+		
+		@Override
+		public int getPort() {
+			return 21;
+		}
+		
+		@Override
+		public String getPassword() {
+			return "xampp";
+		}
+		
+		@Override
+		public String getHost() {
+			return "localhost";
 		}
 	};
 	
@@ -68,8 +95,41 @@ public class FTPClient {
 	public void uploadFolder() throws SocketException, IOException {
 		FTPTarget target = new FTPTarget(login);
 		target.connect();
+		target.login();
 		
 		target.uploadFolder("FilesUnittest/FolderUpload/UploadFolderTest/", "/");
+	}
+	
+	@Test
+	public void downloadFile() throws SocketException, IOException{
+		FTPTarget target = new FTPTarget(login);
+		target.connect();
+		target.login();
+		
+		File targetFile = new File("DownloadTest/zipDownloader.php");
+		File targetDirectory = new File(targetFile.getParent());
+		targetDirectory.mkdirs();
+		
+		target.downloadFile("zipDownloader.php", targetFile);
+	}
+	
+	@Test
+	public void downloadFTP() throws SocketException, IOException{
+		FTPTarget target = new FTPTarget(loginLocalhost);
+		target.connect();
+		target.login();
+		
+		File localTarget = new File("ftpDownloadTest");
+		localTarget.mkdirs();
+		
+		target.downloadFTP(localTarget);
+		
+		try {
+			ZipEngine.zip(localTarget.getPath(), "ftp.zip");
+		} catch (ZipVocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
