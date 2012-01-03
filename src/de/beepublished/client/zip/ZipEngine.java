@@ -78,7 +78,7 @@ public class ZipEngine {
 		addDir(locationFile,out,locationFile);
 		out.flush();
 		out.close();
-		return null;
+		return new File(targetFileName);
 		
 	}
 	
