@@ -87,13 +87,12 @@ public class WebManager {
 		ServiceHandler shandler = new ServiceHandler(hclient);
 		WebManager wmanager = new WebManager(shandler);
 		
-
-		wmanager.downloadZIPFile("http://localhost/Zip/archive.zip",  new RestWebServiceListener());
+		//wmanager.downloadZIPFile("http://www.ms-mediagroup.de/archive.zip",  new RestWebServiceListener());
 		
-		//wmanager.installCMS("test", "test", "test", "test", "http://www.ms-mediagroup.de/Installation/", new RestWebServiceListener());
+		wmanager.installCMS("localhost", "cake", "alex2", "alex", "http://localhost/CMS/DualonCMS/services/installation", new RestWebServiceListener());
 	}
 	
-	private static HttpClient createHttpClient() {
+	public static HttpClient createHttpClient() {
 		// TODO Auto-generated method stub
 		//set proxy if available
 		/*if(proxyHostname != null)

@@ -14,6 +14,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import de.beepublished.client.exceptions.ZipVocationException;
 import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload_response;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Installation_response;
 import de.beepublished.client.http.webservice.management.WebServiceListener;
@@ -37,15 +38,20 @@ public class RestWebServiceListener implements WebServiceListener {
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
-		System.out.println("Fail2");
+		System.out.println("blupp");
 		
 	}
 	@Override
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
 		
 		String extractTo = "C:\\Users\\Alex\\test";
-		
-		ZipEngine.unzip(response.getFile(), extractTo);
+
+		try {
+			ZipEngine.unzip(response.getFile(), extractTo);
+		} catch (ZipVocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		System.out.println("Erfolgreich heruntergeladen und extrahiert");
 		

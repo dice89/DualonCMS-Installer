@@ -63,6 +63,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblHost.setText("Host");
 		
 		inputHost = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputHost.setText("dualon-cms.brickit-mod.de");
 		inputHost.addVerifyListener(verification);
 		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -73,6 +74,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblPort.setText("Port");
 		
 		inputPort = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputPort.setText("21");
 		inputPort.addVerifyListener(verification);
 		inputPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -83,6 +85,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblUsername.setText("UserName");
 		
 		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputUserName.setText("w00ec6fd");
 		inputUserName.addVerifyListener(verification);
 		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -93,6 +96,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblPassword.setText("Password");
 		
 		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputPassword.setText("XZYxYeVxRKpF89v3");
 		inputPassword.addVerifyListener(verification);
 		inputPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		

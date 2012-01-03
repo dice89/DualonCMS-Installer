@@ -16,7 +16,7 @@ public class FTPClient {
 		
 		@Override
 		public String getUserName() {
-			return "f005e804";
+			return "f005f379";
 		}
 		
 		@Override
@@ -26,12 +26,12 @@ public class FTPClient {
 		
 		@Override
 		public String getPassword() {
-			return "BeePublishedTest";
+			return "3PwtGY9UqcyQzVCo";
 		}
 		
 		@Override
 		public String getHost() {
-			return "brickit-mod.de";
+			return "dualon-cms.brickit-mod.de";
 		}
 	};
 	
@@ -50,6 +50,7 @@ public class FTPClient {
 	public void uploadAndDeleteTest() throws SocketException, IOException {
 		FTPTarget target = new FTPTarget(login);
 		target.connect();
+		boolean login = target.login();
 		
 		assertFalse(target.containsFile("testfile.txt"));
 		
@@ -59,6 +60,7 @@ public class FTPClient {
 		target.deleteFile("testfile.txt");
 		assertFalse(target.containsFile("testfile.txt"));
 		
+		target.logout();
 		target.disconnect();
 	}
 	

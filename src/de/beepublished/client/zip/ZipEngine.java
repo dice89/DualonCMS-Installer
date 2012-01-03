@@ -45,7 +45,7 @@ public class ZipEngine {
 
 			        InputStream in = archive.getInputStream(entry);
 			        BufferedOutputStream out = new BufferedOutputStream(
-			            new FileOutputStream(file));
+			            new FileOutputStream(zfile));
 
 			        byte[] buffer = new byte[8192];
 			        int read;
