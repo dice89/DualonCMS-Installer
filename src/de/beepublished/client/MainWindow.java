@@ -31,6 +31,30 @@ import de.beepublished.client.zip.ZipEngine;
 //TODO create class description
 public class MainWindow implements WebServiceListener {
 
+private static FTPLoginInformation login = new FTPLoginInformation() {
+		
+		@Override
+		public String getUserName() {
+			return "f005f379";
+		}
+		
+		@Override
+		public int getPort() {
+			return 21;
+		}
+		
+		@Override
+		public String getPassword() {
+			return "3PwtGY9UqcyQzVCo";
+		}
+		
+		@Override
+		public String getHost() {
+			return "dualon-cms.brickit-mod.de";
+		}
+	};
+	
+	
 	protected Shell shell;
 
 	/**
@@ -91,7 +115,7 @@ public class MainWindow implements WebServiceListener {
 				wmanager = new WebManager(shandler);
 				
 
-				wmanager.downloadZIPFile("http://www.ms-mediagroup.de/archive.zip",  MainWindow.this);
+				wmanager.downloadZIPFile("http://localhost/DualonCMS.zip",  MainWindow.this);
 				
 				
 			}
@@ -117,36 +141,15 @@ public class MainWindow implements WebServiceListener {
 		
 		System.out.println("Erfolgreich heruntergeladen und extrahiert");
 		
-		FTPTarget target = new FTPTarget( new FTPLoginInformation() {
-			
-			@Override
-			public String getUserName() {
-				return "f005f379";
-			}
-			
-			@Override
-			public int getPort() {
-				return 21;
-			}
-			
-			@Override
-			public String getPassword() {
-				return "3PwtGY9UqcyQzVCo";
-			}
-			
-			@Override
-			public String getHost() {
-				return "dualon-cms.brickit-mod.de";
-			}
-		});
+		FTPTarget target = new FTPTarget(login);
 		try {
 			target.connect();
 			target.login();
-			target.uploadFolder(extractTo+"/cms","");
+			target.uploadFolder(extractTo,"");
 			target.logout();
 			target.disconnect();
 			
-			wmanager.installCMS("dualon-cms.brickit-mod.de", "d012d73c", "d012d73c", "d012d73c", "http://dualon-cms.brickit-mod.de/cms/services/installation", this);
+			wmanager.installCMS("dualon-cms.brickit-mod.de", "d012d73c", "9sp5FaUyQUsCAskh", "d012d73c", "http://dualon-cms.brickit-mod.de/tempfolder/services/installation/index.php", this);
 			
 			System.out.println("Upload finished!");
 			//btnUpload.setText("Success");
@@ -168,6 +171,7 @@ public class MainWindow implements WebServiceListener {
 	public void onRestInstallationSuccess(
 			REST_CMS_Installation_response response) {
 		System.out.println("onRestInstallationSuccess");
+		System.out.println("RC:"+ response.getResponseCode());
 		
 	}
 

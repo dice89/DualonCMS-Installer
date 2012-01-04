@@ -68,6 +68,9 @@ public class FTPTarget {
 		assert(this.isConnected());
 		File f = new File(localFilePath);
 		boolean result = ftpClient.storeFile(remoteFilePath, new FileInputStream(f));
+		String command = "CHMOD 777 "+f.getName();
+		System.out.println(ftpClient.sendSiteCommand(command));
+		System.out.println(ftpClient.getReplyString());
 		
 		//System.out.println(localFilePath+" uploaded");
 		// TODO create method description
@@ -111,6 +114,11 @@ public class FTPTarget {
 		assert(folder.isDirectory());
 		
 		ftpClient.makeDirectory(folder.getName());
+		
+		String command = "CHMOD 777 "+folder.getName();
+		System.out.println(ftpClient.sendSiteCommand(command));
+		System.out.println(ftpClient.getReplyString());
+		
 		ftpClient.changeWorkingDirectory(folder.getName());
 		
 		for(File f : folder.listFiles()){
