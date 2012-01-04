@@ -8,6 +8,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 
+import de.beepublished.client.ftp.FTPLoginInformation;
+import de.beepublished.client.ftp.FTPTarget;
 import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload;
 import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload_response;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Backup;
@@ -142,12 +144,15 @@ public class WebManager {
 	
 	
 	public static void main(String args[]){
+		
 		WebManager wmanager = getWebManager();
 
-		//wmanager.downloadZIPFile("http://www.ms-mediagroup.de/archive.zip",  new RestWebServiceListener());
-		
-		//wmanager.installCMS("localhost/DualonCMS","localhost", "cake", "alex", "alex", "http://localhost/DualonCMS/services/installation/", new RestWebServiceListener());
-		wmanager.backupCMS("alex", "alex","http://localhost/DualonCMS/services/backup/",new RestWebServiceListener());
+
+		wmanager.downloadZIPFile("http://www.ms-mediagroup.de/Dualon/installation/archive.zip",  new RestWebServiceListener());
+		//wmanager.installCMS("www.ms-mediagroup.de/Dualon/DualonCMS","mysql5.concept2designs.de", "db115933_10", "cms1", "db115933_10", "http://www.ms-mediagroup.de/Dualon/DualonCMS/services/installation/",new RestWebServiceListener());
+		//wmanager.backupCMS("alex", "alex","http://localhost/DualonCMS/services/backup/",new RestWebServiceListener());
+
+	
 	}
 	
 	
@@ -184,5 +189,27 @@ public class WebManager {
 		
 		return httpClient;
 	}
-	
+private static FTPLoginInformation login = new FTPLoginInformation() {
+		
+		@Override
+		public String getUserName() {
+			return "115933-cms";
+		}
+		
+		@Override
+		public int getPort() {
+			return 21;
+		}
+		
+		@Override
+		public String getPassword() {
+			return "cms1";
+		}
+		
+		@Override
+		public String getHost() {
+			return "ftp.abi2008ms.de";
+		}
+	};
 }
+

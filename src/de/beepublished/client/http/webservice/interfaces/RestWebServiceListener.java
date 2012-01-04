@@ -15,6 +15,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import de.beepublished.client.exceptions.ZipVocationException;
+import de.beepublished.client.ftp.FTPLoginInformation;
+import de.beepublished.client.ftp.FTPTarget;
 import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload_response;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Backup_response;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Installation_response;
@@ -34,9 +36,7 @@ public class RestWebServiceListener implements WebServiceListener {
 	@Override
 	public void onRestInstallationSuccess(
 			REST_CMS_Installation_response response) {
-		System.out.println("Erfolg");
-		
-		
+		System.out.println("Der erste umfassende Test ist gelungen!");	
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public class RestWebServiceListener implements WebServiceListener {
 	}
 	@Override
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
-		
-		String extractTo = "C:\\Users\\Alex\\test";
+		System.out.println("Zip download success... start unzip");
+		String extractTo = "tmp";
 
 		try {
 			ZipEngine.unzip(response.getFile(), extractTo);
@@ -55,9 +55,20 @@ public class RestWebServiceListener implements WebServiceListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("unzip sucess start .... start ftp upload"); 
 		
-		System.out.println("Erfolgreich heruntergeladen und extrahiert");
-		
+		// Trigger FTP Upload
+		FTPTarget target = new FTPTarget(login);
+		try{
+			target.connect();
+			target.login();
+			target.uploadFolder("tmp/DualonCMS/", "/");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("ftp completed  ....start installing");
+		WebManager wmanager = WebManager.getWebManager();
+		wmanager.installCMS("www.ms-mediagroup.de/Dualon/DualonCMS","mysql5.concept2designs.de", "db115933_10", "cms1", "db115933_10", "http://www.ms-mediagroup.de/Dualon/DualonCMS/services/installation/",this);
 	}
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
@@ -66,6 +77,8 @@ public class RestWebServiceListener implements WebServiceListener {
 	}
 	@Override
 	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
+		
+		
 		WebManager wmanager = WebManager.getWebManager();
 		wmanager.downloadFile("backup/", "b1.sql", "http://"+response.getSqlurl(), new BackupDownloadListener());
 		//Trigger File download
@@ -78,5 +91,27 @@ public class RestWebServiceListener implements WebServiceListener {
 		//Trigger nothing
 		System.out.println("Fail");
 	}
-
+	
+	private static FTPLoginInformation login = new FTPLoginInformation() {
+		
+		@Override
+		public String getUserName() {
+			return "115933-cms";
+		}
+		
+		@Override
+		public int getPort() {
+			return 21;
+		}
+		
+		@Override
+		public String getPassword() {
+			return "cms1";
+		}
+		
+		@Override
+		public String getHost() {
+			return "ftp.abi2008ms.de";
+		}
+	};
 }
