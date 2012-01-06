@@ -28,7 +28,14 @@ import de.beepublished.client.zip.ZipEngine;
 
 
 public class RestWebServiceListener implements WebServiceListener {
-
+	
+	private String rootdir = null;
+	
+	public RestWebServiceListener(String rootdir) {
+		super();
+		this.rootdir = rootdir;
+	}
+	
 	public RestWebServiceListener() {
 		super();
 
@@ -52,7 +59,7 @@ public class RestWebServiceListener implements WebServiceListener {
 		try {
 			ZipEngine.unzip(response.getFile(), extractTo);
 		} catch (ZipVocationException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		System.out.println("unzip sucess start .... start ftp upload"); 
@@ -62,13 +69,15 @@ public class RestWebServiceListener implements WebServiceListener {
 		try{
 			target.connect();
 			target.login();
-			target.uploadFolder("tmp/DualonCMS/", "/");
+			target.uploadFolder(extractTo+"", "/html/dualon");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println("ftp completed  ....start installing");
+		//Cleanup the mess
+		WebManager.cleanupdir("tmp");
 		WebManager wmanager = WebManager.getWebManager();
-		wmanager.installCMS("www.ms-mediagroup.de/Dualon/DualonCMS","mysql5.concept2designs.de", "db115933_10", "cms1", "db115933_10", "http://www.ms-mediagroup.de/Dualon/DualonCMS/services/installation/",this);
+		wmanager.installCMS("http://www.direktbankkonten.de/dualon","localhost", "usr_web200_1", "PdNO4FNM", "web200", "http://www.direktbankkonten.de/dualon/services/installation/",this);
 	}
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
@@ -77,10 +86,11 @@ public class RestWebServiceListener implements WebServiceListener {
 	}
 	@Override
 	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
-		
-		
+		String burl = response.getSqlurl();
+		String[] burlsplit = burl.split("/");
+		String backupfilename = burlsplit[burlsplit.length-1];
 		WebManager wmanager = WebManager.getWebManager();
-		wmanager.downloadFile("backup/", "b1.sql", "http://"+response.getSqlurl(), new BackupDownloadListener());
+		wmanager.downloadFile("backup/", backupfilename, response.getSqlurl(), new BackupDownloadListener(rootdir));
 		//Trigger File download
 		System.out.println("Test");
 		System.out.println("backup sql dump as well from:" + response.getSqlurl());
@@ -96,7 +106,7 @@ public class RestWebServiceListener implements WebServiceListener {
 		
 		@Override
 		public String getUserName() {
-			return "115933-cms";
+			return "web200";
 		}
 		
 		@Override
@@ -106,12 +116,12 @@ public class RestWebServiceListener implements WebServiceListener {
 		
 		@Override
 		public String getPassword() {
-			return "cms1";
+			return "PdNO4FNM";
 		}
 		
 		@Override
 		public String getHost() {
-			return "ftp.abi2008ms.de";
+			return "web200.mis08.de";
 		}
 	};
 }
