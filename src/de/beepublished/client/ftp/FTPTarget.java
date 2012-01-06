@@ -21,7 +21,8 @@ public class FTPTarget {
 	
 	private FTPLoginInformation loginInformation;
 	private FTPClient ftpClient;
-	
+	private boolean firsttime = true;
+	private boolean firsttimedownload = true;
 	public FTPTarget(FTPLoginInformation loginInformation){
 		// TODO create method description
 		// TODO create test case
@@ -112,14 +113,13 @@ public class FTPTarget {
 		
 		File folder = new File(localFolderPath);
 		assert(folder.isDirectory());
-		
-		ftpClient.makeDirectory(folder.getName());
-		
-		String command = "CHMOD 777 "+folder.getName();
-		System.out.println(ftpClient.sendSiteCommand(command));
-		System.out.println(ftpClient.getReplyString());
-		
-		ftpClient.changeWorkingDirectory(folder.getName());
+		if(!firsttime){
+			ftpClient.makeDirectory(folder.getName());
+			ftpClient.changeWorkingDirectory(folder.getName());
+		}else{
+			ftpClient.changeWorkingDirectory(remoteFolderPath);
+		}
+		firsttime = false;
 		
 		for(File f : folder.listFiles()){
 			if(f.isFile()){
@@ -150,11 +150,19 @@ public class FTPTarget {
 	public void downloadFTP(File localFolder) throws IOException{
 		downloadDirectory(localFolder, "");
 	}
+	public void downloadFTP(File localFolder, String remoteDirectory) throws IOException{
+		downloadDirectory(localFolder, remoteDirectory);
+	}
 	
 	public void downloadDirectory(File localTargetDirectory, String remoteDirectory) throws IOException{
+		
 		if(!remoteDirectory.equals("")){
 			System.out.println(ftpClient.changeWorkingDirectory(remoteDirectory));
-			System.out.println(localTargetDirectory.mkdirs());
+			if(!firsttimedownload){
+				System.out.println(localTargetDirectory.mkdirs());
+			}
+			firsttimedownload = false;
+		
 		}
 		FTPFile[] files = ftpClient.listFiles();
 		for(FTPFile f : files){
