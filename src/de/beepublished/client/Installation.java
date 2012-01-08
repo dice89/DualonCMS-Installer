@@ -23,6 +23,7 @@ import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse
 import de.beepublished.client.widget.DBLoginInformationWidget;
 import de.beepublished.client.widget.FTPLoginInformationWidget;
 import de.beepublished.client.zip.ZipEngine;
+import de.beepublished.client.widget.DownloadSourceWidget;
 
 public class Installation implements WebServiceListener{
 	
@@ -110,7 +111,7 @@ public class Installation implements WebServiceListener{
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(612, 232);
+		shell.setSize(706, 232);
 		shell.setText("SWT Application");
 		
 		btnDownload = new Button(shell, SWT.NONE);
@@ -119,11 +120,11 @@ public class Installation implements WebServiceListener{
 			public void widgetSelected(SelectionEvent e) {
 				// download
 				webManager = WebManager.getWebManager();
-				webManager.downloadZIPFile(dualonZipUrl, Installation.this);
+				webManager.downloadZIPFile(downloadSourceWidget.getDownloadSource(), Installation.this);
 				
 			}
 		});
-		btnDownload.setBounds(10, 10, 75, 174);
+		btnDownload.setBounds(10, 143, 172, 41);
 		btnDownload.setText("1. Download");
 		
 		btnUpload = new Button(shell, SWT.NONE);
@@ -158,7 +159,7 @@ public class Installation implements WebServiceListener{
 				}
 			}
 		});
-		btnUpload.setBounds(109, 143, 244, 41);
+		btnUpload.setBounds(196, 143, 244, 41);
 		btnUpload.setText("2. Upload");
 		btnUpload.setEnabled(false);
 		
@@ -169,28 +170,32 @@ public class Installation implements WebServiceListener{
 				webManager.installCMS("http://dualon-cms.brickit-mod.de", "http://dualon-cms.brickit-mod.de/services/installation/", Installation.this , loginInformationWidget_1.getLoginInformation());
 			}
 		});
-		btnInstall.setBounds(367, 143, 226, 41);
+		btnInstall.setBounds(454, 143, 226, 41);
 		btnInstall.setText("3. Install");
 		btnInstall.setEnabled(false);
 		
 		loginInformationWidget = new FTPLoginInformationWidget(shell, SWT.NONE);
-		loginInformationWidget.setBounds(109, 10, 244, 127);
+		loginInformationWidget.setBounds(196, 10, 244, 127);
 		
 		Label label = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
 		label.setText("0");
-		label.setBounds(96, 15, 2, 150);
+		label.setBounds(188, 18, 2, 150);
 		
 		Label label_1 = new Label(shell, SWT.SEPARATOR);
 		label_1.setText("0");
-		label_1.setBounds(359, 10, 2, 158);
+		label_1.setBounds(446, 10, 2, 158);
 		
 		loginInformationWidget_1 = new DBLoginInformationWidget(shell, SWT.NONE);
-		loginInformationWidget_1.setBounds(367, 10, 226, 127);
+		loginInformationWidget_1.setBounds(454, 10, 226, 127);
+		
+		downloadSourceWidget = new DownloadSourceWidget(shell, SWT.NONE);
+		downloadSourceWidget.setBounds(10, 10, 172, 127);
 
 	}
 	
 	FTPLoginInformationWidget loginInformationWidget;
 	DBLoginInformationWidget loginInformationWidget_1;
+	DownloadSourceWidget downloadSourceWidget;
 
 	@Override
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
