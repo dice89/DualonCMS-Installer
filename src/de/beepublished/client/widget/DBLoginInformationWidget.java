@@ -44,7 +44,6 @@ public class DBLoginInformationWidget extends Composite {
 		lblDatenbankname_1.setText("Name");
 		
 		inputName = new Text(grpDbLoginInformation, SWT.BORDER);
-		inputName.setText("d012d73c");
 		inputName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblUser = new Label(grpDbLoginInformation, SWT.NONE);
@@ -52,7 +51,6 @@ public class DBLoginInformationWidget extends Composite {
 		lblUser.setText("User");
 		
 		inputUser = new Text(grpDbLoginInformation, SWT.BORDER);
-		inputUser.setText("d012d73c");
 		inputUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPasswort = new Label(grpDbLoginInformation, SWT.NONE);
@@ -60,7 +58,6 @@ public class DBLoginInformationWidget extends Composite {
 		lblPasswort.setText("Passwort");
 		
 		inputPasswort = new Text(grpDbLoginInformation, SWT.BORDER);
-		inputPasswort.setText("9sp5FaUyQUsCAskh");
 		inputPasswort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}
@@ -71,10 +68,31 @@ public class DBLoginInformationWidget extends Composite {
 	}
 	
 	public DBLoginInformation getLoginInformation(){
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
-		throw new RuntimeException("Not yet implemented!");
+		return new DBLoginInformation() {
+			
+			@Override
+			public String getUserName() {
+				return inputUser.getText();
+			}
+			
+			@Override
+			public String getPassword() {
+				// TODO Auto-generated method stub
+				return inputPasswort.getText();
+			}
+			
+			@Override
+			public String getHost() {
+				// TODO Auto-generated method stub
+				return inputHost.getText();
+			}
+			
+			@Override
+			public String getDBName() {
+				// TODO Auto-generated method stub
+				return inputName.getText();
+			}
+		};
 	}
 
 }

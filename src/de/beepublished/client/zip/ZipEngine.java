@@ -30,7 +30,7 @@ public class ZipEngine {
 	 * @return
 	 * @throws ZipVocationException 
 	 */
-	public static String unzip(File file, String dest) throws ZipVocationException{
+	public static File unzip(File file, String dest) throws ZipVocationException{
 
 		ZipFile archive = null;
 		try {
@@ -68,7 +68,7 @@ public class ZipEngine {
 			e1.printStackTrace();
 			throw new ZipVocationException(e1.getMessage());
 		}
-	  return dest;
+	  return new File(dest);
 	}
 	
 	public static File zip(String location, String targetFileName) throws ZipVocationException, IOException{
@@ -92,7 +92,7 @@ public class ZipEngine {
 		        continue;
 		      }
 		      FileInputStream in = new FileInputStream(files[i].getAbsolutePath());
-		      System.out.println(" Adding: " + files[i].getAbsolutePath());
+		     // System.out.println(" Adding: " + files[i].getAbsolutePath());
 		      out.putNextEntry(new ZipEntry(relativeTo.toURI().relativize(new File(files[i].getAbsolutePath()).toURI()).getPath()));
 		      int len;
 		      while ((len = in.read(tmpBuf)) > 0) {

@@ -85,7 +85,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblUsername.setText("UserName");
 		
 		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputUserName.setText("w00ec6fd");
+		inputUserName.setText("f005f379");
 		inputUserName.addVerifyListener(verification);
 		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -96,7 +96,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblPassword.setText("Password");
 		
 		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputPassword.setText("XZYxYeVxRKpF89v3");
+		inputPassword.setText("3PwtGY9UqcyQzVCo");
 		inputPassword.addVerifyListener(verification);
 		inputPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		

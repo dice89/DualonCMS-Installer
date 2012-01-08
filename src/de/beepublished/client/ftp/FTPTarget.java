@@ -21,7 +21,8 @@ public class FTPTarget {
 	
 	private FTPLoginInformation loginInformation;
 	private FTPClient ftpClient;
-	
+	private boolean firsttime = true;
+	private boolean firsttimedownload = true;
 	public FTPTarget(FTPLoginInformation loginInformation){
 		// TODO create method description
 		// TODO create test case
@@ -67,10 +68,9 @@ public class FTPTarget {
 	public void uploadFile(String localFilePath, String remoteFilePath) throws FileNotFoundException, IOException{	
 		assert(this.isConnected());
 		File f = new File(localFilePath);
-		boolean result = ftpClient.storeFile(remoteFilePath, new FileInputStream(f));
-		String command = "CHMOD 777 "+f.getName();
-		System.out.println(ftpClient.sendSiteCommand(command));
-		System.out.println(ftpClient.getReplyString());
+		ftpClient.storeFile(remoteFilePath, new FileInputStream(f));
+		System.out.println(ftpClient.sendSiteCommand("CHMOD 777 "+f.getName()));
+		//System.out.println(ftpClient.getReplyString());
 		
 		//System.out.println(localFilePath+" uploaded");
 		// TODO create method description
@@ -79,58 +79,33 @@ public class FTPTarget {
 		//throw new RuntimeException("Not yet implemented!");
 	}
 	
-	public void uploadFolderInitial(String localFolderPath, String remoteFolderPath) throws FileNotFoundException, IOException{
-		assert(ftpClient.isConnected());
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
-		
-		File folder = new File(localFolderPath);
-		assert(folder.isDirectory());
-		
-		//ftpClient.makeDirectory(folder.getName());
-		//ftpClient.changeWorkingDirectory(folder.getName());
-		
-		for(File f : folder.listFiles()){
-			if(f.isFile()){
-				this.uploadFile(f.getAbsolutePath(), f.getName());
-			}
-			if(f.isDirectory()){
-				this.uploadFolder(f.getAbsolutePath(), f.getAbsolutePath());
-				ftpClient.changeToParentDirectory();
-			}	
-		}		
-	}
-	
-	public void uploadFolder(String localFolderPath, String remoteFolderPath) throws FileNotFoundException, IOException{
+	public void uploadFolder(File localFolder, String remoteFolderPath) throws FileNotFoundException, IOException{
 		assert(ftpClient.isConnected());
 		// TODO create method description
 		// TODO create test case
 		// TODO implement method
 
-		System.out.println(localFolderPath+" started");
+		System.out.println(localFolder.getName()+" started");
 		
-		File folder = new File(localFolderPath);
-		assert(folder.isDirectory());
+		assert(localFolder.isDirectory());
 		
-		ftpClient.makeDirectory(folder.getName());
-		
-		String command = "CHMOD 777 "+folder.getName();
-		System.out.println(ftpClient.sendSiteCommand(command));
-		System.out.println(ftpClient.getReplyString());
-		
-		ftpClient.changeWorkingDirectory(folder.getName());
-		
-		for(File f : folder.listFiles()){
+		if(!firsttime){
+			ftpClient.makeDirectory(localFolder.getName());
+			ftpClient.changeWorkingDirectory(localFolder.getName());
+		}else{
+			ftpClient.changeWorkingDirectory(remoteFolderPath);
+		}
+		firsttime = false;
+		for(File f : localFolder.listFiles()){
 			if(f.isFile()){
 				this.uploadFile(f.getAbsolutePath(), f.getName());
 			}
 			if(f.isDirectory()){
-				this.uploadFolder(f.getAbsolutePath(), f.getAbsolutePath());
+				this.uploadFolder(f, f.getAbsolutePath());
 				ftpClient.changeToParentDirectory();
 			}	
 		}
-		System.out.println(localFolderPath+" uploaded");
+		System.out.println(localFolder.getName()+" uploaded");
 
 	//	throw new RuntimeException("Not yet implemented!");
 	}
@@ -150,11 +125,19 @@ public class FTPTarget {
 	public void downloadFTP(File localFolder) throws IOException{
 		downloadDirectory(localFolder, "");
 	}
+	public void downloadFTP(File localFolder, String remoteDirectory) throws IOException{
+		downloadDirectory(localFolder, remoteDirectory);
+	}
 	
 	public void downloadDirectory(File localTargetDirectory, String remoteDirectory) throws IOException{
+		
 		if(!remoteDirectory.equals("")){
 			System.out.println(ftpClient.changeWorkingDirectory(remoteDirectory));
-			System.out.println(localTargetDirectory.mkdirs());
+			if(!firsttimedownload){
+				System.out.println(localTargetDirectory.mkdirs());
+			}
+			firsttimedownload = false;
+		
 		}
 		FTPFile[] files = ftpClient.listFiles();
 		for(FTPFile f : files){
@@ -171,9 +154,8 @@ public class FTPTarget {
 	}
 	
 	public boolean isLogedIn() throws IOException{
-		boolean lout = ftpClient.logout();
-		boolean lin =  ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());
-		return lin;
+		ftpClient.logout();
+		return ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());
 	}
 	
 	public boolean containsFile(String filename) throws IOException{
