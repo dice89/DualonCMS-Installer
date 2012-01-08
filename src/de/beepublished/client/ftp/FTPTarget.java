@@ -95,6 +95,7 @@ public class FTPTarget {
 		}else{
 			ftpClient.changeWorkingDirectory(remoteFolderPath);
 		}
+		
 		firsttime = false;
 		for(File f : localFolder.listFiles()){
 			if(f.isFile()){
