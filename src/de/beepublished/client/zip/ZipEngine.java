@@ -30,8 +30,8 @@ public class ZipEngine {
 	 * @return
 	 * @throws ZipVocationException 
 	 */
-	public static File unzip(File file, String dest) throws ZipVocationException{
-
+	public static File unzip(File file, File dest) throws ZipVocationException{		
+		assert(dest.isDirectory());
 		ZipFile archive = null;
 		try {
 			archive = new ZipFile(file);
@@ -68,7 +68,16 @@ public class ZipEngine {
 			e1.printStackTrace();
 			throw new ZipVocationException(e1.getMessage());
 		}
-	  return new File(dest);
+	  return dest;
+	}
+	
+	public static File zip(File locationFile, File target) throws ZipVocationException, IOException{
+		assert(locationFile.isDirectory());
+		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(target));
+		addDir(locationFile,out,locationFile);
+		out.flush();
+		out.close();
+		return target;
 	}
 	
 	public static File zip(String location, String targetFileName) throws ZipVocationException, IOException{

@@ -69,7 +69,7 @@ public class FTPTarget {
 		assert(this.isConnected());
 		File f = new File(localFilePath);
 		ftpClient.storeFile(remoteFilePath, new FileInputStream(f));
-		System.out.println(ftpClient.sendSiteCommand("CHMOD 777 "+f.getName()));
+		//System.out.println(ftpClient.sendSiteCommand("CHMOD 777 "+f.getName()));
 		//System.out.println(ftpClient.getReplyString());
 		
 		//System.out.println(localFilePath+" uploaded");
