@@ -11,4 +11,6 @@ public interface FTPLoginInformation {
 	public String getUserName();
 	// TODO create method description
 	public String getPassword();
+	
+	public String getFtpUploadRoot();
 }

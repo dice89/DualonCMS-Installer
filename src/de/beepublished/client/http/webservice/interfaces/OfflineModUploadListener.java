@@ -73,7 +73,7 @@ public class OfflineModUploadListener implements WebServiceListener {
 			
 			
 			//now trigger installation
-			WebManager.getWebManager().installCMS(remote_homeUrl, remote_homeUrl +"/services/installation", this, null);
+			WebManager.getWebManager().installCMS(null, null, this);
 			
 		} catch (SocketException e1) {
 			System.out.println("Fail");
@@ -131,7 +131,7 @@ public class OfflineModUploadListener implements WebServiceListener {
 			
 			
 			//now trigger installation
-			WebManager.getWebManager().installCMS(remote_homeUrl, remote_homeUrl +"/services/installation", this, null);
+			WebManager.getWebManager().installCMS(null, null, this);
 			
 		} catch (SocketException e1) {
 			System.out.println("Fail");

@@ -77,7 +77,7 @@ public class RestWebServiceListener implements WebServiceListener {
 		//Cleanup the mess
 		WebManager.cleanupdir("tmp");
 		WebManager wmanager = WebManager.getWebManager();
-		wmanager.installCMS("http://www.direktbankkonten.de/dualon","http://www.direktbankkonten.de/dualon/services/installation/", this, null);
+		wmanager.installCMS(null,null, this);
 	}
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {

@@ -1,28 +1,17 @@
 package de.beepublished.client.widget;
-import java.io.IOException;
-import java.net.SocketException;
-
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPConnectionClosedException;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 import de.beepublished.client.ftp.FTPConnectionThread;
 import de.beepublished.client.ftp.FTPLoginInformation;
-import de.beepublished.client.ftp.FTPLoginInformationImplementation;
-import de.beepublished.client.ftp.FTPTarget;
-
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.events.VerifyListener;
-import org.eclipse.swt.events.VerifyEvent;
 
 
 public class FTPLoginInformationWidget extends Composite {
@@ -42,6 +31,8 @@ public class FTPLoginInformationWidget extends Composite {
 	private Label lblStatusName;
 	
 	private InputVerification verification;
+	private Label lblDualonRoot;
+	private Text inputRoot;
 
 	/**
 	 * Create the composite.
@@ -63,7 +54,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblHost.setText("Host");
 		
 		inputHost = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputHost.setText("dualon-cms.brickit-mod.de");
+		inputHost.setText("localhost");
 		inputHost.addVerifyListener(verification);
 		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -85,7 +76,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblUsername.setText("UserName");
 		
 		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputUserName.setText("f005f379");
+		inputUserName.setText("newuser");
 		inputUserName.addVerifyListener(verification);
 		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -96,12 +87,21 @@ public class FTPLoginInformationWidget extends Composite {
 		lblPassword.setText("Password");
 		
 		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputPassword.setText("3PwtGY9UqcyQzVCo");
+		inputPassword.setText("xampp");
 		inputPassword.addVerifyListener(verification);
 		inputPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		lblStatusPw = new Label(grpFtpLoginInformation, SWT.NONE);
 		lblStatusPw.setText("?");
+		
+		lblDualonRoot = new Label(grpFtpLoginInformation, SWT.NONE);
+		lblDualonRoot.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblDualonRoot.setText("Dualon Root");
+		
+		inputRoot = new Text(grpFtpLoginInformation, SWT.BORDER);
+		inputRoot.setText("dualon-cms");
+		inputRoot.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(grpFtpLoginInformation, SWT.NONE);
 
 	}
 
@@ -111,9 +111,33 @@ public class FTPLoginInformationWidget extends Composite {
 	}
 
 	public FTPLoginInformation getLoginInformation(){
-		// TODO create method description
-		// TODO create test case
-		return new FTPLoginInformationImplementation(inputHost.getText(),Integer.parseInt(inputPort.getText()),inputUserName.getText(),inputPassword.getText());
+		return new FTPLoginInformation() {
+			
+			@Override
+			public String getUserName() {
+				return inputUserName.getText();
+			}
+			
+			@Override
+			public int getPort() {
+				return Integer.parseInt(inputPort.getText());
+			}
+			
+			@Override
+			public String getPassword() {
+				return inputPassword.getText();
+			}
+			
+			@Override
+			public String getHost() {
+				return inputHost.getText();
+			}
+			
+			@Override
+			public String getFtpUploadRoot() {
+				return inputRoot.getText();
+			}
+		};
 	}
 	
 	public void setHostAndPortStatus(int newStatus){

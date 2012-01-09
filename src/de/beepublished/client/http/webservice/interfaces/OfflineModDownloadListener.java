@@ -70,7 +70,7 @@ public class OfflineModDownloadListener implements WebServiceListener {
 			backupFile.renameTo(backupTmpFile);
 			
 			//now trigger installation
-			WebManager.getWebManager().installCMS(lcl_homeUrl, lcl_homeUrl +lcl_url, this, null);
+			WebManager.getWebManager().installCMS(null, null, this);
 			
 		} catch (SocketException e1) {
 			System.out.println("Fail");

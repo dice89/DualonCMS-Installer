@@ -24,12 +24,11 @@ import de.beepublished.client.widget.DBLoginInformationWidget;
 import de.beepublished.client.widget.FTPLoginInformationWidget;
 import de.beepublished.client.zip.ZipEngine;
 import de.beepublished.client.widget.DownloadSourceWidget;
+import de.beepublished.client.widget.WebpageInformationWidget;
 
 public class Installation implements WebServiceListener{
 	
-	private final String dualonZipUrl = "http://localhost/archive.zip";
-
-	protected Shell shell;
+	protected Shell shlDualonCmsInstaller;
 
 	private WebManager webManager;
 	
@@ -93,9 +92,9 @@ public class Installation implements WebServiceListener{
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
-		shell.open();
-		shell.layout();
-		while (!shell.isDisposed()) {
+		shlDualonCmsInstaller.open();
+		shlDualonCmsInstaller.layout();
+		while (!shlDualonCmsInstaller.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -110,32 +109,32 @@ public class Installation implements WebServiceListener{
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell();
-		shell.setSize(706, 232);
-		shell.setText("SWT Application");
+		shlDualonCmsInstaller = new Shell();
+		shlDualonCmsInstaller.setSize(706, 364);
+		shlDualonCmsInstaller.setText("Dualon CMS Installer");
 		
-		btnDownload = new Button(shell, SWT.NONE);
+		btnDownload = new Button(shlDualonCmsInstaller, SWT.NONE);
 		btnDownload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// download
 				webManager = WebManager.getWebManager();
-				webManager.downloadZIPFile(downloadSourceWidget.getDownloadSource(), Installation.this);
+				webManager.downloadZIPFile(sourceWidget.getDownloadSource(), Installation.this);
 				
 			}
 		});
-		btnDownload.setBounds(10, 143, 172, 41);
+		btnDownload.setBounds(10, 198, 172, 41);
 		btnDownload.setText("1. Download");
 		
-		btnUpload = new Button(shell, SWT.NONE);
+		btnUpload = new Button(shlDualonCmsInstaller, SWT.NONE);
 		btnUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FTPTarget target = new FTPTarget(loginInformationWidget.getLoginInformation());
+				FTPTarget target = new FTPTarget(ftpWidget.getLoginInformation());
 				try {
 					target.connect();
 					target.login();
-					target.uploadFolder(unzipedArchive,"");
+					target.uploadFolder(unzipedArchive,ftpWidget.getLoginInformation().getFtpUploadRoot());
 					target.logout();
 					target.disconnect();
 					System.out.println("uploaded finished");
@@ -159,43 +158,59 @@ public class Installation implements WebServiceListener{
 				}
 			}
 		});
-		btnUpload.setBounds(196, 143, 244, 41);
+		btnUpload.setBounds(196, 198, 244, 41);
 		btnUpload.setText("2. Upload");
 		btnUpload.setEnabled(false);
 		
-		btnInstall = new Button(shell, SWT.NONE);
+		btnInstall = new Button(shlDualonCmsInstaller, SWT.NONE);
 		btnInstall.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				webManager.installCMS("http://dualon-cms.brickit-mod.de", "http://dualon-cms.brickit-mod.de/services/installation/", Installation.this , loginInformationWidget_1.getLoginInformation());
+				webManager.installCMS(dbWidget.getLoginInformation(), pageWidget.getPageInformation(), Installation.this);
 			}
 		});
-		btnInstall.setBounds(454, 143, 226, 41);
+		btnInstall.setBounds(454, 198, 226, 41);
 		btnInstall.setText("3. Install");
 		btnInstall.setEnabled(false);
 		
-		loginInformationWidget = new FTPLoginInformationWidget(shell, SWT.NONE);
-		loginInformationWidget.setBounds(196, 10, 244, 127);
+		ftpWidget = new FTPLoginInformationWidget(shlDualonCmsInstaller, SWT.NONE);
+		ftpWidget.setBounds(196, 10, 244, 153);
 		
-		Label label = new Label(shell, SWT.SEPARATOR | SWT.VERTICAL);
+		Label label = new Label(shlDualonCmsInstaller, SWT.SEPARATOR | SWT.VERTICAL);
 		label.setText("0");
-		label.setBounds(188, 18, 2, 150);
+		label.setBounds(188, 18, 2, 174);
 		
-		Label label_1 = new Label(shell, SWT.SEPARATOR);
+		Label label_1 = new Label(shlDualonCmsInstaller, SWT.SEPARATOR);
 		label_1.setText("0");
-		label_1.setBounds(446, 10, 2, 158);
+		label_1.setBounds(446, 10, 2, 182);
 		
-		loginInformationWidget_1 = new DBLoginInformationWidget(shell, SWT.NONE);
-		loginInformationWidget_1.setBounds(454, 10, 226, 127);
+		dbWidget = new DBLoginInformationWidget(shlDualonCmsInstaller, SWT.NONE);
+		dbWidget.setBounds(454, 10, 226, 127);
 		
-		downloadSourceWidget = new DownloadSourceWidget(shell, SWT.NONE);
-		downloadSourceWidget.setBounds(10, 10, 172, 127);
+		sourceWidget = new DownloadSourceWidget(shlDualonCmsInstaller, SWT.NONE);
+		sourceWidget.setBounds(10, 10, 172, 127);
+		
+		pageWidget = new WebpageInformationWidget(shlDualonCmsInstaller, SWT.NONE);
+		pageWidget.setBounds(454, 143, 226, 49);
+		
+		Button btnNewButton = new Button(shlDualonCmsInstaller, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(webManager == null)
+					webManager = WebManager.getWebManager();
+				webManager.backupCMS(Installation.this, dbWidget.getLoginInformation(), pageWidget.getPageInformation());
+			}
+		});
+		btnNewButton.setBounds(196, 245, 244, 30);
+		btnNewButton.setText("Backup");
 
 	}
 	
-	FTPLoginInformationWidget loginInformationWidget;
-	DBLoginInformationWidget loginInformationWidget_1;
-	DownloadSourceWidget downloadSourceWidget;
+	FTPLoginInformationWidget ftpWidget;
+	DBLoginInformationWidget dbWidget;
+	DownloadSourceWidget sourceWidget;
+	WebpageInformationWidget pageWidget;
 
 	@Override
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
@@ -223,10 +238,10 @@ public class Installation implements WebServiceListener{
 	}
 
 	@Override
-	public void onRestInstallationSuccess(
-			REST_CMS_Installation_response response) {
+	public void onRestInstallationSuccess(REST_CMS_Installation_response response) {
 		System.out.println("onRestInstallationSuccess");
 		// TODO Auto-generated method stub
+		System.out.println("Response code: "+response.getResponseCode());
 		
 	}
 
@@ -240,6 +255,10 @@ public class Installation implements WebServiceListener{
 	@Override
 	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
 		System.out.println("onRestBackupSuccess");
+		System.out.println(response.getResponseCode());
+		System.out.println(response.getSqlurl());
+		System.out.println(response.getZipurl());
+		
 		// TODO Auto-generated method stub
 		
 	}

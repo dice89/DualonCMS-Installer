@@ -8,9 +8,12 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.layout.GridData;
 
 public class DownloadSourceWidget extends Composite {
-	private Text text;
+	private Text txtHttplocalhostarchivezip;
 
 	/**
 	 * Create the composite.
@@ -19,19 +22,19 @@ public class DownloadSourceWidget extends Composite {
 	 */
 	public DownloadSourceWidget(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new FormLayout());
+		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Group grpDownloadSource = new Group(this, SWT.NONE);
 		grpDownloadSource.setText("Download Source");
-		FormData fd_grpDownloadSource = new FormData();
-		fd_grpDownloadSource.bottom = new FormAttachment(0, 300);
-		fd_grpDownloadSource.right = new FormAttachment(0, 450);
-		fd_grpDownloadSource.top = new FormAttachment(0);
-		fd_grpDownloadSource.left = new FormAttachment(0);
-		grpDownloadSource.setLayoutData(fd_grpDownloadSource);
-		grpDownloadSource.setLayout(new FillLayout(SWT.HORIZONTAL));
+		grpDownloadSource.setLayout(new GridLayout(2, false));
 		
-		text = new Text(grpDownloadSource, SWT.BORDER);
+		Label lblDualonCmsDownload = new Label(grpDownloadSource, SWT.NONE);
+		lblDualonCmsDownload.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblDualonCmsDownload.setText("Dualon CMS Download");
+		
+		txtHttplocalhostarchivezip = new Text(grpDownloadSource, SWT.BORDER);
+		txtHttplocalhostarchivezip.setText("http://localhost/archive.zip");
+		txtHttplocalhostarchivezip.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}
 
@@ -41,6 +44,6 @@ public class DownloadSourceWidget extends Composite {
 	}
 	
 	public String getDownloadSource(){
-		return text.getText();
+		return txtHttplocalhostarchivezip.getText();
 	}
 }

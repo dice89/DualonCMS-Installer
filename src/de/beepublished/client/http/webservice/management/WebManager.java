@@ -29,6 +29,7 @@ import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
 import de.beepublished.client.http.webservice.services.ServiceHandler;
 import de.beepublished.client.http.webservice.services.ServiceResponse;
+import de.beepublished.client.widget.WebPageInformation;
 import de.beepublished.client.zip.ZipEngine;
 
 
@@ -50,12 +51,11 @@ public class WebManager {
 		this.handler = handler;
 	}
 	/**
-	 * @param homeUrl root dir of dualon
-	 * @param url  service remote adress
-	 * @param listener
 	 * @param dbLogin TODO
+	 * @param listener
+	 * @param wenPageInformation TODO
 	 */
-	public void installCMS(String homeUrl, String url, final WebServiceListener listener, DBLoginInformation dbLogin){
+	public void installCMS(DBLoginInformation dbLogin, WebPageInformation webPageInformation, final WebServiceListener listener){
 		ResponseListener responseListener = new ResponseListener(){
 
 
@@ -75,13 +75,13 @@ public class WebManager {
 		};
 		
 		try {
-			handler.processRequestAsynch(new REST_CMS_Installation(homeUrl, dbLogin.getHost(), dbLogin.getDBName(), dbLogin.getPassword(), dbLogin.getUserName(), url) , responseListener);
+			handler.processRequestAsynch(new REST_CMS_Installation(webPageInformation.getPageRoot(), dbLogin.getHost(), dbLogin.getDBName(), dbLogin.getPassword(), dbLogin.getUserName(), webPageInformation.getPageRoot()+"/services/installation/") , responseListener);
 		} catch (ServiceException e) {
 			
 		}
 	}
 	
-	public void backupCMS(String url, final WebServiceListener listener, DBLoginInformation dbLogin){
+	public void backupCMS(final WebServiceListener listener, DBLoginInformation dbLogin, WebPageInformation pageInformation){
 		ResponseListener responseListener = new ResponseListener(){
 			@Override
 			public void onResponseFailed(String methodName,
@@ -99,7 +99,7 @@ public class WebManager {
 		};
 		
 		try {
-			handler.processRequestAsynch(new REST_CMS_Backup( dbLogin.getPassword(), dbLogin.getUserName(), url) , responseListener);
+			handler.processRequestAsynch(new REST_CMS_Backup( dbLogin.getPassword(), dbLogin.getUserName(), pageInformation.getPageRoot()+"/services/backup/") , responseListener);
 		} catch (ServiceException e) {
 			
 		}
@@ -221,7 +221,7 @@ public class WebManager {
 		wmanager.downloadZIPFile("http://www.ms-mediagroup.de/archive.zip",  new RestWebServiceListener());
 		//wmanager.installCMS("www.ms-mediagroup.de/Dualon/DualonCMS","mysql5.concept2designs.de", "db115933_10", "cms1", "db115933_10", "http://www.ms-mediagroup.de/Dualon/DualonCMS/services/installation/",new RestWebServiceListener());
 		//wmanager.backupCMS("PdNO4FNM", "web200","http://www.direktbankkonten.de/dualon/services/backup/",new RestWebServiceListener("/html/dualon"));
-		wmanager.installCMS("www.localhost.de/dualon", "localhost.de/dualon/services/installation/", new RestWebServiceListener(), localDbLogin);
+		wmanager.installCMS(localDbLogin, null, new RestWebServiceListener());
 		//wmanager.installCMS("http://www.direktbankkonten.de/dualon","localhost", "usr_web200_1", "PdNO4FNM", "web200", "http://www.direktbankkonten.de/dualon/services/installation/",new RestWebServiceListener("/html/dualon"));
 		//downloadtoWorkOffline(ftp_root, "PdNO4FNM", "web200", "www.direktbankkonten.de/dualon/", xammp_path, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, installation_url );
 	}
@@ -251,7 +251,7 @@ public class WebManager {
 			e.printStackTrace();
 		}
 		
-		wmanager.installCMS(homeUrl,homeUrl+"/services/installation/", new BackupUpLoadListener(), dbLogin);
+		wmanager.installCMS(dbLogin,null, new BackupUpLoadListener());
 	
 		
 		
@@ -274,14 +274,14 @@ public class WebManager {
 	 */
 	public static void downloadtoWorkOffline(String pathfromFTProot, String remote_dbPw, String remote_dbUser, String remote_homeURL, String xammp_path, String lcl_homeUrl, String lcl_dBHost, String lcl_dBName, String lcl_dBPw, String lcl_dBLogin, String lcl_url ){
 		WebManager wmanager = getWebManager();
-		wmanager.backupCMS("http://"+remote_homeURL+"/services/backup/", new OfflineModDownloadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login),null);
+		wmanager.backupCMS(new OfflineModDownloadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null,null);
 	}
 	
 	public static void uploadOfflineMode(String pathfromFTProot, String remote_dbPw, String remote_dbUser, String remote_homeURL, String xammp_path, String lcl_homeUrl, String lcl_dBHost, String lcl_dBName, String lcl_dBPw, String lcl_dBLogin, String lcl_url ){
 		WebManager wmanager = getWebManager();
 	
 		//wmanager.installCMS(homeUrl,dBHost, dBName, dBPw, dBLogin, homeUrl+"/services/installation/",new BackupUpLoadListener());
-		wmanager.backupCMS(lcl_homeUrl+lcl_url, new OfflineModUploadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null);
+		wmanager.backupCMS(new OfflineModUploadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null, null);
 	}
 	
 	/** Deletes a Dir and all underlaying structures
