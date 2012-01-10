@@ -73,8 +73,8 @@ public class newUI {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(334, 137);
-		shell.setText("SWT Application");
+		shell.setSize(454, 137);
+		shell.setText("Dualon CMS Installer");
 		
 		try {
 			fileEndPoint = new LocalFileEndPoint(new File("C:\\Users\\Fabian\\Desktop\\ExampleFileEndPoint.zip"));
@@ -88,26 +88,24 @@ public class newUI {
 		
 
 		Button btnAction = new Button(shell, SWT.NONE);
-		btnAction.setBounds(125, 54, 75, 25);
+		btnAction.setBounds(183, 53, 75, 25);
 		btnAction.setText("action");
 		
 		Group grpSource = new Group(shell, SWT.NONE);
 		grpSource.setText("Source");
-		grpSource.setBounds(10, 37, 109, 53);
-		
-		final Combo source = new Combo(grpSource, SWT.NONE);
-		source.setBounds(10, 21, 91, 23);
-		source.setItems(manager.getForComboBox());
+		grpSource.setBounds(10, 37, 157, 53);
 		
 		Group grpTarget = new Group(shell, SWT.NONE);
 		grpTarget.setText("Target");
-		grpTarget.setBounds(206, 37, 109, 53);
+		grpTarget.setBounds(267, 37, 157, 53);
+		
+		final Combo source = new Combo(grpSource, SWT.NONE);
+		source.setBounds(10, 21, 137, 23);
+		source.setItems(manager.getForComboBox());
 		
 		final Combo target = new Combo(grpTarget, SWT.NONE);
-		target.setBounds(10, 20, 91, 23);
+		target.setBounds(10, 20, 137, 23);
 		target.setItems(manager.getForComboBox());
-		
-		listener = new ComboSelectionListener(source, target,btnAction);
 		
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -122,8 +120,14 @@ public class newUI {
 				}
 			}
 		});
-		btnNewButton.setBounds(10, 10, 305, 25);
+		btnNewButton.setBounds(10, 10, 414, 25);
 		btnNewButton.setText("add new EndPoint");
+		
+		
+		
+		
+		
+		listener = new ComboSelectionListener(source, target,btnAction);
 		
 		
 		target.addSelectionListener(listener);
