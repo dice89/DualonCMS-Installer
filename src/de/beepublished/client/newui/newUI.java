@@ -77,6 +77,17 @@ public class newUI {
 		shell.setText("Dualon CMS Installer");
 		
 		try {
+			new VariabelLocalFileSource(shell);
+			new VariabelLocalFileTarget(shell);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ZipVocationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
 			fileEndPoint = new LocalFileEndPoint(new File("C:\\Users\\Fabian\\Desktop\\ExampleFileEndPoint.zip"));
 		} catch (Exception e) {
 			e.printStackTrace();
