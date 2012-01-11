@@ -11,6 +11,7 @@ import de.beepublished.client.exceptions.ZipVocationException;
 
 public class VariabelLocalFileSource extends LocalFileEndPoint {
 
+	
 	public VariabelLocalFileSource(Shell shell) throws IOException,ZipVocationException {
 		super(createNewFile(shell));
 		// TODO Auto-generated constructor stub

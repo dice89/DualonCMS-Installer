@@ -13,10 +13,26 @@ public class EndPointManager {
 		endPoints.add(ep);
 	}
 	
-	public String[] getForComboBox(){
+	public String[] getForComboBox(boolean isSource){
 		ArrayList<String> result = new ArrayList<String>();
-		for(EndPoint ep : endPoints)
-			result.add(ep.getName());
+		for(EndPoint ep : endPoints){
+			if(isSource){
+				if(ep.isFinal())
+					result.add(ep.getName());
+			} else {
+				if(!ep.isFinal())
+					result.add(ep.getName());
+				if(ep instanceof WebEndPoint)
+					result.add(ep.getName());
+			}
+			
+		}
+		
+		if(isSource)
+			result.add("Variable Source");
+		else
+			result.add("Variable Target");
+		
 		return result.toArray(new String[]{});
 	}
 	
@@ -36,7 +52,26 @@ public class EndPointManager {
 				// TODO Auto-generated method stub
 				return "";
 			}
+
+			@Override
+			public boolean isFinal() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			
+			
 		};
+	}
+	
+	public int getPosition(String name){
+		int i = 0;
+		for(EndPoint p : endPoints){
+			if(p.getName().equals(name))
+				return i;
+			i++;
+		}
+		throw new RuntimeException();
 	}
 	
 }

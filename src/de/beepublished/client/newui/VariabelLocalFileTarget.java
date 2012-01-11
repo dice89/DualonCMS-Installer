@@ -9,8 +9,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import de.beepublished.client.exceptions.ZipVocationException;
 
-public class VariabelLocalFileTarget implements EndPoint {
+public class VariabelLocalFileTarget implements FileEndPoint{
 
+	private boolean isFinal = false;
+	
 	private File file;
 	
 	public VariabelLocalFileTarget(Shell shell) throws IOException,ZipVocationException {
@@ -38,6 +40,38 @@ public class VariabelLocalFileTarget implements EndPoint {
 	public String getType() {
 		// TODO Auto-generated method stub
 		return "LocalFile";
+	}
+
+	@Override
+	public File getFiles() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public File getSQLDump() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void process() throws IOException, ZipVocationException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public File getBackupFile() {
+		return file;
+	}
+
+	@Override
+	public boolean isFinal() {
+		return isFinal;
+	}
+	
+	public void setFinal(){
+		isFinal = true;
 	}
 
 }

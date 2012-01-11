@@ -1,6 +1,5 @@
 package de.beepublished.client.newui;
 
-import java.awt.FileDialog;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,14 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Shell;
 
 import de.beepublished.client.db.DBLoginInformation;
 import de.beepublished.client.exceptions.ZipVocationException;
@@ -29,9 +29,6 @@ import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
 import de.beepublished.client.widget.WebPageInformation;
 import de.beepublished.client.zip.ZipEngine;
-
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.widgets.Group;
 
 public class newUI {
 
@@ -76,6 +73,7 @@ public class newUI {
 		shell.setSize(454, 137);
 		shell.setText("Dualon CMS Installer");
 		
+		/*
 		try {
 			new VariabelLocalFileSource(shell);
 			new VariabelLocalFileTarget(shell);
@@ -86,15 +84,19 @@ public class newUI {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		*/
+		
+		/*
 		
 		try {
 			fileEndPoint = new LocalFileEndPoint(new File("C:\\Users\\Fabian\\Desktop\\ExampleFileEndPoint.zip"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		
 		manager = new EndPointManager();
-		manager.addEndPoint(fileEndPoint);
+		//manager.addEndPoint(fileEndPoint);
 		manager.addEndPoint(webEndPoint);
 		
 
@@ -112,11 +114,11 @@ public class newUI {
 		
 		final Combo source = new Combo(grpSource, SWT.NONE);
 		source.setBounds(10, 21, 137, 23);
-		source.setItems(manager.getForComboBox());
+		source.setItems(manager.getForComboBox(true));
 		
 		final Combo target = new Combo(grpTarget, SWT.NONE);
 		target.setBounds(10, 20, 137, 23);
-		target.setItems(manager.getForComboBox());
+		target.setItems(manager.getForComboBox(false));
 		
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -126,8 +128,8 @@ public class newUI {
 				Object o = d.open();
 				if(o != null){
 					manager.addEndPoint((EndPoint) o);
-					source.setItems(manager.getForComboBox());
-					target.setItems(manager.getForComboBox());
+					source.setItems(manager.getForComboBox(true));
+					target.setItems(manager.getForComboBox(false));
 				}
 			}
 		});
@@ -156,8 +158,8 @@ public class newUI {
 			actionTarget.addSelectionListener(curentListener);
 		}
 		
-		private Combo source;
-		private Combo target;
+		private final Combo source;
+		private final Combo target;
 		private Button actionTarget;
 		
 		private EndPoint sourceValue;
@@ -166,7 +168,13 @@ public class newUI {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			// TODO Auto-generated method stub
-			fillSourceAndTarget();
+			try {
+				fillSourceAndTarget();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			setButtonAction();
 			System.out.println("widget Selected");
 			System.out.println(sourceValue + "" + targetValue);
@@ -178,8 +186,32 @@ public class newUI {
 			System.out.println("widget Selected");
 		}
 		
-		private void fillSourceAndTarget(){
-			sourceValue = manager.getEndPoint(source.getText());
+		private void fillSourceAndTarget() throws IOException, ZipVocationException{
+			if(source.getText().equals("Variable Source")){
+				VariabelLocalFileSource newSouce = new VariabelLocalFileSource(shell);
+				sourceValue = newSouce;
+				manager.addEndPoint(newSouce);
+				source.setItems(manager.getForComboBox(true));
+				target.setItems(manager.getForComboBox(false));
+				source.select(manager.getPosition(newSouce.getName()));
+				target.select(manager.getPosition(targetValue.getName()));
+			} else if(source.getText().equals("")){
+				System.out.println("Nothing selected");
+			} else{
+				sourceValue = manager.getEndPoint(source.getText());
+			}
+			
+			if(target.getText().equals("Variable Target")){
+				VariabelLocalFileTarget newTarget = new VariabelLocalFileTarget(shell);
+				targetValue = newTarget;
+				manager.addEndPoint(newTarget);
+				target.setItems(manager.getForComboBox(false));
+				source.setItems(manager.getForComboBox(true));
+				target.select(manager.getPosition(newTarget.getName()));
+				source.select(manager.getPosition(sourceValue.getName()));
+			} else if(target.getText().equals("")){
+				System.out.println("Nothing selected");
+			} else
 			targetValue = manager.getEndPoint(target.getText());
 		}
 		
@@ -198,6 +230,13 @@ public class newUI {
 		};
 		
 		private void setButtonAction(){
+			 if(sourceValue == null || targetValue == null) {
+					actionTarget.setEnabled(false);
+					actionTarget.setText("bad combination");
+					return;
+				}
+			
+			
 			if(sourceValue.getType().equals("WebServer") && targetValue.getType().equals("LocalFile")){
 				actionTarget.setEnabled(true);
 				actionTarget.setText("get backup");
@@ -210,20 +249,17 @@ public class newUI {
 				actionTarget.removeSelectionListener(curentListener);
 				curentListener = new InstallationSelectionListener(sourceValue, targetValue);
 				actionTarget.addSelectionListener(curentListener);
-			} else {
-				actionTarget.setEnabled(false);
-				actionTarget.setText("bad combination");
 			}
 		}
 	}
 	private class BackupSelectionListener implements SelectionListener,WebServiceListener{
 
 		private WebEndPoint source;
-		private FileEndPoint target;
+		private VariabelLocalFileTarget target;
 		
 		public BackupSelectionListener(EndPoint source, EndPoint target) {
 			this.source = (WebEndPoint) source;
-			this.target = (FileEndPoint) target;
+			this.target = (VariabelLocalFileTarget) target;
 		}
 
 		@Override
@@ -275,12 +311,14 @@ public class newUI {
 				
 				System.out.println("Start to create zip");
 				
-				File finishedZip = ZipEngine.zip(result, File.createTempFile("result", ".zip"));
+				//File finishedZip = ZipEngine.zip(result, File.createTempFile("result", ".zip"));
+				File finishedZip = ZipEngine.zip(result, target.getBackupFile());
 				
 				System.out.println("----------------------------------------");
 				System.out.println("Backup finished: " + finishedZip.getAbsolutePath());
 				System.out.println("----------------------------------------");
 				
+				target.setFinal();
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -338,6 +376,7 @@ public class newUI {
 		public void widgetSelected(SelectionEvent e) {
 			try {
 				System.out.println("Start to upload Files");
+				source.process();
 				FTPTarget ftpTarget = new FTPTarget(target.getFtpInformation());
 				ftpTarget.connect();
 				ftpTarget.login();
@@ -473,6 +512,11 @@ public class newUI {
 					return "dualoncms";
 				}
 			};
+		}
+
+		@Override
+		public boolean isFinal() {
+			return true;
 		}
 	};
 	
