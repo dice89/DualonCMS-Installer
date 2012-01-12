@@ -32,7 +32,7 @@ public class ValidationThread extends Thread {
 			EndPoint sourceEndPoint = managerSource.getAtIndex(indexSource);
 			EndPoint targetEndPoint = managerTarget.getAtIndex(indexTarget);
 			
-			if(sourceEndPoint instanceof FileBackup && targetEndPoint instanceof WebServer)
+			if(sourceEndPoint instanceof FileEndPoint && targetEndPoint instanceof WebServer)
 				target.setValidationFeedback(ValidationStatus.VALID_INSTALL);
 			else if(sourceEndPoint instanceof WebServer && targetEndPoint instanceof FileBackup)
 				target.setValidationFeedback(ValidationStatus.VALID_BACKUP);

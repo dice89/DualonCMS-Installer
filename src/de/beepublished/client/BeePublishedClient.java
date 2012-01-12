@@ -101,6 +101,8 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		managerQuelle = new EndPointManager(ADDITION_SOURCE);
 		managerZiel = new EndPointManager(ADDITION_TARGET);
 		
+		managerQuelle.addEndPoint(new HostedBackup());
+		
 		setup();
 	}
 	
@@ -128,7 +130,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	private void handlePerformButton(SelectionEvent e){
 		System.out.println("Button handlePerformButton");
 		if(buttonAction.getText().equals("Install")){
-			InstallThread installThread = new InstallThread(this, (FileBackup) managerQuelle.getAtIndex(comboQuelle.getSelectionIndex()), (WebServer) managerZiel.getAtIndex(comboZiel.getSelectionIndex()));
+			InstallThread installThread = new InstallThread(this, (FileEndPoint) managerQuelle.getAtIndex(comboQuelle.getSelectionIndex()), (WebServer) managerZiel.getAtIndex(comboZiel.getSelectionIndex()));
 			installThread.start();
 			buttonAction.setEnabled(false);
 		}

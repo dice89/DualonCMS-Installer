@@ -71,6 +71,7 @@ public class CreateWebPointDialog extends Dialog {
 		
 		inputName = new Text(grpCreateNewEndpoint, SWT.BORDER);
 		inputName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		inputName.setText("Local XAMPP Webserver");
 		
 		Label lblDbInformation = new Label(grpCreateNewEndpoint, SWT.NONE);
 		lblDbInformation.setText("DB Information");

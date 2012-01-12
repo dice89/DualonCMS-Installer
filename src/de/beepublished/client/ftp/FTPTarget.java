@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.SocketException;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -68,38 +69,10 @@ public class FTPTarget {
 		assert(this.isConnected());
 		File f = new File(localFilePath);
 		
-		//if(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f)))
-			//System.out.println("File not stored!");
+		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 		
-		OutputStream os = ftpClient.storeFileStream(remoteFilePath);
-		
-		if(os == null){
-			System.out.println("File not saved!");
-			return;
-		}
-		
-		BufferedOutputStream bos = new BufferedOutputStream(os);
-		
-		BufferedInputStream is = new BufferedInputStream(new FileInputStream(f));
-		byte[] buffer = new byte[1024];
-		
-		while(is.read(buffer) != -1){
-			bos.write(buffer);
-		}
-		
-		bos.flush();
-		bos.close();
-		is.close();
-		
-		
-		//System.out.println(ftpClient.sendSiteCommand("CHMOD 777 "+f.getName()));
-		//System.out.println(ftpClient.getReplyString());
-		
-		//System.out.println(localFilePath+" uploaded");
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
-		//throw new RuntimeException("Not yet implemented!");
+		if(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f)))
+			System.out.println("File not stored!");
 	}
 	
 	public void uploadFolder(File localFolder, String remoteFolderPath) throws FileNotFoundException, IOException{

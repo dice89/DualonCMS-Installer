@@ -74,7 +74,7 @@ public class FTPLoginInformationWidget extends Composite {
 		lblUsername.setText("UserName");
 		
 		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputUserName.setText("nobody");
+		inputUserName.setText("newuser");
 		//inputUserName.addVerifyListener(verification);
 		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		

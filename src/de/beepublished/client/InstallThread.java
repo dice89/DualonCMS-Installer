@@ -10,10 +10,10 @@ import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse
 
 public class InstallThread extends Thread implements WebServiceListener {
 	private ProgressFeedback delegate;
-	private FileBackup source;
+	private FileEndPoint source;
 	private WebServer target;
 
-	public InstallThread(ProgressFeedback delegate, FileBackup source,
+	public InstallThread(ProgressFeedback delegate, FileEndPoint source,
 			WebServer target) {
 		super();
 		this.delegate = delegate;
