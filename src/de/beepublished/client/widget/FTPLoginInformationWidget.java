@@ -1,7 +1,5 @@
 package de.beepublished.client.widget;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -10,8 +8,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import de.beepublished.client.ftp.FTPConnectionThread;
 import de.beepublished.client.ftp.FTPLoginInformation;
+import de.beepublished.client.ftp.FTPLoginInformationImpl;
 
 
 public class FTPLoginInformationWidget extends Composite {
@@ -30,7 +28,7 @@ public class FTPLoginInformationWidget extends Composite {
 	private Label lblStatusPort;
 	private Label lblStatusName;
 	
-	private InputVerification verification;
+	//private InputVerification verification;
 	private Label lblDualonRoot;
 	private Text inputRoot;
 
@@ -42,7 +40,7 @@ public class FTPLoginInformationWidget extends Composite {
 	public FTPLoginInformationWidget(Composite parent, int style) {
 		super(parent, style);
 		
-		verification = new InputVerification();
+		//verification = new InputVerification();
 		
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
@@ -55,7 +53,7 @@ public class FTPLoginInformationWidget extends Composite {
 		
 		inputHost = new Text(grpFtpLoginInformation, SWT.BORDER);
 		inputHost.setText("localhost");
-		inputHost.addVerifyListener(verification);
+		//inputHost.addVerifyListener(verification);
 		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		lblStatusHost = new Label(grpFtpLoginInformation, SWT.NONE);
@@ -66,7 +64,7 @@ public class FTPLoginInformationWidget extends Composite {
 		
 		inputPort = new Text(grpFtpLoginInformation, SWT.BORDER);
 		inputPort.setText("21");
-		inputPort.addVerifyListener(verification);
+		//inputPort.addVerifyListener(verification);
 		inputPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		lblStatusPort = new Label(grpFtpLoginInformation, SWT.NONE);
@@ -76,8 +74,8 @@ public class FTPLoginInformationWidget extends Composite {
 		lblUsername.setText("UserName");
 		
 		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputUserName.setText("newuser");
-		inputUserName.addVerifyListener(verification);
+		inputUserName.setText("nobody");
+		//inputUserName.addVerifyListener(verification);
 		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		lblStatusName = new Label(grpFtpLoginInformation, SWT.NONE);
@@ -88,7 +86,7 @@ public class FTPLoginInformationWidget extends Composite {
 		
 		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER);
 		inputPassword.setText("xampp");
-		inputPassword.addVerifyListener(verification);
+		//inputPassword.addVerifyListener(verification);
 		inputPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		lblStatusPw = new Label(grpFtpLoginInformation, SWT.NONE);
@@ -111,6 +109,8 @@ public class FTPLoginInformationWidget extends Composite {
 	}
 
 	public FTPLoginInformation getLoginInformation(){
+		return new FTPLoginInformationImpl(inputHost.getText(), Integer.parseInt(inputPort.getText()), inputUserName.getText(), inputPassword.getText(), inputRoot.getText());
+		/*
 		return new FTPLoginInformation() {
 			
 			@Override
@@ -138,6 +138,7 @@ public class FTPLoginInformationWidget extends Composite {
 				return inputRoot.getText();
 			}
 		};
+		*/
 	}
 	
 	public void setHostAndPortStatus(int newStatus){
@@ -171,15 +172,5 @@ public class FTPLoginInformationWidget extends Composite {
 		lblStatusPw.setText(value);
 		lblStatusName.setText(value);
 	}
-	
-	private class InputVerification implements VerifyListener{
 
-		@Override
-		public void verifyText(VerifyEvent e) {
-			
-			FTPConnectionThread thread = new FTPConnectionThread(FTPLoginInformationWidget.this);
-			thread.start();
-			
-		}
-	}
 }

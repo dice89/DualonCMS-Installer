@@ -2,6 +2,8 @@ package de.beepublished.client.widget;
 import org.eclipse.swt.widgets.Composite;
 
 import de.beepublished.client.db.DBLoginInformation;
+import de.beepublished.client.db.DBLoginInformationImpl;
+
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Group;
@@ -70,6 +72,10 @@ public class DBLoginInformationWidget extends Composite {
 	}
 	
 	public DBLoginInformation getLoginInformation(){
+		
+		return new DBLoginInformationImpl(inputHost.getText(), inputName.getText(), inputUser.getText(), inputPasswort.getText());
+		
+		/*
 		return new DBLoginInformation() {
 			
 			@Override
@@ -95,6 +101,7 @@ public class DBLoginInformationWidget extends Composite {
 				return inputName.getText();
 			}
 		};
+		*/
 	}
 
 }

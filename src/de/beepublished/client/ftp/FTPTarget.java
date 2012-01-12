@@ -1,5 +1,7 @@
 package de.beepublished.client.ftp;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,11 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -68,7 +67,31 @@ public class FTPTarget {
 	public void uploadFile(String localFilePath, String remoteFilePath) throws FileNotFoundException, IOException{	
 		assert(this.isConnected());
 		File f = new File(localFilePath);
-		ftpClient.storeFile(remoteFilePath, new FileInputStream(f));
+		
+		//if(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f)))
+			//System.out.println("File not stored!");
+		
+		OutputStream os = ftpClient.storeFileStream(remoteFilePath);
+		
+		if(os == null){
+			System.out.println("File not saved!");
+			return;
+		}
+		
+		BufferedOutputStream bos = new BufferedOutputStream(os);
+		
+		BufferedInputStream is = new BufferedInputStream(new FileInputStream(f));
+		byte[] buffer = new byte[1024];
+		
+		while(is.read(buffer) != -1){
+			bos.write(buffer);
+		}
+		
+		bos.flush();
+		bos.close();
+		is.close();
+		
+		
 		//System.out.println(ftpClient.sendSiteCommand("CHMOD 777 "+f.getName()));
 		//System.out.println(ftpClient.getReplyString());
 		

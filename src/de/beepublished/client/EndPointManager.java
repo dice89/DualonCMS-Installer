@@ -1,9 +1,9 @@
-package de.beepublished.client.newuiv2;
+package de.beepublished.client;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.beepublished.client.newui.EndPoint;
+import de.beepublished.client.EndPoint;
 
 public class EndPointManager {
 	private List<EndPoint> endPoints;

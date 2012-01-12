@@ -1,4 +1,6 @@
-package de.beepublished.client.newuiv2;
+package de.beepublished.client;
+
+import java.io.File;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -9,8 +11,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Label;
 
-public class BeePublishedClient implements SelectionListener, ValidationFeedback {
+import de.beepublished.client.widget.CreateWebPointDialog;
+
+public class BeePublishedClient implements SelectionListener, ValidationFeedback, ProgressFeedback {
 	
 	public static final String ADDITION_SOURCE = "...existing backup";
 	public static final String ADDITION_TARGET = "...new backup";
@@ -20,6 +25,8 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	private Combo comboQuelle;
 	private Combo comboZiel;
 	private Button buttonAction;
+	private Button buttonAddServer;
+	private Label labelFeedback;
 	
 	// Model
 	private EndPointManager managerQuelle;
@@ -70,17 +77,25 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		grpZiele.setBounds(274, 10, 150, 55);
 		
 		comboQuelle = new Combo(grpQuelle, SWT.NONE);
-		comboQuelle.setBounds(10, 20, 130, 23);
+		comboQuelle.setBounds(10, 10, 130, 23);
 		comboQuelle.addSelectionListener(this);
 		
 		comboZiel = new Combo(grpZiele, SWT.NONE);
-		comboZiel.setBounds(10, 20, 130, 23);
+		comboZiel.setBounds(10, 10, 130, 23);
 		comboZiel.addSelectionListener(this);
 		
 		buttonAction = new Button(shlBeepublishedClient, SWT.NONE);
-		buttonAction.setBounds(166, 23, 102, 31);
+		buttonAction.setBounds(166, 34, 102, 31);
 		buttonAction.setText("...");
 		buttonAction.addSelectionListener(this);
+		
+		buttonAddServer = new Button(shlBeepublishedClient, SWT.NONE);
+		buttonAddServer.setBounds(170, 0, 94, 28);
+		buttonAddServer.setText("add Server");
+		
+		labelFeedback = new Label(shlBeepublishedClient, SWT.NONE);
+		labelFeedback.setBounds(125, 71, 199, 14);
+		buttonAddServer.addSelectionListener(this);
 		
 		// setup Model
 		managerQuelle = new EndPointManager(ADDITION_SOURCE);
@@ -98,16 +113,43 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	public void widgetSelected(SelectionEvent e) {
 		if(e.getSource() instanceof Combo)
 			handleComboBoxSelection(e);
-		else if (e.getSource() instanceof Button)
-			handleButtonSelection(e);
+		else if (e.getSource() instanceof Button){
+			if(e.getSource().equals(buttonAction))
+				handlePerformButton(e);
+			else if(e.getSource().equals(buttonAddServer))
+				handleAddServerButton(e);
+		}
 	}
 
 	@Override
-	public void widgetDefaultSelected(SelectionEvent e) {		
+	public void widgetDefaultSelected(SelectionEvent e) {
 	}
 	
-	private void handleButtonSelection(SelectionEvent e){
-		System.out.println("Button Selection");
+	private void handlePerformButton(SelectionEvent e){
+		System.out.println("Button handlePerformButton");
+		if(buttonAction.getText().equals("Install")){
+			InstallThread installThread = new InstallThread(this, (FileBackup) managerQuelle.getAtIndex(comboQuelle.getSelectionIndex()), (WebServer) managerZiel.getAtIndex(comboZiel.getSelectionIndex()));
+			installThread.start();
+			buttonAction.setEnabled(false);
+		}
+		
+		if(buttonAction.getText().equals("Backup")){
+			BackupThread installThread = new BackupThread(this, (WebServer) managerQuelle.getAtIndex(comboQuelle.getSelectionIndex()), (FileBackup) managerZiel.getAtIndex(comboZiel.getSelectionIndex()));
+			installThread.start();
+			buttonAction.setEnabled(false);
+		}
+	}
+	
+	private void handleAddServerButton(SelectionEvent e){
+		System.out.println("Button handleAddServerButton");
+		CreateWebPointDialog dialog = new CreateWebPointDialog(shlBeepublishedClient, 0);
+		WebServer server = (WebServer) dialog.open();
+		if(server != null){
+			managerQuelle.addEndPoint(server);
+			managerZiel.addEndPoint(server);
+			comboQuelle.setItems(managerQuelle.getForComboBox());
+			comboZiel.setItems(managerZiel.getForComboBox());
+		}
 	}
 	
 	private void handleComboBoxSelection(SelectionEvent e){
@@ -130,7 +172,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	}
 
 	@Override
-	public void setValidationFeedback(int validationStatus) {
+	public void setValidationFeedback(final int validationStatus) {
 		if(validationStatus == ValidationStatus.INVALID){
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
@@ -142,7 +184,10 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					BeePublishedClient.this.changeButton("Valid");
+					if(validationStatus == ValidationStatus.VALID_INSTALL)
+						BeePublishedClient.this.changeButton("Install");
+					else
+						BeePublishedClient.this.changeButton("Backup");
 				}
 			});
 		}
@@ -156,7 +201,13 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 				FileDialog dialog = new FileDialog(shlBeepublishedClient, SWT.OPEN);
 			    dialog.setFilterNames(new String[] { "BeePublished Backup Files"});
 			    dialog.setFilterExtensions(new String[] { "*.bpb.zip"}); // Windows
-			    dialog.open();
+			    String fileName = dialog.open();
+			    if(fileName != null){
+			    	managerQuelle.addEndPoint(new FileBackup(new File(fileName)));
+			    	
+			    	comboQuelle.setItems(managerQuelle.getForComboBox());
+			    	comboQuelle.select(comboQuelle.getItemCount()-2);
+			    }
 			}
 		});
 	}
@@ -170,7 +221,58 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 			    dialog.setFilterNames(new String[] { "BeePublished Backup Files"});
 			    dialog.setFilterExtensions(new String[] { "*.bpb.zip"});
 			    dialog.setFileName("backup.bpb.zip");
-			    dialog.open();
+			    String fileName = dialog.open();
+			    if(fileName != null){
+			    	managerZiel.addEndPoint(new FileBackup(new File(fileName)));
+
+			    	comboZiel.setItems(managerZiel.getForComboBox());
+			    	comboZiel.select(comboZiel.getItemCount()-2);
+			    }
+			}
+		});
+	}
+
+	@Override
+	public void setFeedback(final String newStatus) {
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				labelFeedback.setText(newStatus);
+			}
+		});
+	}
+
+	@Override
+	public void setStarted() {
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				labelFeedback.setText("Started...");
+			}
+		});
+	}
+
+	@Override
+	public void setFinished() {
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				labelFeedback.setText("Success");
+				buttonAction.setEnabled(true);
+			}
+		});
+	}
+
+	@Override
+	public void setFailed() {
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				labelFeedback.setText("Failed!");
+				buttonAction.setEnabled(true);
 			}
 		});
 	}

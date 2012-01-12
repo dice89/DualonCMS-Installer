@@ -1,4 +1,4 @@
-package de.beepublished.client.newuiv2;
+package de.beepublished.client;
 
 public class ValidationStatus {
 	public static final int VALID_INSTALL = 1;

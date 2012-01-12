@@ -1,27 +1,21 @@
-package de.beepublished.client.newui;
+package de.beepublished.client.widget;
 
-import javax.swing.text.Style;
-
-import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridData;
-
-import de.beepublished.client.db.DBLoginInformation;
-import de.beepublished.client.ftp.FTPLoginInformation;
-import de.beepublished.client.widget.DBLoginInformationWidget;
-import de.beepublished.client.widget.FTPLoginInformationWidget;
-import de.beepublished.client.widget.WebPageInformation;
-import de.beepublished.client.widget.WebpageInformationWidget;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+import de.beepublished.client.EndPointType;
+import de.beepublished.client.WebServer;
 
 public class CreateWebPointDialog extends Dialog {
 
@@ -92,39 +86,23 @@ public class CreateWebPointDialog extends Dialog {
 		lblWebpageInformation.setText("Webpage Information");
 		
 		final WebpageInformationWidget webpageInformationWidget = new WebpageInformationWidget(grpCreateNewEndpoint, SWT.NONE);
-		new Label(grpCreateNewEndpoint, SWT.NONE);
+		
+		Button btnClose = new Button(grpCreateNewEndpoint, SWT.NONE);
+		btnClose.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				result = null;
+				CreateWebPointDialog.this.shell.dispose();
+			}
+		});
+		btnClose.setText("close");
 		
 		Button btnNewButton = new Button(grpCreateNewEndpoint, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				result = new WebEndPoint() {
-					
-					@Override
-					public String getType() {
-						return "WebServer";
-					}
-					
-					@Override
-					public String getName() {
-						return inputName.getText();
-					}
-					
-					@Override
-					public WebPageInformation getPageInformation() {
-						return webpageInformationWidget.getPageInformation();
-					}
-					
-					@Override
-					public FTPLoginInformation getFtpInformation() {
-						return loginInformationWidget_1.getLoginInformation();
-					}
-					
-					@Override
-					public DBLoginInformation getDbInformation() {
-						return loginInformationWidget.getLoginInformation();
-					}
-				};
+				result = new WebServer(inputName.getText(), EndPointType.WEBSERVER, loginInformationWidget_1.getLoginInformation(), loginInformationWidget.getLoginInformation(),webpageInformationWidget.getPageInformation());
+				CreateWebPointDialog.this.shell.dispose();
 			}
 		});
 		GridData gd_btnNewButton = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);

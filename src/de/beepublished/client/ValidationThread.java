@@ -1,6 +1,6 @@
-package de.beepublished.client.newuiv2;
+package de.beepublished.client;
 
-import de.beepublished.client.newui.EndPoint;
+import de.beepublished.client.EndPoint;
 
 public class ValidationThread extends Thread {
 	private ValidationFeedback target;
@@ -31,7 +31,13 @@ public class ValidationThread extends Thread {
 		try{
 			EndPoint sourceEndPoint = managerSource.getAtIndex(indexSource);
 			EndPoint targetEndPoint = managerTarget.getAtIndex(indexTarget);
-			target.setValidationFeedback(ValidationStatus.VALID_INSTALL);
+			
+			if(sourceEndPoint instanceof FileBackup && targetEndPoint instanceof WebServer)
+				target.setValidationFeedback(ValidationStatus.VALID_INSTALL);
+			else if(sourceEndPoint instanceof WebServer && targetEndPoint instanceof FileBackup)
+				target.setValidationFeedback(ValidationStatus.VALID_BACKUP);
+			else
+				target.setValidationFeedback(ValidationStatus.INVALID);
 		} catch (Exception e) {
 			target.setValidationFeedback(ValidationStatus.INVALID);
 		}

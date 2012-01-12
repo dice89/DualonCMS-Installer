@@ -11,26 +11,21 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 
 import de.beepublished.client.db.DBLoginInformation;
-import de.beepublished.client.exceptions.ZipVocationException;
 import de.beepublished.client.ftp.FTPLoginInformation;
 import de.beepublished.client.ftp.FTPTarget;
 import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload;
-import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload_response;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Backup;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Backup_response;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Installation;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Installation_response;
 import de.beepublished.client.http.webservice.interfaces.BackupUpLoadListener;
-import de.beepublished.client.http.webservice.interfaces.OfflineModDownloadListener;
-import de.beepublished.client.http.webservice.interfaces.OfflineModUploadListener;
 import de.beepublished.client.http.webservice.interfaces.RestWebServiceListener;
 import de.beepublished.client.http.webservice.services.ResponseListener;
 import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
 import de.beepublished.client.http.webservice.services.ServiceHandler;
 import de.beepublished.client.http.webservice.services.ServiceResponse;
-import de.beepublished.client.widget.WebPageInformation;
-import de.beepublished.client.zip.ZipEngine;
+import de.beepublished.client.pageInformation.WebPageInformation;
 
 
 
@@ -242,7 +237,7 @@ public class WebManager {
 		FTPTarget target = new FTPTarget(ftpLogin);
 		try{
 			//unzip
-			ZipEngine.unzip(zip, "backup/tmp");
+			//ZipEngine.unzip(zip, "backup/tmp");
 			//upload
 			target.connect();
 			target.login();
@@ -273,15 +268,15 @@ public class WebManager {
 	 * @param lcl_url
 	 */
 	public static void downloadtoWorkOffline(String pathfromFTProot, String remote_dbPw, String remote_dbUser, String remote_homeURL, String xammp_path, String lcl_homeUrl, String lcl_dBHost, String lcl_dBName, String lcl_dBPw, String lcl_dBLogin, String lcl_url ){
-		WebManager wmanager = getWebManager();
-		wmanager.backupCMS(new OfflineModDownloadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null,null);
+		//WebManager wmanager = getWebManager();
+		//wmanager.backupCMS(new OfflineModDownloadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null,null);
 	}
 	
 	public static void uploadOfflineMode(String pathfromFTProot, String remote_dbPw, String remote_dbUser, String remote_homeURL, String xammp_path, String lcl_homeUrl, String lcl_dBHost, String lcl_dBName, String lcl_dBPw, String lcl_dBLogin, String lcl_url ){
-		WebManager wmanager = getWebManager();
+		//WebManager wmanager = getWebManager();
 	
 		//wmanager.installCMS(homeUrl,dBHost, dBName, dBPw, dBLogin, homeUrl+"/services/installation/",new BackupUpLoadListener());
-		wmanager.backupCMS(new OfflineModUploadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null, null);
+		//wmanager.backupCMS(new OfflineModUploadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null, null);
 	}
 	
 	/** Deletes a Dir and all underlaying structures
@@ -341,6 +336,7 @@ public class WebManager {
 		
 		return httpClient;
 	}
+	/*
 private static FTPLoginInformation login = new FTPLoginInformation() {
 		
 		@Override
@@ -363,5 +359,6 @@ private static FTPLoginInformation login = new FTPLoginInformation() {
 			return "web200.mis08.de";
 		}
 	};
+	*/
 }
 

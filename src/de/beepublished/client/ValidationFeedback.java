@@ -1,4 +1,4 @@
-package de.beepublished.client.newuiv2;
+package de.beepublished.client;
 
 public interface ValidationFeedback {
 	public void setValidationFeedback(int status);
