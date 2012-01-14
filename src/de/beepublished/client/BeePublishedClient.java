@@ -135,7 +135,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		managerQuelle = new EndPointManager(ADDITION_SOURCE);
 		managerZiel = new EndPointManager(ADDITION_TARGET);
 		
-		managerQuelle.addEndPoint(new HostedBackup());
+		//managerQuelle.addEndPoint(new HostedBackup());
 		
 		setup();
 	}
