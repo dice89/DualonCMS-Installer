@@ -1,15 +1,12 @@
 package de.beepublished.client;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import de.beepublished.client.exceptions.ZipVocationException;
 import de.beepublished.client.zip.ZipEngine;
 
 public class HostedBackup implements FileEndPoint {
@@ -51,11 +48,8 @@ public class HostedBackup implements FileEndPoint {
 			f.delete();
 			f.mkdir();
 			
-			
 			URLConnection con = new URL("http://localhost/archive.zip").openConnection();
 			System.out.println(con.getContentType());
-			
-			
 			
 			InputStream in = con.getInputStream();
 			this.backupFile = new File(f.getAbsolutePath()+"/installation.zip");
@@ -66,14 +60,10 @@ public class HostedBackup implements FileEndPoint {
 			}
 			bout.flush();
 			bout.close();
-		
-		// setup temp directory
-
-			
+					
 			File extracted = File.createTempFile("tmp_installation", "");
 			extracted.delete();
 			extracted.mkdir();
-			
 			
 			ZipEngine.unzip(backupFile, extracted);
 			
@@ -82,14 +72,9 @@ public class HostedBackup implements FileEndPoint {
 			
 			assert(filesRoot.isDirectory());
 			assert(dbFile.isFile());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ZipVocationException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }

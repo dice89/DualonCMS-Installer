@@ -23,7 +23,6 @@ public class ValidationThread extends Thread {
 
 	@Override
 	public void run() {
-		super.run();
 		System.out.println("validate input...");
 		
 		resolveUnresolved();

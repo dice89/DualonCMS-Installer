@@ -14,6 +14,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 
 import de.beepublished.client.widget.CreateWebPointDialog;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.events.SelectionAdapter;
 
 public class BeePublishedClient implements SelectionListener, ValidationFeedback, ProgressFeedback {
 	
@@ -25,7 +32,6 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	private Combo comboQuelle;
 	private Combo comboZiel;
 	private Button buttonAction;
-	private Button buttonAddServer;
 	private Label labelFeedback;
 	
 	// Model
@@ -65,37 +71,65 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	 */
 	protected void createContents() {
 		shlBeepublishedClient = new Shell();
-		shlBeepublishedClient.setSize(450, 110);
+		shlBeepublishedClient.setSize(450, 130);
 		shlBeepublishedClient.setText("BeePublished - Client");
+		shlBeepublishedClient.setLayout(new FormLayout());
 		
 		Group grpQuelle = new Group(shlBeepublishedClient, SWT.NONE);
+		FormData fd_grpQuelle = new FormData();
+		fd_grpQuelle.bottom = new FormAttachment(0, 51);
+		fd_grpQuelle.right = new FormAttachment(0, 160);
+		fd_grpQuelle.top = new FormAttachment(0, 10);
+		fd_grpQuelle.left = new FormAttachment(0, 10);
+		grpQuelle.setLayoutData(fd_grpQuelle);
 		grpQuelle.setText("Quelle");
-		grpQuelle.setBounds(10, 10, 150, 55);
 		
 		Group grpZiele = new Group(shlBeepublishedClient, SWT.NONE);
+		FormData fd_grpZiele = new FormData();
+		fd_grpZiele.bottom = new FormAttachment(0, 51);
+		fd_grpZiele.right = new FormAttachment(0, 424);
+		fd_grpZiele.top = new FormAttachment(0, 10);
+		fd_grpZiele.left = new FormAttachment(0, 274);
+		grpZiele.setLayoutData(fd_grpZiele);
 		grpZiele.setText("Ziele");
-		grpZiele.setBounds(274, 10, 150, 55);
+		grpQuelle.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		comboQuelle = new Combo(grpQuelle, SWT.NONE);
-		comboQuelle.setBounds(10, 10, 130, 23);
 		comboQuelle.addSelectionListener(this);
+		grpZiele.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		comboZiel = new Combo(grpZiele, SWT.NONE);
-		comboZiel.setBounds(10, 10, 130, 23);
 		comboZiel.addSelectionListener(this);
 		
 		buttonAction = new Button(shlBeepublishedClient, SWT.NONE);
-		buttonAction.setBounds(166, 34, 102, 31);
+		FormData fd_buttonAction = new FormData();
+		fd_buttonAction.bottom = new FormAttachment(grpQuelle, 0, SWT.BOTTOM);
+		fd_buttonAction.right = new FormAttachment(grpZiele, -6);
+		fd_buttonAction.top = new FormAttachment(0, 20);
+		fd_buttonAction.left = new FormAttachment(0, 166);
+		buttonAction.setLayoutData(fd_buttonAction);
 		buttonAction.setText("...");
 		buttonAction.addSelectionListener(this);
 		
-		buttonAddServer = new Button(shlBeepublishedClient, SWT.NONE);
-		buttonAddServer.setBounds(170, 0, 94, 28);
-		buttonAddServer.setText("add Server");
+		labelFeedback = new Label(shlBeepublishedClient, SWT.CENTER);
+		FormData fd_labelFeedback = new FormData();
+		fd_labelFeedback.top = new FormAttachment(grpQuelle, 6);
+		fd_labelFeedback.left = new FormAttachment(0, 117);
+		fd_labelFeedback.right = new FormAttachment(100, -118);
+		fd_labelFeedback.bottom = new FormAttachment(0, 71);
+		labelFeedback.setLayoutData(fd_labelFeedback);
 		
-		labelFeedback = new Label(shlBeepublishedClient, SWT.NONE);
-		labelFeedback.setBounds(125, 71, 199, 14);
-		buttonAddServer.addSelectionListener(this);
+		Menu menu = new Menu(shlBeepublishedClient, SWT.BAR);
+		shlBeepublishedClient.setMenuBar(menu);
+		
+		MenuItem mntmAddServer = new MenuItem(menu, SWT.NONE);
+		mntmAddServer.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleAddServerButton(e);
+			}
+		});
+		mntmAddServer.setText("add Server");
 		
 		// setup Model
 		managerQuelle = new EndPointManager(ADDITION_SOURCE);
@@ -116,10 +150,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		if(e.getSource() instanceof Combo)
 			handleComboBoxSelection(e);
 		else if (e.getSource() instanceof Button){
-			if(e.getSource().equals(buttonAction))
-				handlePerformButton(e);
-			else if(e.getSource().equals(buttonAddServer))
-				handleAddServerButton(e);
+			handlePerformButton(e);
 		}
 	}
 

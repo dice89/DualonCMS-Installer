@@ -13,9 +13,7 @@ public class InstallThread extends Thread implements WebServiceListener {
 	private FileEndPoint source;
 	private WebServer target;
 
-	public InstallThread(ProgressFeedback delegate, FileEndPoint source,
-			WebServer target) {
-		super();
+	public InstallThread(ProgressFeedback delegate, FileEndPoint source, WebServer target) {
 		this.delegate = delegate;
 		this.source = source;
 		this.target = target;
@@ -23,8 +21,6 @@ public class InstallThread extends Thread implements WebServiceListener {
 
 	@Override
 	public void run() {
-		super.run();
-		
 		try {
 			delegate.setStarted();
 
@@ -45,7 +41,6 @@ public class InstallThread extends Thread implements WebServiceListener {
 			
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);
 		} catch (Exception ex) {
-			// TODO: handle exception
 			ex.printStackTrace();
 			delegate.setFailed();
 		}

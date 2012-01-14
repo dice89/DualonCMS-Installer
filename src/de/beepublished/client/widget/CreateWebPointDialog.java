@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import de.beepublished.client.EndPointType;
 import de.beepublished.client.WebServer;
 
 public class CreateWebPointDialog extends Dialog {
@@ -72,21 +71,18 @@ public class CreateWebPointDialog extends Dialog {
 		inputName = new Text(grpCreateNewEndpoint, SWT.BORDER);
 		inputName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		inputName.setText("Local XAMPP Webserver");
-		
-		Label lblDbInformation = new Label(grpCreateNewEndpoint, SWT.NONE);
-		lblDbInformation.setText("DB Information");
+		new Label(grpCreateNewEndpoint, SWT.NONE);
 		
 		final DBLoginInformationWidget loginInformationWidget = new DBLoginInformationWidget(grpCreateNewEndpoint, SWT.NONE);
-		
-		Label lblFtpInformation = new Label(grpCreateNewEndpoint, SWT.NONE);
-		lblFtpInformation.setText("FTP Information");
+		loginInformationWidget.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		new Label(grpCreateNewEndpoint, SWT.NONE);
 		
 		final FTPLoginInformationWidget loginInformationWidget_1 = new FTPLoginInformationWidget(grpCreateNewEndpoint, SWT.NONE);
-		
-		Label lblWebpageInformation = new Label(grpCreateNewEndpoint, SWT.NONE);
-		lblWebpageInformation.setText("Webpage Information");
+		loginInformationWidget_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		new Label(grpCreateNewEndpoint, SWT.NONE);
 		
 		final WebpageInformationWidget webpageInformationWidget = new WebpageInformationWidget(grpCreateNewEndpoint, SWT.NONE);
+		webpageInformationWidget.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		Button btnClose = new Button(grpCreateNewEndpoint, SWT.NONE);
 		btnClose.addSelectionListener(new SelectionAdapter() {
@@ -102,7 +98,7 @@ public class CreateWebPointDialog extends Dialog {
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				result = new WebServer(inputName.getText(), EndPointType.WEBSERVER, loginInformationWidget_1.getLoginInformation(), loginInformationWidget.getLoginInformation(),webpageInformationWidget.getPageInformation());
+				result = new WebServer(inputName.getText(), loginInformationWidget_1.getLoginInformation(), loginInformationWidget.getLoginInformation(),webpageInformationWidget.getPageInformation());
 				CreateWebPointDialog.this.shell.dispose();
 			}
 		});

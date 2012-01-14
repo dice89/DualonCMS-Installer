@@ -8,16 +8,14 @@ import de.beepublished.client.pageInformation.WebPageInformation;
 public class WebServer implements WebEndPoint {
 
 	private String name;
-	private int type;
 	private FTPLoginInformation ftpInfo;
 	private DBLoginInformation dbInfo;
 	private WebPageInformation pageInfo;
 	
-	public WebServer(String name, int type, FTPLoginInformation ftpInfo,
+	public WebServer(String name, FTPLoginInformation ftpInfo,
 			DBLoginInformation dbInfo, WebPageInformation pageInfo) {
 		super();
 		this.name = name;
-		this.type = type;
 		this.ftpInfo = ftpInfo;
 		this.dbInfo = dbInfo;
 		this.pageInfo = pageInfo;

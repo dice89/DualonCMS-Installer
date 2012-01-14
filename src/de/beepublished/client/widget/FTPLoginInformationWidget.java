@@ -23,11 +23,6 @@ public class FTPLoginInformationWidget extends Composite {
 	private Text inputPort;
 	private Text inputUserName;
 	
-	private Label lblStatusHost;
-	private Label lblStatusPw;
-	private Label lblStatusPort;
-	private Label lblStatusName;
-	
 	//private InputVerification verification;
 	private Label lblDualonRoot;
 	private Text inputRoot;
@@ -46,7 +41,7 @@ public class FTPLoginInformationWidget extends Composite {
 		
 		Group grpFtpLoginInformation = new Group(this, SWT.NONE);
 		grpFtpLoginInformation.setText("FTP Login Information");
-		grpFtpLoginInformation.setLayout(new GridLayout(3, false));
+		grpFtpLoginInformation.setLayout(new GridLayout(2, false));
 		
 		Label lblHost = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblHost.setText("Host");
@@ -56,9 +51,6 @@ public class FTPLoginInformationWidget extends Composite {
 		//inputHost.addVerifyListener(verification);
 		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblStatusHost = new Label(grpFtpLoginInformation, SWT.NONE);
-		lblStatusHost.setText("?");
-		
 		Label lblPort = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblPort.setText("Port");
 		
@@ -66,9 +58,6 @@ public class FTPLoginInformationWidget extends Composite {
 		inputPort.setText("21");
 		//inputPort.addVerifyListener(verification);
 		inputPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		lblStatusPort = new Label(grpFtpLoginInformation, SWT.NONE);
-		lblStatusPort.setText("?");
 		
 		Label lblUsername = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblUsername.setText("UserName");
@@ -78,9 +67,6 @@ public class FTPLoginInformationWidget extends Composite {
 		//inputUserName.addVerifyListener(verification);
 		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblStatusName = new Label(grpFtpLoginInformation, SWT.NONE);
-		lblStatusName.setText("?");
-		
 		Label lblPassword = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblPassword.setText("Password");
 		
@@ -89,9 +75,6 @@ public class FTPLoginInformationWidget extends Composite {
 		//inputPassword.addVerifyListener(verification);
 		inputPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		lblStatusPw = new Label(grpFtpLoginInformation, SWT.NONE);
-		lblStatusPw.setText("?");
-		
 		lblDualonRoot = new Label(grpFtpLoginInformation, SWT.NONE);
 		lblDualonRoot.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDualonRoot.setText("Dualon Root");
@@ -99,7 +82,6 @@ public class FTPLoginInformationWidget extends Composite {
 		inputRoot = new Text(grpFtpLoginInformation, SWT.BORDER);
 		inputRoot.setText("dualon-cms");
 		inputRoot.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		new Label(grpFtpLoginInformation, SWT.NONE);
 
 	}
 
@@ -110,67 +92,7 @@ public class FTPLoginInformationWidget extends Composite {
 
 	public FTPLoginInformation getLoginInformation(){
 		return new FTPLoginInformationImpl(inputHost.getText(), Integer.parseInt(inputPort.getText()), inputUserName.getText(), inputPassword.getText(), inputRoot.getText());
-		/*
-		return new FTPLoginInformation() {
-			
-			@Override
-			public String getUserName() {
-				return inputUserName.getText();
-			}
-			
-			@Override
-			public int getPort() {
-				return Integer.parseInt(inputPort.getText());
-			}
-			
-			@Override
-			public String getPassword() {
-				return inputPassword.getText();
-			}
-			
-			@Override
-			public String getHost() {
-				return inputHost.getText();
-			}
-			
-			@Override
-			public String getFtpUploadRoot() {
-				return inputRoot.getText();
-			}
-		};
-		*/
-	}
-	
-	public void setHostAndPortStatus(int newStatus){
-		String value = "";
-		switch (newStatus) {
-			case STATUS_UNKNOWN:
-				value = "?";
-				break;
-			case STATUS_RIGHT:
-				value = "OK";
-				break;
-			case STATUS_WRONG:
-				value = "X";
-		}
-		lblStatusHost.setText(value);
-		lblStatusPort.setText(value);
-	}
-	
-	public void setUserAndPwStatus(int newStatus){
-		String value = "";
-		switch (newStatus) {
-			case STATUS_UNKNOWN:
-				value = "?";
-				break;
-			case STATUS_RIGHT:
-				value = "OK";
-				break;
-			case STATUS_WRONG:
-				value = "X";
-		}
-		lblStatusPw.setText(value);
-		lblStatusName.setText(value);
+
 	}
 
 }

@@ -15,8 +15,6 @@ public class FileBackup implements FileEndPoint {
 	public FileBackup(File backupFile) {
 		super();
 		this.backupFile = backupFile;
-		//filesRoot = new File(backupFile.getAbsolutePath()+"/files/");
-		//dbFile = new File(backupFile.getAbsolutePath()+"/db/cake.sql");
 	}
 
 	@Override
@@ -46,13 +44,11 @@ public class FileBackup implements FileEndPoint {
 
 	@Override
 	public void process() {
-		File extracted;
-		// setup temp directory
 		try {
-			extracted = File.createTempFile("tmp_installation", "");
+			// setup temp directory
+			File extracted = File.createTempFile("tmp_installation", "");
 			extracted.delete();
 			extracted.mkdir();
-			
 			
 			ZipEngine.unzip(backupFile, extracted);
 			
@@ -62,10 +58,8 @@ public class FileBackup implements FileEndPoint {
 			assert(filesRoot.isDirectory());
 			assert(dbFile.isFile());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ZipVocationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
