@@ -37,11 +37,11 @@ public class BackupThread extends Thread implements WebServiceListener{
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
 		try {
 			File f = response.getFile();
-			
+
+			delegate.setFeedback("connect to ftp...");
 			FTPTarget ftpTarget = new FTPTarget(source.getFtpInformation());
 			ftpTarget.connect();
 			ftpTarget.login();
-			System.out.println("Start to download files");
 			
 			// pack files together
 			File result = File.createTempFile("tmp_backup", "");
@@ -53,23 +53,19 @@ public class BackupThread extends Thread implements WebServiceListener{
 			
 			File dbFolder = new File(result.getAbsolutePath()+"/db/");
 			dbFolder.mkdirs();
-			
+
+			delegate.setFeedback("download from ftp...");
 			ftpTarget.downloadFTP(fileFolder,source.getFtpInformation().getFtpUploadRoot());
 			ftpTarget.logout();
 			ftpTarget.disconnect();
 			
+			delegate.setFeedback("processing download...");
 			copyFolder(f, new File(dbFolder.getAbsolutePath()+"/cake.sql"));
-			
-			System.out.println("Start to create zip");
-			
-			File finishedZip = ZipEngine.zip(result, target.getBackupFile());
-			
-			System.out.println("----------------------------------------");
-			System.out.println("Backup finished: " + finishedZip.getAbsolutePath());
-			System.out.println("----------------------------------------");
-			
+
+			delegate.setFeedback("creating backup...");
+			ZipEngine.zip(result, target.getBackupFile());
+						
 			delegate.setFinished();
-			
 		} catch (Exception e) {
 			delegate.setFailed();
 		}
@@ -78,30 +74,26 @@ public class BackupThread extends Thread implements WebServiceListener{
 
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("should not happen :D");
 	}
 
 	@Override
 	public void onRestInstallationSuccess(
 			REST_CMS_Installation_response response) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("should not happen :D");
 	}
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("should not happen :D");
 	}
 
 	@Override
 	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
 		try {
-			delegate.setFeedback("downloading db file...");
+			delegate.setFeedback("downloading db...");
 			WebManager.getWebManager().downloadFile("", File.createTempFile("temp", ".sql").getAbsolutePath(), response.getSqlurl(), this);
 		} catch (IOException e) {
-			delegate.setFeedback("Backup failed!");
 			delegate.setFailed();
 			e.printStackTrace();
 		}
@@ -109,7 +101,6 @@ public class BackupThread extends Thread implements WebServiceListener{
 
 	@Override
 	public void onRestBackupFailed(ServiceException e) {
-		delegate.setFeedback("Backup failed!");
 		delegate.setFailed();
 	}
 	

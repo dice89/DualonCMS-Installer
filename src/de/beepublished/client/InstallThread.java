@@ -23,20 +23,21 @@ public class InstallThread extends Thread implements WebServiceListener {
 	public void run() {
 		try {
 			delegate.setStarted();
+			
+			delegate.setFeedback("unzip...");
+			source.process();
 
-			System.out.println("Start to upload Files");
+			delegate.setFeedback("connect to ftp...");
 			FTPTarget ftpTarget = new FTPTarget(target.getFtpInformation());
 			ftpTarget.connect();
 			ftpTarget.login();
-			delegate.setFeedback("unzip...");
-			source.process();
+			
 			delegate.setFeedback("upload files...");
 			ftpTarget.uploadFolder(source.getFiles(),target.getFtpInformation().getFtpUploadRoot());
 			delegate.setFeedback("upload db...");
 			ftpTarget.uploadFile(source.getSQLDump().getAbsolutePath(), "services/installation/cake.sql");
 			ftpTarget.logout();
 			ftpTarget.disconnect();
-			System.out.println("Start to install CMS");
 			delegate.setFeedback("install cms...");
 			
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);
@@ -44,18 +45,6 @@ public class InstallThread extends Thread implements WebServiceListener {
 			ex.printStackTrace();
 			delegate.setFailed();
 		}
-	}
-
-	@Override
-	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onRestZipDownloadFailed(ServiceException e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -71,16 +60,22 @@ public class InstallThread extends Thread implements WebServiceListener {
 
 	@Override
 	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("should not happen :D");
 	}
 
 	@Override
 	public void onRestBackupFailed(ServiceException e) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("should not happen :D");
 	}
 	
-	
+	@Override
+	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
+		throw new RuntimeException("should not happen :D");
+	}
+
+	@Override
+	public void onRestZipDownloadFailed(ServiceException e) {
+		throw new RuntimeException("should not happen :D");
+	}
 	
 }

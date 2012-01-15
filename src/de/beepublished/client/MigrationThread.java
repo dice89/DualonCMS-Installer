@@ -44,10 +44,11 @@ public class MigrationThread extends Thread implements WebServiceListener{
 		try {
 			File f = response.getFile();
 			
+
+			delegate.setFeedback("connect to ftp...");
 			FTPTarget ftpTarget = new FTPTarget(source.getFtpInformation());
 			ftpTarget.connect();
 			ftpTarget.login();
-			System.out.println("Start to download files");
 			
 			// pack files together
 			File result = File.createTempFile("tmp_backup", "");
@@ -60,33 +61,41 @@ public class MigrationThread extends Thread implements WebServiceListener{
 			File dbFolder = new File(result.getAbsolutePath()+"/db/");
 			dbFolder.mkdirs();
 			
+			delegate.setFeedback("download from ftp...");
 			ftpTarget.downloadFTP(fileFolder,source.getFtpInformation().getFtpUploadRoot());
 			ftpTarget.logout();
 			ftpTarget.disconnect();
 			
+			delegate.setFeedback("processing download...");
 			copyFolder(f, new File(dbFolder.getAbsolutePath()+"/cake.sql"));
 			
 			System.out.println("Start to create zip");
 			
 			temp = File.createTempFile("tmp_file_", ".zip");
 			
+
+			delegate.setFeedback("creating backup...");
 			File finishedZip = ZipEngine.zip(result, temp);
 			tempBackup = new FileBackup(finishedZip);
 			
 			// backup finished, start installation!
+
+			delegate.setFeedback("unzip...");
+			tempBackup.process();
 			
+
+			delegate.setFeedback("connect to ftp...");
 			FTPTarget ftpTargetZiel = new FTPTarget(target.getFtpInformation());
 			ftpTarget.connect();
 			ftpTarget.login();
-			delegate.setFeedback("unzip...");
-			tempBackup.process();
+			
 			delegate.setFeedback("upload files...");
 			ftpTarget.uploadFolder(tempBackup.getFiles(),target.getFtpInformation().getFtpUploadRoot());
+			
 			delegate.setFeedback("upload db...");
 			ftpTarget.uploadFile(tempBackup.getSQLDump().getAbsolutePath(), "services/installation/cake.sql");
 			ftpTarget.logout();
 			ftpTarget.disconnect();
-			System.out.println("Start to install CMS");
 			delegate.setFeedback("install cms...");
 			
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);
@@ -99,8 +108,7 @@ public class MigrationThread extends Thread implements WebServiceListener{
 
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("should not happen :D");
 	}
 
 	@Override
@@ -110,16 +118,16 @@ public class MigrationThread extends Thread implements WebServiceListener{
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
+		delegate.setFailed();
 	}
 
 	@Override
 	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
 		// (2) //
 		try {
-			delegate.setFeedback("downloading db file...");
+			delegate.setFeedback("downloading db...");
 			WebManager.getWebManager().downloadFile("", File.createTempFile("temp", ".sql").getAbsolutePath(), response.getSqlurl(), this);
 		} catch (IOException e) {
-			delegate.setFeedback("Backup failed!");
 			delegate.setFailed();
 			e.printStackTrace();
 		}
@@ -127,8 +135,7 @@ public class MigrationThread extends Thread implements WebServiceListener{
 
 	@Override
 	public void onRestBackupFailed(ServiceException e) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("should not happen :D");
 	}
 	
 	public static void copyFolder(File src, File dest) throws IOException{
