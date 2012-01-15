@@ -171,6 +171,12 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 			installThread.start();
 			buttonAction.setEnabled(false);
 		}
+		
+		if(buttonAction.getText().equals("Migrate")){
+			MigrationThread migrateThread = new MigrationThread(this, (WebServer) managerQuelle.getAtIndex(comboQuelle.getSelectionIndex()), (WebServer) managerZiel.getAtIndex(comboZiel.getSelectionIndex()));
+			migrateThread.start();
+			buttonAction.setEnabled(false);
+		}
 	}
 	
 	private void handleAddServerButton(SelectionEvent e){
@@ -219,8 +225,10 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 				public void run() {
 					if(validationStatus == ValidationStatus.VALID_INSTALL)
 						BeePublishedClient.this.changeButton("Install");
-					else
+					else if(validationStatus == ValidationStatus.VALID_BACKUP)
 						BeePublishedClient.this.changeButton("Backup");
+					else if(validationStatus == ValidationStatus.VALID_MIGRATION)
+						BeePublishedClient.this.changeButton("Migrate");
 				}
 			});
 		}

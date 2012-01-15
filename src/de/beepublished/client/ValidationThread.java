@@ -35,6 +35,8 @@ public class ValidationThread extends Thread {
 				target.setValidationFeedback(ValidationStatus.VALID_INSTALL);
 			else if(sourceEndPoint instanceof WebServer && targetEndPoint instanceof FileBackup)
 				target.setValidationFeedback(ValidationStatus.VALID_BACKUP);
+			else if(sourceEndPoint instanceof WebServer && targetEndPoint instanceof WebServer)
+				target.setValidationFeedback(ValidationStatus.VALID_MIGRATION);
 			else
 				target.setValidationFeedback(ValidationStatus.INVALID);
 		} catch (Exception e) {
