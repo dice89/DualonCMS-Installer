@@ -14,6 +14,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import de.beepublished.client.db.DBLoginInformation;
 import de.beepublished.client.exceptions.ZipVocationException;
 import de.beepublished.client.ftp.FTPLoginInformation;
 import de.beepublished.client.ftp.FTPTarget;
@@ -24,6 +25,7 @@ import de.beepublished.client.http.webservice.management.WebManager;
 import de.beepublished.client.http.webservice.management.WebServiceListener;
 import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
+import de.beepublished.client.widget.WebPageInformation;
 import de.beepublished.client.zip.ZipEngine;
 
 
@@ -69,7 +71,7 @@ public class RestWebServiceListener implements WebServiceListener {
 		try{
 			target.connect();
 			target.login();
-			target.uploadFolder(new File(extractTo+""), "/html/dualon");
+			target.uploadFolder(new File(extractTo+""), login.getFtpUploadRoot());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,7 +79,7 @@ public class RestWebServiceListener implements WebServiceListener {
 		//Cleanup the mess
 		WebManager.cleanupdir("tmp");
 		WebManager wmanager = WebManager.getWebManager();
-		wmanager.installCMS(null,null, this);
+		wmanager.installCMS(localDbLogin,pageInformation, this);
 	}
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
@@ -102,11 +104,11 @@ public class RestWebServiceListener implements WebServiceListener {
 		System.out.println("Fail");
 	}
 	
-	private static FTPLoginInformation login = new FTPLoginInformation() {
+private static FTPLoginInformation login = new FTPLoginInformation() {
 		
 		@Override
 		public String getUserName() {
-			return "web200";
+			return "newuser";
 		}
 		
 		@Override
@@ -116,12 +118,48 @@ public class RestWebServiceListener implements WebServiceListener {
 		
 		@Override
 		public String getPassword() {
-			return "PdNO4FNM";
+			return "wampp";
 		}
 		
 		@Override
 		public String getHost() {
-			return "web200.mis08.de";
+			return "localhost";
+		}
+
+		@Override
+		public String getFtpUploadRoot() {
+			return "/testinstallation";
 		}
 	};
+	DBLoginInformation localDbLogin = new DBLoginInformation() {
+		
+		@Override
+		public String getUserName() {
+			return "root";
+		}
+		
+		@Override
+		public String getPassword() {
+			return "";
+		}
+		
+		@Override
+		public String getHost() {
+			return "localhost";
+		}
+		
+		@Override
+		public String getDBName() {
+			return "cake2";
+		}
+	};
+	WebPageInformation pageInformation = new WebPageInformation() {
+		
+		@Override
+		public String getPageRoot() {
+			
+			return "http://localhost/DualonCMS";
+		}
+	};
+	
 }

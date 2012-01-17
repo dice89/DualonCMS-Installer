@@ -179,11 +179,18 @@ public class WebManager {
 			
 			@Override
 			public String getDBName() {
-				return "dualon-cms";
+				return "cake";
 			}
 		};
 		
-		
+		WebPageInformation pageInformation = new WebPageInformation() {
+			
+			@Override
+			public String getPageRoot() {
+				
+				return "http://localhost/DualonCMS";
+			}
+		};
 		//nach jedem Service sollte ein cleanup dir von tmp durchgeführt werden
 		
 		
@@ -213,17 +220,22 @@ public class WebManager {
 		 //String lcl_url;
 		 FTPLoginInformation login; //the ftp login which is used
 		
+		 
+		 
 		
 		//cleanupdir("tmp");
 		
 		WebManager wmanager = getWebManager();
 
-		wmanager.downloadZIPFile("http://www.ms-mediagroup.de/archive.zip",  new RestWebServiceListener());
+		wmanager.downloadZIPFile("http://localhost/Zip/archive.zip",  new RestWebServiceListener());
 		//wmanager.installCMS("www.ms-mediagroup.de/Dualon/DualonCMS","mysql5.concept2designs.de", "db115933_10", "cms1", "db115933_10", "http://www.ms-mediagroup.de/Dualon/DualonCMS/services/installation/",new RestWebServiceListener());
 		//wmanager.backupCMS("PdNO4FNM", "web200","http://www.direktbankkonten.de/dualon/services/backup/",new RestWebServiceListener("/html/dualon"));
-		wmanager.installCMS(localDbLogin, null, new RestWebServiceListener());
+		//wmanager.installCMS(localDbLogin, null, new RestWebServiceListener());
 		//wmanager.installCMS("http://www.direktbankkonten.de/dualon","localhost", "usr_web200_1", "PdNO4FNM", "web200", "http://www.direktbankkonten.de/dualon/services/installation/",new RestWebServiceListener("/html/dualon"));
 		//downloadtoWorkOffline(ftp_root, "PdNO4FNM", "web200", "www.direktbankkonten.de/dualon/", xammp_path, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, installation_url );
+		//wmanager.backupCMS(new RestWebServiceListener(), localDbLogin, pageInformation);
+		
+		
 	}
 	
 	/**
@@ -361,6 +373,12 @@ private static FTPLoginInformation login = new FTPLoginInformation() {
 		@Override
 		public String getHost() {
 			return "web200.mis08.de";
+		}
+
+		@Override
+		public String getFtpUploadRoot() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	};
 }

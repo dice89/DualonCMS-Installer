@@ -115,5 +115,11 @@ private static FTPLoginInformation login = new FTPLoginInformation() {
 		public String getHost() {
 			return "web200.mis08.de";
 		}
+
+		@Override
+		public String getFtpUploadRoot() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	};
 }
