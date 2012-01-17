@@ -5,13 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Collection;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -68,15 +65,11 @@ public class FTPTarget {
 	public void uploadFile(String localFilePath, String remoteFilePath) throws FileNotFoundException, IOException{	
 		assert(this.isConnected());
 		File f = new File(localFilePath);
-		ftpClient.storeFile(remoteFilePath, new FileInputStream(f));
-		System.out.println(ftpClient.sendSiteCommand("CHMOD 777 "+f.getName()));
-		//System.out.println(ftpClient.getReplyString());
 		
-		//System.out.println(localFilePath+" uploaded");
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
-		//throw new RuntimeException("Not yet implemented!");
+		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+		
+		if(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f)))
+			System.out.println("File not stored!");
 	}
 	
 	public void uploadFolder(File localFolder, String remoteFolderPath) throws FileNotFoundException, IOException{

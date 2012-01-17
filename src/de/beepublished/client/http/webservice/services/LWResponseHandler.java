@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload_response;
 import de.beepublished.client.http.webservice.services.ServiceException.ServiceErrorType;
 
 

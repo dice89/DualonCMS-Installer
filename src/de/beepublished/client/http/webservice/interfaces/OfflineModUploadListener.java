@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.SocketException;
 
-import de.beepublished.client.exceptions.ZipVocationException;
 import de.beepublished.client.ftp.FTPLoginInformation;
 import de.beepublished.client.ftp.FTPTarget;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Backup_response;
@@ -13,7 +12,6 @@ import de.beepublished.client.http.webservice.management.WebManager;
 import de.beepublished.client.http.webservice.management.WebServiceListener;
 import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
-import de.beepublished.client.zip.ZipEngine;
 
 public class OfflineModUploadListener implements WebServiceListener {
 	

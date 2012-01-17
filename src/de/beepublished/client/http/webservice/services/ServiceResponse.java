@@ -1,6 +1,5 @@
 package de.beepublished.client.http.webservice.services;
 
-import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 /**

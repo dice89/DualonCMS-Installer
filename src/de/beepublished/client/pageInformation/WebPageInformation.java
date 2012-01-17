@@ -1,4 +1,4 @@
-package de.beepublished.client.widget;
+package de.beepublished.client.pageInformation;
 
 public interface WebPageInformation {
 	public String getPageRoot();

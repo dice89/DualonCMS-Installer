@@ -1,32 +1,16 @@
 package de.beepublished.client.http.webservice.interfaces;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
-import de.beepublished.client.db.DBLoginInformation;
-import de.beepublished.client.exceptions.ZipVocationException;
-import de.beepublished.client.ftp.FTPLoginInformation;
-import de.beepublished.client.ftp.FTPTarget;
-import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload_response;
+
+
 import de.beepublished.client.http.webservice.dao.REST_CMS_Backup_response;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Installation_response;
 import de.beepublished.client.http.webservice.management.WebManager;
 import de.beepublished.client.http.webservice.management.WebServiceListener;
 import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
-import de.beepublished.client.widget.WebPageInformation;
-import de.beepublished.client.zip.ZipEngine;
+
+
 
 
 public class RestWebServiceListener implements WebServiceListener {
@@ -55,11 +39,12 @@ public class RestWebServiceListener implements WebServiceListener {
 	}
 	@Override
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
+		/*
 		System.out.println("Zip download success... start unzip");
 		String extractTo = "tmp";
 
 		try {
-			ZipEngine.unzip(response.getFile(), extractTo);
+			//ZipEngine.unzip(response.getFile(), extractTo);
 		} catch (ZipVocationException e) {
 			
 			e.printStackTrace();
@@ -67,7 +52,7 @@ public class RestWebServiceListener implements WebServiceListener {
 		System.out.println("unzip sucess start .... start ftp upload"); 
 		
 		// Trigger FTP Upload
-		FTPTarget target = new FTPTarget(login);
+		//FTPTarget target = new FTPTarget(login);
 		try{
 			target.connect();
 			target.login();
@@ -79,7 +64,10 @@ public class RestWebServiceListener implements WebServiceListener {
 		//Cleanup the mess
 		WebManager.cleanupdir("tmp");
 		WebManager wmanager = WebManager.getWebManager();
-		wmanager.installCMS(localDbLogin,pageInformation, this);
+
+		wmanager.installCMS(null,null, this);
+		*/
+
 	}
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
@@ -103,63 +91,5 @@ public class RestWebServiceListener implements WebServiceListener {
 		//Trigger nothing
 		System.out.println("Fail");
 	}
-	
-private static FTPLoginInformation login = new FTPLoginInformation() {
-		
-		@Override
-		public String getUserName() {
-			return "newuser";
-		}
-		
-		@Override
-		public int getPort() {
-			return 21;
-		}
-		
-		@Override
-		public String getPassword() {
-			return "wampp";
-		}
-		
-		@Override
-		public String getHost() {
-			return "localhost";
-		}
 
-		@Override
-		public String getFtpUploadRoot() {
-			return "/testinstallation";
-		}
-	};
-	DBLoginInformation localDbLogin = new DBLoginInformation() {
-		
-		@Override
-		public String getUserName() {
-			return "root";
-		}
-		
-		@Override
-		public String getPassword() {
-			return "";
-		}
-		
-		@Override
-		public String getHost() {
-			return "localhost";
-		}
-		
-		@Override
-		public String getDBName() {
-			return "cake2";
-		}
-	};
-	WebPageInformation pageInformation = new WebPageInformation() {
-		
-		@Override
-		public String getPageRoot() {
-			
-			return "http://localhost/DualonCMS";
-		}
-	};
-	
 }
