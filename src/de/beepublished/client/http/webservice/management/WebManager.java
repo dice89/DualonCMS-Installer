@@ -154,7 +154,7 @@ public class WebManager {
 	
 	public static void main(String args[]){
 		
-		
+		/*
 		DBLoginInformation localDbLogin = new DBLoginInformation() {
 			
 			@Override
@@ -219,6 +219,7 @@ public class WebManager {
 		wmanager.installCMS(localDbLogin, null, new RestWebServiceListener());
 		//wmanager.installCMS("http://www.direktbankkonten.de/dualon","localhost", "usr_web200_1", "PdNO4FNM", "web200", "http://www.direktbankkonten.de/dualon/services/installation/",new RestWebServiceListener("/html/dualon"));
 		//downloadtoWorkOffline(ftp_root, "PdNO4FNM", "web200", "www.direktbankkonten.de/dualon/", xammp_path, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, installation_url );
+	*/
 	}
 	
 	/**

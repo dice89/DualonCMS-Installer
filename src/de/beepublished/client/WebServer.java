@@ -2,11 +2,19 @@ package de.beepublished.client;
 
 import de.beepublished.client.WebEndPoint;
 import de.beepublished.client.db.DBLoginInformation;
+import de.beepublished.client.db.DBLoginInformationImpl;
 import de.beepublished.client.ftp.FTPLoginInformation;
+import de.beepublished.client.ftp.FTPLoginInformationImpl;
 import de.beepublished.client.pageInformation.WebPageInformation;
+import de.beepublished.client.pageInformation.WebPageInformationImpl;
 
 public class WebServer implements WebEndPoint {
 
+	public static WebServer deserialize(String serialization){
+		String[] values = serialization.split(";");
+		return new WebServer(values[0], FTPLoginInformationImpl.deserialize(values), DBLoginInformationImpl.deserialize(values), WebPageInformationImpl.deserialize(values));
+	}
+	
 	private String name;
 	private FTPLoginInformation ftpInfo;
 	private DBLoginInformation dbInfo;
@@ -41,5 +49,56 @@ public class WebServer implements WebEndPoint {
 	public WebPageInformation getPageInformation() {
 		return pageInfo;
 	}
+
+	@Override
+	public String serialize() {
+		return name+";"+ftpInfo.serialize()+";"+dbInfo.serialize()+";"+pageInfo.serialize();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dbInfo == null) ? 0 : dbInfo.hashCode());
+		result = prime * result + ((ftpInfo == null) ? 0 : ftpInfo.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((pageInfo == null) ? 0 : pageInfo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WebServer other = (WebServer) obj;
+		if (dbInfo == null) {
+			if (other.dbInfo != null)
+				return false;
+		} else if (!dbInfo.equals(other.dbInfo))
+			return false;
+		if (ftpInfo == null) {
+			if (other.ftpInfo != null)
+				return false;
+		} else if (!ftpInfo.equals(other.ftpInfo))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (pageInfo == null) {
+			if (other.pageInfo != null)
+				return false;
+		} else if (!pageInfo.equals(other.pageInfo))
+			return false;
+		return true;
+	}
+	
+	
 
 }

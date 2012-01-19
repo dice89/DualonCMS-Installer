@@ -13,4 +13,6 @@ public interface FTPLoginInformation {
 	public String getPassword();
 	
 	public String getFtpUploadRoot();
+	
+	public String serialize();
 }

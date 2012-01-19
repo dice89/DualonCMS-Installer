@@ -65,4 +65,10 @@ public class FileBackup implements FileEndPoint {
 		
 	}
 
+	@Override
+	public String serialize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

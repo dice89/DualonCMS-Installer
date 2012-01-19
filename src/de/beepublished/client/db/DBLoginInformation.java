@@ -14,4 +14,6 @@ public interface DBLoginInformation {
 	
 	// TODO create method description
 	public String getPassword();
+	
+	public String serialize();
 }

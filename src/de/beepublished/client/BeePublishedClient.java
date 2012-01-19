@@ -1,6 +1,13 @@
 package de.beepublished.client;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -122,7 +129,13 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		Menu menu = new Menu(shlBeepublishedClient, SWT.BAR);
 		shlBeepublishedClient.setMenuBar(menu);
 		
-		MenuItem mntmAddServer = new MenuItem(menu, SWT.NONE);
+		MenuItem mntmNewSubmenu = new MenuItem(menu, SWT.CASCADE);
+		mntmNewSubmenu.setText("Einstellungen");
+		
+		Menu menu_1 = new Menu(mntmNewSubmenu);
+		mntmNewSubmenu.setMenu(menu_1);
+		
+		MenuItem mntmAddServer = new MenuItem(menu_1, SWT.NONE);
 		mntmAddServer.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -130,6 +143,95 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 			}
 		});
 		mntmAddServer.setText("add Server");
+		
+		MenuItem mntmExportSettings = new MenuItem(menu_1, SWT.NONE);
+		mntmExportSettings.setText("export Settings");
+		
+		MenuItem mntmImportSettings = new MenuItem(menu_1, SWT.NONE);
+		mntmImportSettings.setText("import Settings");
+		mntmImportSettings.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog dialog = new FileDialog(shlBeepublishedClient, SWT.OPEN);
+			    dialog.setFilterNames(new String[] { "BeePublished Setting Files"});
+			    dialog.setFilterExtensions(new String[] { "*.bps.txt"});
+			    //dialog.setFileName("setting.bps.txt");
+			    String fileName = dialog.open();
+			    if(fileName != null){
+			    	try {
+				    	File f = new File(fileName);
+						BufferedReader reader = new BufferedReader(new FileReader(f));
+						String line = null;
+						while((line = reader.readLine()) != null){
+							System.out.println(line);
+							WebServer s = WebServer.deserialize(line);
+							managerQuelle.addEndPoint(s);
+							managerZiel.addEndPoint(s);
+						}
+						BeePublishedClient.this.setup();
+			    	
+			    	} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			    }
+			}
+		});
+		mntmExportSettings.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				FileDialog dialog = new FileDialog(shlBeepublishedClient, SWT.SAVE);
+			    dialog.setFilterNames(new String[] { "BeePublished Setting Files"});
+			    dialog.setFilterExtensions(new String[] { "*.bps.txt"});
+			    dialog.setFileName("setting.bps.txt");
+			    String fileName = dialog.open();
+			    if(fileName != null){
+			    	try {
+				    	File f = new File(fileName);
+						PrintWriter inputStream = new PrintWriter(f);new FileInputStream(f);
+						List<EndPoint> pointsQuelle = managerQuelle.getEndPoints();
+						List<EndPoint> pointsZiele = managerZiel.getEndPoints();
+						
+						ArrayList<WebServer> result = new ArrayList<WebServer>();
+						
+						
+						for(EndPoint p : pointsQuelle){
+							if(p instanceof WebServer){
+								if(!result.contains((WebServer) p)){
+									result.add((WebServer) p);
+								}
+							}
+						}
+						
+						for(EndPoint p : pointsZiele){
+							if(p instanceof WebServer){
+								if(!result.contains((WebServer) p)){
+									result.add((WebServer) p);
+								}
+							}
+						}
+						
+						for(WebServer server : result){
+							String serialization = server.serialize();
+							System.out.println(serialization);
+							inputStream.println(serialization);
+						}
+						
+						inputStream.flush();
+						inputStream.close();
+			    	
+			    	} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			    }
+				
+				
+				
+				
+			}
+		});
 		
 		// setup Model
 		managerQuelle = new EndPointManager(ADDITION_SOURCE);
