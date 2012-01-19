@@ -12,6 +12,7 @@ public class InstallThread extends Thread implements WebServiceListener {
 	private ProgressFeedback delegate;
 	private FileEndPoint source;
 	private WebServer target;
+	private boolean finished = false;
 
 	public InstallThread(ProgressFeedback delegate, FileEndPoint source, WebServer target) {
 		this.delegate = delegate;
@@ -41,6 +42,10 @@ public class InstallThread extends Thread implements WebServiceListener {
 			delegate.setFeedback("install cms...");
 			
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);
+			
+			while(!finished){
+				this.sleep(100);
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			delegate.setFailed();
@@ -51,11 +56,13 @@ public class InstallThread extends Thread implements WebServiceListener {
 	public void onRestInstallationSuccess(
 			REST_CMS_Installation_response response) {
 		delegate.setFinished();		
+		finished = true;
 	}
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
-		delegate.setFailed();		
+		delegate.setFailed();	
+		finished = true;	
 	}
 
 	@Override

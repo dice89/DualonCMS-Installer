@@ -50,11 +50,15 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		try {
-			BeePublishedClient window = new BeePublishedClient();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(args.length != 0 && args[0].equals("-console")){
+				new Console(args);
+		} else {	
+			try {
+				BeePublishedClient window = new BeePublishedClient();
+				window.open();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -158,22 +162,15 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 			    //dialog.setFileName("setting.bps.txt");
 			    String fileName = dialog.open();
 			    if(fileName != null){
-			    	try {
-				    	File f = new File(fileName);
-						BufferedReader reader = new BufferedReader(new FileReader(f));
-						String line = null;
-						while((line = reader.readLine()) != null){
-							System.out.println(line);
-							WebServer s = WebServer.deserialize(line);
-							managerQuelle.addEndPoint(s);
-							managerZiel.addEndPoint(s);
-						}
-						BeePublishedClient.this.setup();
 			    	
-			    	} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+			    	List<WebServer> server = WebServerImporter.importWebserver(fileName);
+			    	
+			    	for(WebServer s : server){
+			    		managerQuelle.addEndPoint(s);
+						managerZiel.addEndPoint(s);
 					}
+					BeePublishedClient.this.setup();
+			    	
 			    }
 			}
 		});
