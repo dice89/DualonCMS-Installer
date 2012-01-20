@@ -144,4 +144,10 @@ public class BackupThread extends Thread implements WebServiceListener{
 	    	System.out.println("File copied from " + src + " to " + dest);
 	    }
 	}
+
+	public FileBackup getTarget() {
+		return target;
+	}
+	
+	
 }

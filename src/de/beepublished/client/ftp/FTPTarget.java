@@ -10,6 +10,8 @@ import java.net.SocketException;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPFileFilter;
+import org.apache.commons.net.ftp.FTPFileFilters;
 import org.apache.commons.net.ftp.FTPReply;
 
 
@@ -133,8 +135,19 @@ public class FTPTarget {
 			firsttimedownload = false;
 		
 		}
-		FTPFile[] files = ftpClient.listFiles();
+		FTPFile[] files = ftpClient.listFiles("", FTPFileFilters.ALL);
+		
+		try{
+			FileOutputStream stream = new FileOutputStream(localTargetDirectory+"/"+".htaccess");
+			ftpClient.retrieveFile(".htaccess", stream);
+			stream.flush();
+			stream.close();
+			System.out.println("[x] .htaccess");
+		} catch (Exception e){
+			System.out.println("[ ] .htaccess");
+		}
 		for(FTPFile f : files){
+			System.out.println(f.getName());
 			if(f.isFile())
 				this.downloadFile(f.getName(), new File(localTargetDirectory+"/"+f.getName()));
 			if(f.isDirectory() && !f.getName().equals(".") && !f.getName().equals(".."))

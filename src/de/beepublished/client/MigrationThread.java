@@ -1,28 +1,14 @@
 package de.beepublished.client;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import de.beepublished.client.ftp.FTPTarget;
-import de.beepublished.client.http.webservice.dao.REST_CMS_Backup_response;
-import de.beepublished.client.http.webservice.dao.REST_CMS_Installation_response;
-import de.beepublished.client.http.webservice.management.WebManager;
-import de.beepublished.client.http.webservice.management.WebServiceListener;
-import de.beepublished.client.http.webservice.services.ServiceException;
-import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
-import de.beepublished.client.zip.ZipEngine;
-
-public class MigrationThread extends Thread implements WebServiceListener{
+public class MigrationThread extends Thread implements ProgressFeedback{
 	private ProgressFeedback delegate;
 	private WebServer source;
 	private WebServer target;
-	private File temp;
-	private FileEndPoint tempBackup;
-	private boolean finished;
+	//private File temp;
+	//private FileEndPoint tempBackup;
+//	private boolean finished;
 	
 
 	public MigrationThread(ProgressFeedback delegate, WebServer source, WebServer target) {
@@ -31,7 +17,50 @@ public class MigrationThread extends Thread implements WebServiceListener{
 		this.source = source;
 		this.target = target;
 	}
+	
+	@Override
+	public void run() {
+		try{
+			File f = File.createTempFile("tmp_file_", ".zip");
+			System.out.println("Backing up to: " + f);
+			BackupThread backup = new BackupThread(this, source, new FileBackup(f));
+			backup.start();
+			backup.join();
+			InstallThread install = new InstallThread(this, backup.getTarget(), target);
+			install.start();
+			install.join();
+			delegate.setFinished();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
 
+	@Override
+	public void setFeedback(String newStatus) {
+		delegate.setFeedback(newStatus);
+	}
+
+	@Override
+	public void setStarted() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFinished() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFailed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/*
+	
 	@Override
 	public void run() {
 		try{
@@ -177,5 +206,5 @@ public class MigrationThread extends Thread implements WebServiceListener{
 	    	System.out.println("File copied from " + src + " to " + dest);
 	    }
 	}
-
+*/
 }
