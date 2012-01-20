@@ -20,6 +20,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 	private ProgressFeedback delegate;
 	private WebServer source;
 	private FileBackup target;
+	private boolean finished = false;
 	
 	public BackupThread(ProgressFeedback delegate, WebServer source,FileBackup target) {
 		this.delegate = delegate;
@@ -29,8 +30,17 @@ public class BackupThread extends Thread implements WebServiceListener{
 
 	@Override
 	public void run() {
-		delegate.setFeedback("starting backup...");
-		WebManager.getWebManager().backupCMS(this, source.getDbInformation(), source.getPageInformation());
+		try{
+			delegate.setFeedback("starting backup...");
+			WebManager.getWebManager().backupCMS(this, source.getDbInformation(), source.getPageInformation());
+			
+			while(!finished){
+				this.sleep(100);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			delegate.setFailed();
+		}
 	}
 
 	@Override
@@ -66,6 +76,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 			ZipEngine.zip(result, target.getBackupFile());
 						
 			delegate.setFinished();
+			finished = true;
 		} catch (Exception e) {
 			delegate.setFailed();
 		}

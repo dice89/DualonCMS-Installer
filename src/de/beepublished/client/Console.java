@@ -26,13 +26,33 @@ public class Console implements ProgressFeedback{
 		System.out.println("Target: "+argTarget);
 		
 		if(argAction.equals("install")){
-			System.out.println("start installation");
-			InstallThread t = new InstallThread(this, new FileBackup(new File(argSource)), getWebServerWithName(argTarget));
-			t.start();
 			try {
+				System.out.println("start installation");
+				InstallThread t = new InstallThread(this, new FileBackup(new File(argSource)), getWebServerWithName(argTarget));
+				t.start();
 				t.join();
+				System.out.println("intallation finished");
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if(argAction.equals("backup")){
+			try {
+				System.out.println("start backup");
+				BackupThread t = new BackupThread(this, getWebServerWithName(argSource), new FileBackup(new File(argTarget)));
+				t.start();
+				t.join();
+				System.out.println("backup finished");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} else if(argAction.equals("migrate")){
+			try {
+				System.out.println("start migrate");
+				MigrationThread t = new MigrationThread(this, getWebServerWithName(argSource), getWebServerWithName(argTarget));
+				t.start();
+				t.join();
+				System.out.println("migrate finished");
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

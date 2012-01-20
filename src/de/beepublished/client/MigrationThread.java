@@ -22,6 +22,7 @@ public class MigrationThread extends Thread implements WebServiceListener{
 	private WebServer target;
 	private File temp;
 	private FileEndPoint tempBackup;
+	private boolean finished;
 	
 
 	public MigrationThread(ProgressFeedback delegate, WebServer source, WebServer target) {
@@ -33,9 +34,17 @@ public class MigrationThread extends Thread implements WebServiceListener{
 
 	@Override
 	public void run() {
+		try{
 		// (1) //
 		delegate.setFeedback("starting backup...");
 		WebManager.getWebManager().backupCMS(this, source.getDbInformation(), source.getPageInformation());
+		while(!finished){
+			this.sleep(100);
+		}
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+		delegate.setFailed();
+	}
 	}
 
 	@Override
@@ -114,6 +123,7 @@ public class MigrationThread extends Thread implements WebServiceListener{
 	@Override
 	public void onRestInstallationSuccess(REST_CMS_Installation_response response) {
 		delegate.setFinished();
+		finished = true;
 	}
 
 	@Override
