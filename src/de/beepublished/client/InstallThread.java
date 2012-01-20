@@ -8,6 +8,13 @@ import de.beepublished.client.http.webservice.management.WebServiceListener;
 import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
 
+/**
+ * Installs the cms
+ * 	Source: FileEndPoint
+ * 	Target: WebServer
+ * @author fabiankajzar
+ *
+ */
 public class InstallThread extends Thread implements WebServiceListener {
 	private ProgressFeedback delegate;
 	private FileEndPoint source;
@@ -44,7 +51,7 @@ public class InstallThread extends Thread implements WebServiceListener {
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);
 			
 			while(!finished){
-				this.sleep(100);
+				Thread.sleep(100);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

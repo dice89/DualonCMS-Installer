@@ -16,6 +16,13 @@ import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
 import de.beepublished.client.zip.ZipEngine;
 
+/**
+ * Performs a Backup
+ * 	source: a WebServer
+ * 	target: a FileBackup
+ * @author fabiankajzar
+ *
+ */
 public class BackupThread extends Thread implements WebServiceListener{
 	private ProgressFeedback delegate;
 	private WebServer source;
@@ -28,6 +35,9 @@ public class BackupThread extends Thread implements WebServiceListener{
 		this.target = target;
 	}
 
+	/**
+	 * Step 1
+	 */
 	@Override
 	public void run() {
 		try{
@@ -35,14 +45,41 @@ public class BackupThread extends Thread implements WebServiceListener{
 			WebManager.getWebManager().backupCMS(this, source.getDbInformation(), source.getPageInformation());
 			
 			while(!finished){
-				this.sleep(100);
+				Thread.sleep(100);
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			delegate.setFailed();
 		}
 	}
+	
+	/**
+	 * Step 2 - success
+	 */
+	@Override
+	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
+		try {
+			delegate.setFeedback("downloading db...");
+			WebManager.getWebManager().downloadFile("", File.createTempFile("temp", ".sql").getAbsolutePath(), response.getSqlurl(), this);
+		} catch (IOException e) {
+			delegate.setFailed();
+			e.printStackTrace();
+			finished = true;
+		}
+	}
+	
+	/**
+	 * Step 2 - fail
+	 */
+	@Override
+	public void onRestBackupFailed(ServiceException e) {
+		delegate.setFailed();
+		finished = true;
+	}
 
+	/**
+	 * Step 3 - success
+	 */
 	@Override
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
 		try {
@@ -83,36 +120,23 @@ public class BackupThread extends Thread implements WebServiceListener{
 		
 	}
 
+	/**
+	 * Step 3 - fail
+	 */
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
-		throw new RuntimeException("should not happen :D");
+		delegate.setFailed();
+		finished = true;
 	}
 
 	@Override
-	public void onRestInstallationSuccess(
-			REST_CMS_Installation_response response) {
+	public void onRestInstallationSuccess(REST_CMS_Installation_response response) {
 		throw new RuntimeException("should not happen :D");
 	}
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
 		throw new RuntimeException("should not happen :D");
-	}
-
-	@Override
-	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
-		try {
-			delegate.setFeedback("downloading db...");
-			WebManager.getWebManager().downloadFile("", File.createTempFile("temp", ".sql").getAbsolutePath(), response.getSqlurl(), this);
-		} catch (IOException e) {
-			delegate.setFailed();
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onRestBackupFailed(ServiceException e) {
-		delegate.setFailed();
 	}
 	
 	public static void copyFolder(File src, File dest) throws IOException{

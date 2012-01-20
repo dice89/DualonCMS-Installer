@@ -29,6 +29,7 @@ public class ZipEngine {
 	 * @return
 	 * @throws ZipVocationException 
 	 */
+	@SuppressWarnings("rawtypes")
 	public static File unzip(File file, File dest) throws ZipVocationException{		
 		assert(dest.isDirectory());
 		ZipFile archive = null;

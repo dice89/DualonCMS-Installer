@@ -30,7 +30,8 @@ public class ServiceHandler {
 	//attributes
    	private HttpClient httpclient;
     private LWResponseHandler lwResponseHandler = null;
-    private ArrayList<LightweightConnectionTask> lwTaskList = new ArrayList<LightweightConnectionTask>();
+    @SuppressWarnings("unused")
+	private ArrayList<LightweightConnectionTask> lwTaskList = new ArrayList<LightweightConnectionTask>();
 	
 	public ServiceHandler(HttpClient httpclient)
 	{
@@ -119,6 +120,7 @@ public class ServiceHandler {
 	private class LightweightConnectionTask implements Runnable 
 	{
 		//attributes
+		@SuppressWarnings("unused")
 		private ServiceHandler serviceHandler = null;
 		private LightweightService lwService = null;
 		private ResponseHandler responseHandler = null;
@@ -142,6 +144,7 @@ public class ServiceHandler {
 		 * Starts the network connection, get the data according to the POST method information 
 		 * and parse them with the response handler.
 		 */
+		@SuppressWarnings("deprecation")
 		@Override
 		public void run() {
 			ServiceException se =  new ServiceException(ServiceErrorType.INVALID_HTTP_RESPONSE, new Exception("test"));
@@ -231,14 +234,17 @@ public class ServiceHandler {
 			
 		}	
 
+		@SuppressWarnings("unused")
 		public LightweightService getLwService() {
 			return lwService;
 		}
 
+		@SuppressWarnings("unused")
 		public ResponseHandler getResponseHandler() {
 			return responseHandler;
 		}
 
+		@SuppressWarnings("unused")
 		public ResponseListener getResponseListener() {
 			return responseListener;
 		}

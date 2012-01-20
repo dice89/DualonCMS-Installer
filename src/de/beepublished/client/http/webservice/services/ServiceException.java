@@ -8,6 +8,7 @@ package de.beepublished.client.http.webservice.services;
  * 
  *
  */
+@SuppressWarnings("serial")
 public class ServiceException extends Exception {
 	
 	/**

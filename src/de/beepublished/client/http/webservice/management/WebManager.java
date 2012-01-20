@@ -1,7 +1,5 @@
 package de.beepublished.client.http.webservice.management;
 
-import java.io.File;
-
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -11,15 +9,11 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 
 import de.beepublished.client.db.DBLoginInformation;
-import de.beepublished.client.ftp.FTPLoginInformation;
-import de.beepublished.client.ftp.FTPTarget;
 import de.beepublished.client.http.webservice.dao.HTTP_CMS_FileDownload;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Backup;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Backup_response;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Installation;
 import de.beepublished.client.http.webservice.dao.REST_CMS_Installation_response;
-import de.beepublished.client.http.webservice.interfaces.BackupUpLoadListener;
-import de.beepublished.client.http.webservice.interfaces.RestWebServiceListener;
 import de.beepublished.client.http.webservice.services.ResponseListener;
 import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
@@ -39,8 +33,6 @@ import de.beepublished.client.pageInformation.WebPageInformation;
 public class WebManager {
 	
 	private static WebManager webManager = null;
-	private long userid;
-	
 	ServiceHandler handler;
 	public WebManager(ServiceHandler handler) {
 		this.handler = handler;
@@ -151,7 +143,7 @@ public class WebManager {
 		}
 	}
 	
-	
+	/*
 	public static void main(String args[]){
 		
 		/*
@@ -220,7 +212,9 @@ public class WebManager {
 		//wmanager.installCMS("http://www.direktbankkonten.de/dualon","localhost", "usr_web200_1", "PdNO4FNM", "web200", "http://www.direktbankkonten.de/dualon/services/installation/",new RestWebServiceListener("/html/dualon"));
 		//downloadtoWorkOffline(ftp_root, "PdNO4FNM", "web200", "www.direktbankkonten.de/dualon/", xammp_path, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, installation_url );
 	*/
-	}
+	//}
+	
+	
 	
 	/**
 	 * @param pathfromFTProot
@@ -228,6 +222,7 @@ public class WebManager {
 	 * @param ftpLogin
 	 * @param dbLogin TODO
 	 */
+	/*
 	public static void uploadBackup(String pathfromFTProot, String homeUrl, FTPLoginInformation ftpLogin, DBLoginInformation dbLogin){
 		
 		WebManager wmanager = getWebManager();
@@ -252,6 +247,7 @@ public class WebManager {
 		
 		
 	}
+	*/
 	
 	
 	/**
@@ -268,6 +264,7 @@ public class WebManager {
 	 * @param lcl_dBLogin
 	 * @param lcl_url
 	 */
+	/*
 	public static void downloadtoWorkOffline(String pathfromFTProot, String remote_dbPw, String remote_dbUser, String remote_homeURL, String xammp_path, String lcl_homeUrl, String lcl_dBHost, String lcl_dBName, String lcl_dBPw, String lcl_dBLogin, String lcl_url ){
 		//WebManager wmanager = getWebManager();
 		//wmanager.backupCMS(new OfflineModDownloadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null,null);
@@ -279,10 +276,11 @@ public class WebManager {
 		//wmanager.installCMS(homeUrl,dBHost, dBName, dBPw, dBLogin, homeUrl+"/services/installation/",new BackupUpLoadListener());
 		//wmanager.backupCMS(new OfflineModUploadListener(xammp_path, pathfromFTProot, lcl_homeUrl, lcl_dBHost, lcl_dBName, lcl_dBPw, lcl_dBLogin, lcl_url, login), null, null);
 	}
-	
+	*/
 	/** Deletes a Dir and all underlaying structures
 	 * @param path
 	 */
+	/*
 	public static void  cleanupdir(String path){	
 		 File folder = new File(path);
 		 if(folder.listFiles().length > 0){
@@ -299,7 +297,7 @@ public class WebManager {
 	}
 		 
 		 
-	
+	*/
 	
 	
 	public static WebManager getWebManager(){
@@ -314,7 +312,8 @@ public class WebManager {
 	}
 	
 	
-	public static HttpClient createHttpClient() {
+	@SuppressWarnings("deprecation")
+	private static HttpClient createHttpClient() {
 		// TODO Auto-generated method stub
 		//set proxy if available
 		/*if(proxyHostname != null)

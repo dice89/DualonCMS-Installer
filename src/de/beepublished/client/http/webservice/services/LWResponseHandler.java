@@ -18,6 +18,7 @@ import de.beepublished.client.http.webservice.services.ServiceException.ServiceE
  */
 public class LWResponseHandler extends ResponseHandler {
 
+	@SuppressWarnings("unused")
 	public ServiceResponse handleResponse(Class<?> responseClass, InputStream stream) throws ServiceException
 	{
 		//read the xml content stream into a buffer

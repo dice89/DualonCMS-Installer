@@ -4,6 +4,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Imports WebServer from Client setting file (.bps.txt)s
+ * @author fabiankajzar
+ *
+ */
 public class WebServerImporter {
 	public static List<WebServer> importWebserver(String exportFileName){
 		try {
@@ -16,7 +21,6 @@ public class WebServerImporter {
 			}
 			return result;
     	} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			throw new RuntimeException();
 		}

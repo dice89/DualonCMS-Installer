@@ -10,12 +10,10 @@ import java.net.SocketException;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPFileFilter;
 import org.apache.commons.net.ftp.FTPFileFilters;
 import org.apache.commons.net.ftp.FTPReply;
 
 
-//TODO create class description
 public class FTPTarget {
 	
 	private FTPLoginInformation loginInformation;
@@ -23,18 +21,10 @@ public class FTPTarget {
 	private boolean firsttime = true;
 	private boolean firsttimedownload = true;
 	public FTPTarget(FTPLoginInformation loginInformation){
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
-		
 		this.loginInformation = loginInformation;
 	}
 	
 	public void connect() throws SocketException, IOException {
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
-		
 		ftpClient = new FTPClient();
 		ftpClient.connect(loginInformation.getHost(), loginInformation.getPort());
 		
@@ -45,9 +35,6 @@ public class FTPTarget {
 	}
 	
 	public boolean login() throws IOException{
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
 		assert(isConnected());
 		return ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());	
 	}
@@ -58,9 +45,6 @@ public class FTPTarget {
 	}
 	
 	public void disconnect() throws IOException{
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
 		ftpClient.disconnect();
 	}
 	
@@ -76,9 +60,6 @@ public class FTPTarget {
 	
 	public void uploadFolder(File localFolder, String remoteFolderPath) throws FileNotFoundException, IOException{
 		assert(ftpClient.isConnected());
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
 
 		System.out.println(localFolder.getName()+" started");
 		
@@ -103,7 +84,6 @@ public class FTPTarget {
 		}
 		System.out.println(localFolder.getName()+" uploaded");
 
-	//	throw new RuntimeException("Not yet implemented!");
 	}
 	
 	/**
@@ -166,11 +146,6 @@ public class FTPTarget {
 	}
 	
 	public boolean containsFile(String filename) throws IOException{
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
-		
-		// ACHTUNG, nur level 0!
 		for(FTPFile file : ftpClient.listFiles()){
 			if(file.getName().equals(filename))
 				return true;
@@ -179,9 +154,6 @@ public class FTPTarget {
 	}
 	
 	public void deleteFile(String filename) throws IOException{
-		// TODO create method description
-		// TODO create test case
-		// TODO implement method
 		ftpClient.deleteFile(filename);
 	}
 
