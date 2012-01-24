@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import de.beepublished.client.widget.CreateWebPointDialog;
+import org.eclipse.swt.widgets.ProgressBar;
 
 public class BeePublishedClient implements SelectionListener, ValidationFeedback, ProgressFeedback {
 	
@@ -37,6 +38,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	private Combo comboZiel;
 	private Button buttonAction;
 	private Label labelFeedback;
+	private ProgressBar progressBar;
 	
 	// Model
 	private EndPointManager managerQuelle;
@@ -79,7 +81,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	 */
 	protected void createContents() {
 		shlBeepublishedClient = new Shell();
-		shlBeepublishedClient.setSize(450, 130);
+		shlBeepublishedClient.setSize(450, 140);
 		shlBeepublishedClient.setText("BeePublished - Client");
 		shlBeepublishedClient.setLayout(new FormLayout());
 		
@@ -120,11 +122,11 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		buttonAction.addSelectionListener(this);
 		
 		labelFeedback = new Label(shlBeepublishedClient, SWT.CENTER);
+		labelFeedback.setAlignment(SWT.LEFT);
 		FormData fd_labelFeedback = new FormData();
-		fd_labelFeedback.top = new FormAttachment(grpQuelle, 6);
-		fd_labelFeedback.left = new FormAttachment(0, 117);
-		fd_labelFeedback.right = new FormAttachment(100, -118);
-		fd_labelFeedback.bottom = new FormAttachment(0, 71);
+		fd_labelFeedback.bottom = new FormAttachment(100, -8);
+		fd_labelFeedback.top = new FormAttachment(grpZiele, 9);
+		fd_labelFeedback.right = new FormAttachment(100, -10);
 		labelFeedback.setLayoutData(fd_labelFeedback);
 		
 		Menu menu = new Menu(shlBeepublishedClient, SWT.BAR);
@@ -150,6 +152,17 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		
 		MenuItem mntmImportSettings = new MenuItem(menu_1, SWT.NONE);
 		mntmImportSettings.setText("import Settings");
+		
+		progressBar = new ProgressBar(shlBeepublishedClient, SWT.INDETERMINATE);
+		progressBar.setVisible(false);
+		
+		fd_labelFeedback.left = new FormAttachment(progressBar, 6);
+		
+		FormData fd_progressBar = new FormData();
+		fd_progressBar.right = new FormAttachment(grpQuelle, 207);
+		fd_progressBar.top = new FormAttachment(grpQuelle, 6);
+		fd_progressBar.left = new FormAttachment(grpQuelle, 0, SWT.LEFT);
+		progressBar.setLayoutData(fd_progressBar);
 		mntmImportSettings.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -256,22 +269,23 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	
 	private void handlePerformButton(SelectionEvent e){
 		System.out.println("Button handlePerformButton");
+
+		progressBar.setVisible(true);
+		buttonAction.setEnabled(false);
+		
 		if(buttonAction.getText().equals("Install")){
 			InstallThread installThread = new InstallThread(this, (FileEndPoint) managerQuelle.getAtIndex(comboQuelle.getSelectionIndex()), (WebServer) managerZiel.getAtIndex(comboZiel.getSelectionIndex()));
 			installThread.start();
-			buttonAction.setEnabled(false);
 		}
 		
 		if(buttonAction.getText().equals("Backup")){
 			BackupThread installThread = new BackupThread(this, (WebServer) managerQuelle.getAtIndex(comboQuelle.getSelectionIndex()), (FileBackup) managerZiel.getAtIndex(comboZiel.getSelectionIndex()));
 			installThread.start();
-			buttonAction.setEnabled(false);
 		}
 		
 		if(buttonAction.getText().equals("Migrate")){
 			MigrationThread migrateThread = new MigrationThread(this, (WebServer) managerQuelle.getAtIndex(comboQuelle.getSelectionIndex()), (WebServer) managerZiel.getAtIndex(comboZiel.getSelectionIndex()));
 			migrateThread.start();
-			buttonAction.setEnabled(false);
 		}
 	}
 	
@@ -399,17 +413,19 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 			public void run() {
 				labelFeedback.setText("Success");
 				buttonAction.setEnabled(true);
+				progressBar.setVisible(false);
 			}
 		});
 	}
 
 	@Override
-	public void setFailed() {
+	public void setFailed(final Exception e) {
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				labelFeedback.setText("Failed!");
+				labelFeedback.setText("Failed: " + e.getLocalizedMessage());
 				buttonAction.setEnabled(true);
+				progressBar.setVisible(false);
 			}
 		});
 	}

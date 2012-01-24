@@ -55,7 +55,7 @@ public class InstallThread extends Thread implements WebServiceListener {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			delegate.setFailed();
+			delegate.setFailed(ex);
 		}
 	}
 
@@ -68,7 +68,7 @@ public class InstallThread extends Thread implements WebServiceListener {
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
-		delegate.setFailed();	
+		delegate.setFailed(e);	
 		finished = true;	
 	}
 

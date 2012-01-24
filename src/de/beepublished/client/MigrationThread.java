@@ -56,8 +56,7 @@ public class MigrationThread extends Thread implements ProgressFeedback{
 	}
 
 	@Override
-	public void setFailed() {
-		// TODO Auto-generated method stub
-		
+	public void setFailed(Exception e) {
+		e.printStackTrace();
 	}
 }

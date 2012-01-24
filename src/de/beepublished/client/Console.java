@@ -75,8 +75,8 @@ public class Console implements ProgressFeedback{
 	}
 
 	@Override
-	public void setFailed() {
-		System.out.println("error");
+	public void setFailed(Exception e) {
+		System.out.println("error:" + e.getLocalizedMessage());
 	}
 	
 	private WebServer getWebServerWithName(String name){

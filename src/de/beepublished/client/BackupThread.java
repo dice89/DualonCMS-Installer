@@ -49,7 +49,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			delegate.setFailed();
+			delegate.setFailed(e);
 		}
 	}
 	
@@ -62,7 +62,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 			delegate.setFeedback("downloading db...");
 			WebManager.getWebManager().downloadFile("", File.createTempFile("temp", ".sql").getAbsolutePath(), response.getSqlurl(), this);
 		} catch (IOException e) {
-			delegate.setFailed();
+			delegate.setFailed(e);
 			e.printStackTrace();
 			finished = true;
 		}
@@ -73,7 +73,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 	 */
 	@Override
 	public void onRestBackupFailed(ServiceException e) {
-		delegate.setFailed();
+		delegate.setFailed(e);
 		finished = true;
 	}
 
@@ -115,7 +115,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 			delegate.setFinished();
 			finished = true;
 		} catch (Exception e) {
-			delegate.setFailed();
+			delegate.setFailed(e);
 		}
 		
 	}
@@ -125,7 +125,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 	 */
 	@Override
 	public void onRestZipDownloadFailed(ServiceException e) {
-		delegate.setFailed();
+		delegate.setFailed(e);
 		finished = true;
 	}
 
