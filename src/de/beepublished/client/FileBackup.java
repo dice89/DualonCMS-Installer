@@ -1,9 +1,7 @@
 package de.beepublished.client;
 
 import java.io.File;
-import java.io.IOException;
 
-import de.beepublished.client.exceptions.ZipVocationException;
 import de.beepublished.client.zip.ZipEngine;
 
 public class FileBackup implements FileEndPoint {
@@ -57,12 +55,15 @@ public class FileBackup implements FileEndPoint {
 			
 			assert(filesRoot.isDirectory());
 			assert(dbFile.isFile());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ZipVocationException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+	}
+
+	@Override
+	public String serialize() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

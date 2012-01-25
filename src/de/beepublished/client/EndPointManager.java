@@ -35,4 +35,8 @@ public class EndPointManager {
 	public int getCount(){
 		return endPoints.size();
 	}
+	
+	public List<EndPoint> getEndPoints(){
+		return endPoints;
+	}
 }

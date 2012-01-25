@@ -8,10 +8,18 @@ import de.beepublished.client.http.webservice.management.WebServiceListener;
 import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
 
+/**
+ * Installs the cms
+ * 	Source: FileEndPoint
+ * 	Target: WebServer
+ * @author fabiankajzar
+ *
+ */
 public class InstallThread extends Thread implements WebServiceListener {
 	private ProgressFeedback delegate;
 	private FileEndPoint source;
 	private WebServer target;
+	private boolean finished = false;
 
 	public InstallThread(ProgressFeedback delegate, FileEndPoint source, WebServer target) {
 		this.delegate = delegate;
@@ -41,9 +49,13 @@ public class InstallThread extends Thread implements WebServiceListener {
 			delegate.setFeedback("install cms...");
 			
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);
+			
+			while(!finished){
+				Thread.sleep(100);
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			delegate.setFailed();
+			delegate.setFailed(ex);
 		}
 	}
 
@@ -51,11 +63,13 @@ public class InstallThread extends Thread implements WebServiceListener {
 	public void onRestInstallationSuccess(
 			REST_CMS_Installation_response response) {
 		delegate.setFinished();		
+		finished = true;
 	}
 
 	@Override
 	public void onRestInstallationFailed(ServiceException e) {
-		delegate.setFailed();		
+		delegate.setFailed(e);	
+		finished = true;	
 	}
 
 	@Override
