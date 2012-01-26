@@ -27,7 +27,7 @@ public class FTPTarget {
 	public void connect() throws SocketException, IOException {
 		ftpClient = new FTPClient();
 		ftpClient.connect(loginInformation.getHost(), loginInformation.getPort());
-		
+	
 		int replyCode = ftpClient.getReplyCode();
 		if(!FTPReply.isPositiveCompletion(replyCode)){
 			throw new RuntimeException("Reply code "+replyCode);
@@ -54,8 +54,11 @@ public class FTPTarget {
 		
 		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 		
-		if(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f)))
-			System.out.println("File not stored!");
+		while(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f))){
+			System.out.println("File not stored! Do it again!");
+		}
+		
+		
 	}
 	
 	public void uploadFolder(File localFolder, String remoteFolderPath) throws FileNotFoundException, IOException{
@@ -106,6 +109,8 @@ public class FTPTarget {
 	}
 	
 	public void downloadDirectory(File localTargetDirectory, String remoteDirectory) throws IOException{
+		ftpClient.enterLocalPassiveMode();
+		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 		
 		if(!remoteDirectory.equals("")){
 			System.out.println(ftpClient.changeWorkingDirectory(remoteDirectory));
@@ -115,7 +120,7 @@ public class FTPTarget {
 			firsttimedownload = false;
 		
 		}
-		FTPFile[] files = ftpClient.listFiles("", FTPFileFilters.ALL);
+		FTPFile[] files = ftpClient.listFiles(".", FTPFileFilters.ALL);
 		
 		try{
 			FileOutputStream stream = new FileOutputStream(localTargetDirectory+"/"+".htaccess");
