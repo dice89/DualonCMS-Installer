@@ -120,7 +120,7 @@ public class FTPTarget {
 			firsttimedownload = false;
 		
 		}
-		FTPFile[] files = ftpClient.listFiles(".", FTPFileFilters.ALL);
+		FTPFile[] files = ftpClient.listFiles("", FTPFileFilters.ALL);
 		
 		try{
 			FileOutputStream stream = new FileOutputStream(localTargetDirectory+"/"+".htaccess");
