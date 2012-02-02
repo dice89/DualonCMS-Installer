@@ -49,12 +49,23 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		
+		
 		if(args.length != 0 && args[0].equals("-console")){
 				new Console(args);
 		} else {	
 			try {
-				BeePublishedClient window = new BeePublishedClient();
-				window.open();
+				
+				Display.getDefault().syncExec(new Runnable(){
+
+					@Override
+					public void run() {
+						BeePublishedClient window = new BeePublishedClient();
+						window.open();
+					}
+				});
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -120,6 +131,8 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		buttonAction.setLayoutData(fd_buttonAction);
 		buttonAction.setText("...");
 		buttonAction.addSelectionListener(this);
+		buttonAction.setEnabled(false);
+		buttonAction.setFocus();
 		
 		labelFeedback = new Label(shlBeepublishedClient, SWT.CENTER);
 		labelFeedback.setAlignment(SWT.LEFT);
