@@ -141,15 +141,27 @@ public class FTPTarget {
 		System.out.println(ftpClient.changeToParentDirectory());
 	}
 	
+	/**
+	 * @return
+	 */
 	public boolean isConnected(){
 		return ftpClient.isConnected();
 	}
 	
+	/**
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean isLogedIn() throws IOException{
 		ftpClient.logout();
 		return ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());
 	}
 	
+	/**
+	 * @param filename
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean containsFile(String filename) throws IOException{
 		for(FTPFile file : ftpClient.listFiles()){
 			if(file.getName().equals(filename))
@@ -158,6 +170,11 @@ public class FTPTarget {
 		return false;
 	}
 	
+	
+	/**
+	 * @param filename
+	 * @throws IOException
+	 */
 	public void deleteFile(String filename) throws IOException{
 		ftpClient.deleteFile(filename);
 	}
