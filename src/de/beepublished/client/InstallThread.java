@@ -46,6 +46,16 @@ public class InstallThread extends Thread implements WebServiceListener {
 			ftpTarget.uploadFile(source.getSQLDump().getAbsolutePath(), "services/installation/cake.sql");
 			ftpTarget.logout();
 			ftpTarget.disconnect();
+			
+			delegate.setFeedback("setting chmod");
+			ftpTarget.connect();
+			ftpTarget.login();
+			if(!target.getFtpInformation().getFtpUploadRoot().equals(""))
+				ftpTarget.changeWorkingDirectory(target.getFtpInformation().getFtpUploadRoot());
+			ftpTarget.changeWorkingDirectory("app");
+			ftpTarget.changeWorkingDirectory("webroot");
+			ftpTarget.changeCHMOD("CHMOD 777 uploads");
+			
 			delegate.setFeedback("install cms...");
 			
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);

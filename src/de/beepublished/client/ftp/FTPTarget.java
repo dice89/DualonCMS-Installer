@@ -61,6 +61,13 @@ public class FTPTarget {
 		
 	}
 	
+	public void changeWorkingDirectory(String path) throws IOException{
+		if(!ftpClient.changeWorkingDirectory(path)){
+			System.out.println("could not change to directory "+ path);
+			System.err.println(ftpClient.getReplyString());
+		}
+	}
+	
 	public void uploadFolder(File localFolder, String remoteFolderPath) throws FileNotFoundException, IOException{
 		assert(ftpClient.isConnected());
 
@@ -160,6 +167,13 @@ public class FTPTarget {
 	
 	public void deleteFile(String filename) throws IOException{
 		ftpClient.deleteFile(filename);
+	}
+
+	public void changeCHMOD(String string) throws IOException {
+		if(!ftpClient.sendSiteCommand(string)){
+			System.out.println("could not change chmod:"+ string);
+			System.err.println(ftpClient.getReplyString());
+		}
 	}
 
 }
