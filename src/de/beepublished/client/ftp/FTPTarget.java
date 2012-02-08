@@ -55,6 +55,7 @@ public class FTPTarget {
 		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 		
 		while(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f))){
+			System.err.println(ftpClient.getReplyString());
 			System.out.println("File not stored! Do it again!");
 		}
 		

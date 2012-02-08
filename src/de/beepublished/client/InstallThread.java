@@ -43,7 +43,7 @@ public class InstallThread extends Thread implements WebServiceListener {
 			delegate.setFeedback("upload files...");
 			ftpTarget.uploadFolder(source.getFiles(),target.getFtpInformation().getFtpUploadRoot());
 			delegate.setFeedback("upload db...");
-			ftpTarget.uploadFile(source.getSQLDump().getAbsolutePath(), "services/installation/cake.sql");
+			ftpTarget.uploadFile(source.getSQLDump().getAbsolutePath(), "app/webroot/services/installation/cake.sql");
 			ftpTarget.logout();
 			ftpTarget.disconnect();
 			
