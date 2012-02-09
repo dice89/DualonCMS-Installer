@@ -54,9 +54,30 @@ public class InstallThread extends Thread implements WebServiceListener {
 				ftpTarget.changeWorkingDirectory(target.getFtpInformation().getFtpUploadRoot());
 			ftpTarget.changeWorkingDirectory("app");
 			ftpTarget.changeWorkingDirectory("webroot");
+			try{
 			ftpTarget.changeCHMOD("CHMOD 777 uploads");
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			
+			
+			delegate.setFeedback("change CHMOD other folders");
+			
+			ftpTarget.logout();
+			ftpTarget.disconnect();
+			
+			delegate.setFeedback("setting chmod");
+			ftpTarget.connect();
+			ftpTarget.login();
+			if(!target.getFtpInformation().getFtpUploadRoot().equals(""))
+				ftpTarget.changeWorkingDirectory(target.getFtpInformation().getFtpUploadRoot());
+			
+			
+			ftpTarget.changetmpMODS();
 			
 			delegate.setFeedback("install cms...");
+			
+			System.out.println("installa");
 			
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);
 			

@@ -98,7 +98,7 @@ public class FTPTarget {
 	}
 	
 	/**
-	 * Lädt die Datei aus dem aktuellen FTP-Verzeichniss in das aktuelle Arbeitsverzeichnis
+	 * Lï¿½dt die Datei aus dem aktuellen FTP-Verzeichniss in das aktuelle Arbeitsverzeichnis
 	 * @param remoteFilename
 	 * @throws IOException 
 	 */
@@ -192,6 +192,12 @@ public class FTPTarget {
 			System.out.println("could not change chmod:"+ string);
 			System.err.println(ftpClient.getReplyString());
 		}
+	}
+	
+	public void changetmpMODS() throws IOException{
+		this.changeWorkingDirectory("app");	
+		
+		changeCHMOD("CHMOD -R 777 tmp");
 	}
 
 }
