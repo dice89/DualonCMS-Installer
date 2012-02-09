@@ -194,10 +194,27 @@ public class FTPTarget {
 		}
 	}
 	
+	private void changeMODREC(FTPFile file) throws IOException{
+		ftpClient.changeWorkingDirectory(file.getName());
+		changeCHMOD("CHMOD 777 "+file.getName());
+		
+		for(FTPFile files : ftpClient.listDirectories()){
+			this.changeMODREC(files);
+		}
+		
+		ftpClient.changeToParentDirectory();
+	}
+	
 	public void changetmpMODS() throws IOException{
 		this.changeWorkingDirectory("app");	
 		
-		changeCHMOD("CHMOD -R 777 tmp");
+		changeCHMOD("CHMOD 777 tmp");
+		
+		for(FTPFile fileTMP : ftpClient.listDirectories()){
+			if(fileTMP.getName().equals("tmp"))
+				this.changeMODREC(fileTMP);
+		}
+		
 	}
 
 }
