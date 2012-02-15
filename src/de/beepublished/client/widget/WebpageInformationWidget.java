@@ -51,6 +51,10 @@ public class WebpageInformationWidget extends Composite {
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
+	public void initialize(WebPageInformation web){
+		txtHttplocalhostdualoncms.setText(web.getPageRoot());
+	}
+	
 	public WebPageInformation getPageInformation(){
 		
 		return new WebPageInformationImpl(txtHttplocalhostdualoncms.getText());

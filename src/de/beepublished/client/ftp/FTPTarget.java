@@ -13,6 +13,8 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilters;
 import org.apache.commons.net.ftp.FTPReply;
 
+import sun.misc.FpUtils;
+
 
 public class FTPTarget {
 	
@@ -108,6 +110,14 @@ public class FTPTarget {
 		System.out.println(ftpClient.retrieveFile(remoteFilename, stream));
 		stream.flush();
 		stream.close();
+	}
+	
+	public void setBinaryFileType(){
+		try {
+			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void downloadFTP(File localFolder) throws IOException{

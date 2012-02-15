@@ -54,6 +54,24 @@ public class WebServer implements WebEndPoint {
 	public String serialize() {
 		return name+";"+ftpInfo.serialize()+";"+dbInfo.serialize()+";"+pageInfo.serialize();
 	}
+	
+	public void setName(String name){
+		this.name = name;
+	}
+	
+	
+
+	public void setFtpInfo(FTPLoginInformation ftpInfo) {
+		this.ftpInfo = ftpInfo;
+	}
+
+	public void setDbInfo(DBLoginInformation dbInfo) {
+		this.dbInfo = dbInfo;
+	}
+
+	public void setPageInfo(WebPageInformation pageInfo) {
+		this.pageInfo = pageInfo;
+	}
 
 	@Override
 	public int hashCode() {
