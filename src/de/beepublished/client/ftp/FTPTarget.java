@@ -26,8 +26,9 @@ public class FTPTarget {
 	
 	public void connect() throws SocketException, IOException {
 		ftpClient = new FTPClient();
+		
 		ftpClient.connect(loginInformation.getHost(), loginInformation.getPort());
-	
+		ftpClient.setKeepAlive(true);
 		int replyCode = ftpClient.getReplyCode();
 		if(!FTPReply.isPositiveCompletion(replyCode)){
 			throw new RuntimeException("Reply code "+replyCode);
@@ -195,11 +196,18 @@ public class FTPTarget {
 	}
 	
 	private void changeMODREC(FTPFile file) throws IOException{
-		ftpClient.changeWorkingDirectory(file.getName());
-		changeCHMOD("CHMOD 777 "+file.getName());
 		
+		changeCHMOD("CHMOD 777 "+file.getName());
+		System.err.println(ftpClient.getReplyString());
+		ftpClient.changeWorkingDirectory(file.getName());
+		System.err.println(ftpClient.getReplyString());
 		for(FTPFile files : ftpClient.listDirectories()){
-			this.changeMODREC(files);
+			if(! files.getName().equals(".")){
+				if(! files.getName().equals("..")){
+					this.changeMODREC(files);
+				}
+			}
+			System.err.println(ftpClient.getReplyString());
 		}
 		
 		ftpClient.changeToParentDirectory();
@@ -208,12 +216,28 @@ public class FTPTarget {
 	public void changetmpMODS() throws IOException{
 		this.changeWorkingDirectory("app");	
 		
-		changeCHMOD("CHMOD 777 tmp");
+		System.err.println(ftpClient.getReplyString());
 		
-		for(FTPFile fileTMP : ftpClient.listDirectories()){
+	
+		
+		FTPFile[] ftpFiles = ftpClient.listDirectories();
+		System.err.println(ftpClient.getReplyString());
+		System.out.println(ftpFiles.length);
+		
+		//ftpClient.
+		FTPFile fileTMP = null;
+		for(int i  = 0; i < ftpFiles.length; i++ ){
+			fileTMP = ftpFiles[i];
 			if(fileTMP.getName().equals("tmp"))
 				this.changeMODREC(fileTMP);
 		}
+	
+		
+		/*for(FTPFile fileTMP : ftpClient.listDirectories()){
+			System.out.println(fileTMP.getName());
+			if(fileTMP.getName().equals("tmp"))
+				this.changeMODREC(fileTMP);
+		}*/
 		
 	}
 
