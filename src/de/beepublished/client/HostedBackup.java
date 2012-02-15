@@ -1,12 +1,9 @@
 package de.beepublished.client;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
+import de.beepublished.client.ftp.FTPLoginInformationImpl;
+import de.beepublished.client.ftp.FTPTarget;
 import de.beepublished.client.zip.ZipEngine;
 
 public class HostedBackup implements FileEndPoint {
@@ -15,9 +12,13 @@ public class HostedBackup implements FileEndPoint {
 	private File dbFile;
 	private File filesRoot;
 	
+	public HostedBackup() {
+		super();
+	}
+
 	@Override
 	public String getName() {
-		return "webserver";
+		return "Get latest version";
 	}
 
 	@Override
@@ -43,24 +44,20 @@ public class HostedBackup implements FileEndPoint {
 	@Override
 	public void process() {
 		try {
-		
-			File f = File.createTempFile("tmp_download_folder_", "");
-			f.delete();
-			f.mkdir();
 			
-			URLConnection con = new URL("http://localhost/archive.zip").openConnection();
-			System.out.println(con.getContentType());
+			FTPTarget target = new FTPTarget(new FTPLoginInformationImpl("beepublished.de", 21, "f006089b", "ZmFZHS3ckXrAWSSY", ""));
+			target.connect();
+			target.login();
 			
-			InputStream in = con.getInputStream();
-			this.backupFile = new File(f.getAbsolutePath()+"/installation.zip");
-			BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(backupFile));
-			byte data[] = new byte[1024];
-			while(in.read(data) != -1){
-				bout.write(data);
-			}
-			bout.flush();
-			bout.close();
-					
+			target.setBinaryFileType();
+			this.backupFile = File.createTempFile("tmp_installation_hosted_download", ".zip");
+			target.downloadFile("installationfinalBeePublished.bpb.zip", backupFile);
+			
+			target.logout();
+			target.disconnect();
+			
+			
+			// setup temp directory
 			File extracted = File.createTempFile("tmp_installation", "");
 			extracted.delete();
 			extracted.mkdir();
@@ -84,3 +81,4 @@ public class HostedBackup implements FileEndPoint {
 	}
 
 }
+

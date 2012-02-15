@@ -10,22 +10,25 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+import de.beepublished.client.db.DBLoginInformationImpl;
+import de.beepublished.client.ftp.FTPLoginInformationImpl;
+import de.beepublished.client.pageInformation.WebPageInformationImpl;
 import de.beepublished.client.widget.CreateWebPointDialog;
-import org.eclipse.swt.widgets.ProgressBar;
 
 public class BeePublishedClient implements SelectionListener, ValidationFeedback, ProgressFeedback {
 	
@@ -39,6 +42,8 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	private Button buttonAction;
 	private Label labelFeedback;
 	private ProgressBar progressBar;
+	private CreateWebPointDialog createWebPointDialogSource;
+	private CreateWebPointDialog createWebPointDialogTarget;
 	
 	// Model
 	private EndPointManager managerQuelle;
@@ -47,7 +52,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	/**
 	 * Launch the application.
 	 * @param args
-	 */
+	*/
 	public static void main(String[] args) {
 		
 		
@@ -78,6 +83,74 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
+		
+		// Close event
+				shlBeepublishedClient.addListener(SWT.Close, new Listener() {
+					@Override
+					public void handleEvent(Event event) {
+						
+						Display display = Display.getDefault();
+						CloseDialog shell1 = new CloseDialog(display);
+					    while (!shell1.isDisposed()) {
+					        if (!display.readAndDispatch()) {
+					            display.sleep();
+					        }
+					    }
+					    
+					    switch (shell1.getResult()) {
+						case CloseDialog.RESULT_YES:
+
+							// begin
+							try{
+							
+						    	File f = new File("setting.bps.txt");
+								PrintWriter inputStream = new PrintWriter(f);new FileInputStream(f);
+								List<EndPoint> pointsQuelle = managerQuelle.getEndPoints();
+								List<EndPoint> pointsZiele = managerZiel.getEndPoints();
+										
+								ArrayList<WebServer> result = new ArrayList<WebServer>();
+										
+									
+								for(EndPoint p : pointsQuelle){
+									if(p instanceof WebServer){
+										if(!result.contains((WebServer) p)){
+											result.add((WebServer) p);
+										}
+									}
+								}
+										
+								for(EndPoint p : pointsZiele){
+									if(p instanceof WebServer){
+										if(!result.contains((WebServer) p)){
+											result.add((WebServer) p);
+										}
+									}
+								}
+										
+								for(WebServer server : result){
+									String serialization = server.serialize();
+									System.out.println(serialization);
+									inputStream.println(serialization);
+								}
+										
+								inputStream.flush();
+								inputStream.close();
+							
+							} catch (Exception e) {
+								// TODO: handle exception
+							}
+							// end
+							
+						    display.dispose();
+							break;
+						case CloseDialog.RESULT_NO:
+							break;
+					    }
+					    display.dispose();
+					}
+				});
+		
+		
 		shlBeepublishedClient.open();
 		shlBeepublishedClient.layout();
 		while (!shlBeepublishedClient.isDisposed()) {
@@ -89,76 +162,100 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 
 	/**
 	 * Create contents of the window.
+	
+		 * @wbp.parser.entryPoint
+		 
 	 */
 	protected void createContents() {
 		shlBeepublishedClient = new Shell();
-		shlBeepublishedClient.setSize(450, 140);
+		shlBeepublishedClient.setSize(780, 821);
+		
 		shlBeepublishedClient.setText("BeePublished - Client");
-		shlBeepublishedClient.setLayout(new FormLayout());
+		shlBeepublishedClient.setLayout(new GridLayout(3, false));
+		
+		Label descriptionLabel = new Label(shlBeepublishedClient, SWT.NONE);
+		descriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
+		descriptionLabel.setText("Please specifiy your Source and Target. They can be either a File or a Server.");
 		
 		Group grpQuelle = new Group(shlBeepublishedClient, SWT.NONE);
-		FormData fd_grpQuelle = new FormData();
-		fd_grpQuelle.bottom = new FormAttachment(0, 51);
-		fd_grpQuelle.right = new FormAttachment(0, 160);
-		fd_grpQuelle.top = new FormAttachment(0, 10);
-		fd_grpQuelle.left = new FormAttachment(0, 10);
-		grpQuelle.setLayoutData(fd_grpQuelle);
-		grpQuelle.setText("Quelle");
-		
-		Group grpZiele = new Group(shlBeepublishedClient, SWT.NONE);
-		FormData fd_grpZiele = new FormData();
-		fd_grpZiele.bottom = new FormAttachment(0, 51);
-		fd_grpZiele.right = new FormAttachment(0, 424);
-		fd_grpZiele.top = new FormAttachment(0, 10);
-		fd_grpZiele.left = new FormAttachment(0, 274);
-		grpZiele.setLayoutData(fd_grpZiele);
-		grpZiele.setText("Ziele");
-		grpQuelle.setLayout(new FillLayout(SWT.HORIZONTAL));
+		grpQuelle.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		grpQuelle.setText("Source");
+		grpQuelle.setLayout(new GridLayout(1, false));
 		
 		comboQuelle = new Combo(grpQuelle, SWT.NONE);
-		comboQuelle.addSelectionListener(this);
-		grpZiele.setLayout(new FillLayout(SWT.HORIZONTAL));
+		comboQuelle.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		
-		comboZiel = new Combo(grpZiele, SWT.NONE);
-		comboZiel.addSelectionListener(this);
+		Button btnCreateNewFileprofile = new Button(grpQuelle, SWT.NONE);
+		btnCreateNewFileprofile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				resolveSource();
+			}
+		});
+		btnCreateNewFileprofile.setText("Create new Fileprofile");
+		
+		Button btnCreateNewServerprofile = new Button(grpQuelle, SWT.NONE);
+		btnCreateNewServerprofile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				WebServer newServer = new WebServer("WebServer", new FTPLoginInformationImpl("", 21, "", "", ""), new DBLoginInformationImpl("", "", "", ""), new WebPageInformationImpl(""));
+				managerQuelle.addEndPoint(newServer);
+				managerZiel.addEndPoint(newServer);
+				createWebPointDialogSource.initializeWithWebServer(newServer);
+				BeePublishedClient.this.setup();
+			}
+		});
+		btnCreateNewServerprofile.setText("Create new Serverprofile");
+		comboQuelle.addSelectionListener(this);
+		
+		createWebPointDialogSource = new CreateWebPointDialog(grpQuelle, SWT.NONE);
+		createWebPointDialogSource.setVisible(false);
 		
 		buttonAction = new Button(shlBeepublishedClient, SWT.NONE);
-		FormData fd_buttonAction = new FormData();
-		fd_buttonAction.bottom = new FormAttachment(grpQuelle, 0, SWT.BOTTOM);
-		fd_buttonAction.right = new FormAttachment(grpZiele, -6);
-		fd_buttonAction.top = new FormAttachment(0, 20);
-		fd_buttonAction.left = new FormAttachment(0, 166);
-		buttonAction.setLayoutData(fd_buttonAction);
-		buttonAction.setText("...");
+		buttonAction.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		buttonAction.setText("               ...              ");
 		buttonAction.addSelectionListener(this);
 		buttonAction.setEnabled(false);
+		
+	
+		
 		buttonAction.setFocus();
 		
-		labelFeedback = new Label(shlBeepublishedClient, SWT.CENTER);
-		labelFeedback.setAlignment(SWT.LEFT);
-		FormData fd_labelFeedback = new FormData();
-		fd_labelFeedback.bottom = new FormAttachment(100, -8);
-		fd_labelFeedback.top = new FormAttachment(grpZiele, 9);
-		fd_labelFeedback.right = new FormAttachment(100, -10);
-		labelFeedback.setLayoutData(fd_labelFeedback);
+		Group grpZiele = new Group(shlBeepublishedClient, SWT.NONE);
+		grpZiele.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 2));
+		grpZiele.setText("Target");
+		grpZiele.setLayout(new GridLayout(1, false));
 		
+		comboZiel = new Combo(grpZiele, SWT.NONE);
+		comboZiel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		comboZiel.addSelectionListener(this);
+		
+		Button btnCreateNewFileprofileTarget = new Button(grpZiele, SWT.NONE);
+		btnCreateNewFileprofileTarget.setText("Create new Fileprofile");
+		
+		Button btnCreateNewServerprofileTarget = new Button(grpZiele, SWT.NONE);
+		btnCreateNewServerprofileTarget.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				WebServer newServer = new WebServer("WebServer", new FTPLoginInformationImpl("", 21, "", "", ""), new DBLoginInformationImpl("", "", "", ""), new WebPageInformationImpl(""));
+				managerQuelle.addEndPoint(newServer);
+				managerZiel.addEndPoint(newServer);
+				createWebPointDialogTarget.initializeWithWebServer(newServer);
+				BeePublishedClient.this.setup();
+			}
+		});
+		btnCreateNewServerprofileTarget.setText("Create new Serverprofile");
+		
+		createWebPointDialogTarget = new CreateWebPointDialog(grpZiele, SWT.NONE);
+		createWebPointDialogTarget.setVisible(false);
 		Menu menu = new Menu(shlBeepublishedClient, SWT.BAR);
 		shlBeepublishedClient.setMenuBar(menu);
 		
 		MenuItem mntmNewSubmenu = new MenuItem(menu, SWT.CASCADE);
-		mntmNewSubmenu.setText("Einstellungen");
+		mntmNewSubmenu.setText("Settings");
 		
 		Menu menu_1 = new Menu(mntmNewSubmenu);
 		mntmNewSubmenu.setMenu(menu_1);
-		
-		MenuItem mntmAddServer = new MenuItem(menu_1, SWT.NONE);
-		mntmAddServer.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleAddServerButton(e);
-			}
-		});
-		mntmAddServer.setText("add Server");
 		
 		MenuItem mntmExportSettings = new MenuItem(menu_1, SWT.NONE);
 		mntmExportSettings.setText("export Settings");
@@ -168,14 +265,18 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		
 		progressBar = new ProgressBar(shlBeepublishedClient, SWT.INDETERMINATE);
 		progressBar.setVisible(false);
+		new Label(shlBeepublishedClient, SWT.NONE);
+		new Label(shlBeepublishedClient, SWT.NONE);
+		new Label(shlBeepublishedClient, SWT.NONE);
+		new Label(shlBeepublishedClient, SWT.NONE);
 		
-		fd_labelFeedback.left = new FormAttachment(progressBar, 6);
+		labelFeedback = new Label(shlBeepublishedClient, SWT.CENTER);
+		labelFeedback.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		labelFeedback.setText(".");
+		labelFeedback.setAlignment(SWT.LEFT);
+		new Label(shlBeepublishedClient, SWT.NONE);
+		new Label(shlBeepublishedClient, SWT.NONE);
 		
-		FormData fd_progressBar = new FormData();
-		fd_progressBar.right = new FormAttachment(grpQuelle, 207);
-		fd_progressBar.top = new FormAttachment(grpQuelle, 6);
-		fd_progressBar.left = new FormAttachment(grpQuelle, 0, SWT.LEFT);
-		progressBar.setLayoutData(fd_progressBar);
 		mntmImportSettings.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -257,7 +358,16 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		managerQuelle = new EndPointManager(ADDITION_SOURCE);
 		managerZiel = new EndPointManager(ADDITION_TARGET);
 		
-		//managerQuelle.addEndPoint(new HostedBackup());
+		// try to import existing settings
+				try{
+			    	List<WebServer> server = WebServerImporter.importWebserver("setting.bps.txt");
+			    	for(WebServer s : server){
+			    		managerQuelle.addEndPoint(s);
+						managerZiel.addEndPoint(s);
+					}
+				} catch (Exception e) { }
+		
+		managerQuelle.addEndPoint(new HostedBackup());
 		
 		setup();
 	}
@@ -302,22 +412,30 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		}
 	}
 	
-	private void handleAddServerButton(SelectionEvent e){
-		System.out.println("Button handleAddServerButton");
-		CreateWebPointDialog dialog = new CreateWebPointDialog(shlBeepublishedClient, 0);
-		WebServer server = (WebServer) dialog.open();
-		if(server != null){
-			managerQuelle.addEndPoint(server);
-			managerZiel.addEndPoint(server);
-			comboQuelle.setItems(managerQuelle.getForComboBox());
-			comboZiel.setItems(managerZiel.getForComboBox());
-		}
-	}
-	
 	private void handleComboBoxSelection(SelectionEvent e){
 		System.out.println("Combo Selection");
 		new ValidationThread(this,managerQuelle, managerZiel,comboQuelle.getSelectionIndex(),comboZiel.getSelectionIndex()).start();
-		//System.out.println(didSelectExtraItem((Combo) e.getSource()));
+		
+		Combo o =(Combo) e.getSource();
+		
+		try{
+		WebServer s = (WebServer) managerQuelle.getAtIndex(o.getSelectionIndex());
+		if(o.equals(comboQuelle)){
+			createWebPointDialogSource.setVisible(true);
+			createWebPointDialogSource.initializeWithWebServer(s);
+		} else {
+			createWebPointDialogTarget.setVisible(true);
+			createWebPointDialogTarget.initializeWithWebServer(s);
+		}
+		} catch (Exception es){
+			if(o.equals(comboQuelle)){
+				createWebPointDialogSource.setVisible(false);
+				createWebPointDialogSource.redraw();
+				createWebPointDialogSource.pack(true);
+			} else {
+				createWebPointDialogTarget.setVisible(false);
+			}
+		}
 	}
 	
 	/**

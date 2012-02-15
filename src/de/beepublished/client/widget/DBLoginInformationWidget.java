@@ -65,6 +65,13 @@ public class DBLoginInformationWidget extends Composite {
 		inputPasswort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}
+	
+	public void initialize(DBLoginInformation dbInfo){
+		inputHost.setText(dbInfo.getHost());
+		inputName.setText(dbInfo.getDBName());
+		inputPasswort.setText(dbInfo.getPassword());
+		inputUser.setText(dbInfo.getUserName());
+	}
 
 	@Override
 	protected void checkSubclass() {

@@ -7,7 +7,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -16,96 +16,72 @@ import org.eclipse.swt.widgets.Text;
 
 import de.beepublished.client.WebServer;
 
-public class CreateWebPointDialog extends Dialog {
+public class CreateWebPointDialog extends Composite {
 
-	protected Object result;
+	protected WebServer result;
 	protected Shell shell;
 
+	
+	DBLoginInformationWidget loginInformationWidget;
+	FTPLoginInformationWidget loginInformationWidget_1;
+	WebpageInformationWidget webpageInformationWidget;
+	
 	/**
-	 * Create the dialog.
+	 * Create the Composite.
 	 * @param parent
 	 * @param style
 	 */
-	public CreateWebPointDialog(Shell parent, int style) {
-		super(parent, SWT.APPLICATION_MODAL);
-		setText("SWT Dialog");
-	}
-
-	/**
-	 * Open the dialog.
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-	
-
-	private Text inputName;
-
-	/**
-	 * Create contents of the dialog.
-	 */
-	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
-		shell.setSize(450, 466);
-		shell.setText(getText());
-		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
+	public CreateWebPointDialog(Composite parent, int style) {
+		super(parent, style);
+		/////
 		
-		Group grpCreateNewEndpoint = new Group(shell, SWT.NONE);
-		grpCreateNewEndpoint.setText("Create new EndPoint");
-		grpCreateNewEndpoint.setLayout(new GridLayout(2, false));
+		Group grpCreateNewEndpoint = new Group(getParent(), SWT.NONE);
+		grpCreateNewEndpoint.setText("Selected Profile");
+		grpCreateNewEndpoint.setLayout(new GridLayout(1, false));
 		
 		Label lblName = new Label(grpCreateNewEndpoint, SWT.NONE);
-		lblName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblName.setText("Name");
 		
 		inputName = new Text(grpCreateNewEndpoint, SWT.BORDER);
 		inputName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		inputName.setText("Local XAMPP Webserver");
-		new Label(grpCreateNewEndpoint, SWT.NONE);
 		
-		final DBLoginInformationWidget loginInformationWidget = new DBLoginInformationWidget(grpCreateNewEndpoint, SWT.NONE);
+		loginInformationWidget = new DBLoginInformationWidget(grpCreateNewEndpoint, SWT.NONE);
 		loginInformationWidget.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		new Label(grpCreateNewEndpoint, SWT.NONE);
 		
-		final FTPLoginInformationWidget loginInformationWidget_1 = new FTPLoginInformationWidget(grpCreateNewEndpoint, SWT.NONE);
+		loginInformationWidget_1 = new FTPLoginInformationWidget(grpCreateNewEndpoint, SWT.NONE);
 		loginInformationWidget_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		new Label(grpCreateNewEndpoint, SWT.NONE);
 		
-		final WebpageInformationWidget webpageInformationWidget = new WebpageInformationWidget(grpCreateNewEndpoint, SWT.NONE);
+		webpageInformationWidget = new WebpageInformationWidget(grpCreateNewEndpoint, SWT.NONE);
 		webpageInformationWidget.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		
-		Button btnClose = new Button(grpCreateNewEndpoint, SWT.NONE);
-		btnClose.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				result = null;
-				CreateWebPointDialog.this.shell.dispose();
-			}
-		});
-		btnClose.setText("close");
 		
 		Button btnNewButton = new Button(grpCreateNewEndpoint, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				result = new WebServer(inputName.getText(), loginInformationWidget_1.getLoginInformation(), loginInformationWidget.getLoginInformation(),webpageInformationWidget.getPageInformation());
-				CreateWebPointDialog.this.shell.dispose();
+				result.setName(inputName.getText());
+				result.setDbInfo(loginInformationWidget.getLoginInformation());
+				result.setFtpInfo(loginInformationWidget_1.getLoginInformation());
+				result.setPageInfo(webpageInformationWidget.getPageInformation());
 			}
 		});
 		GridData gd_btnNewButton = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
 		gd_btnNewButton.widthHint = 287;
 		btnNewButton.setLayoutData(gd_btnNewButton);
-		btnNewButton.setText("add new EndPoint");
+		btnNewButton.setText("save this Profile");
 
+	}	
+
+	private Text inputName;
+	
+	public void initializeWithWebServer(WebServer webserver){
+		this.result = webserver;
+		
+		inputName.setText(webserver.getName());
+		loginInformationWidget.initialize(webserver.getDbInformation());
+		loginInformationWidget_1.initialize(webserver.getFtpInformation());
+		webpageInformationWidget.initialize(webserver.getPageInformation());
 	}
+
+	
 }

@@ -84,6 +84,14 @@ public class FTPLoginInformationWidget extends Composite {
 		inputRoot.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}
+	
+	public void initialize(FTPLoginInformation ftpInfo){
+		inputHost.setText(ftpInfo.getHost());
+		inputPassword.setText(ftpInfo.getPassword());
+		inputPort.setText(ftpInfo.getPort()+"");
+		inputRoot.setText(ftpInfo.getFtpUploadRoot());
+		inputUserName.setText(ftpInfo.getUserName());
+	}
 
 	@Override
 	protected void checkSubclass() {
@@ -91,7 +99,11 @@ public class FTPLoginInformationWidget extends Composite {
 	}
 
 	public FTPLoginInformation getLoginInformation(){
-		return new FTPLoginInformationImpl(inputHost.getText(), Integer.parseInt(inputPort.getText()), inputUserName.getText(), inputPassword.getText(), inputRoot.getText());
+		int port = 21;
+		try{
+			port = Integer.parseInt(inputPort.getText());
+		} catch (Exception e) {}
+		return new FTPLoginInformationImpl(inputHost.getText(), port, inputUserName.getText(), inputPassword.getText(), inputRoot.getText());
 
 	}
 

@@ -163,7 +163,7 @@ public class ServiceHandler {
 					httpResponse = httpclient.execute(post);
 					
 				}
-				catch(NullPointerException e)
+				catch(Exception e)
 				{
 					/*
 					//retry. because of unknown problem provoking a NullPointerException lets recreate the httpClient 
@@ -175,10 +175,12 @@ public class ServiceHandler {
 						return new ServiceException(ServiceErrorType.ENTITY_IS_NULL, new Exception("NullPointerException within  doInBackground 2nd time"));
 					}
 					*/
+					responseListener.onResponseFailed(lwService.getServiceURL(), new ServiceException(404));
 				}
 				if(httpResponse == null)
 				{
 					responseListener.onResponseFailed(lwService.getServiceURL(), se);
+					return;
 				
 				}
 				//handle the response content

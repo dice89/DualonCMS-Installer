@@ -12,6 +12,7 @@ public class MigrationThread extends Thread implements ProgressFeedback{
 	private ProgressFeedback delegate;
 	private WebServer source;
 	private WebServer target;
+	private boolean failed;
 
 	public MigrationThread(ProgressFeedback delegate, WebServer source, WebServer target) {
 		super();
@@ -23,24 +24,29 @@ public class MigrationThread extends Thread implements ProgressFeedback{
 	@Override
 	public void run() {
 		try{
+			failed = false;
 			File f = File.createTempFile("tmp_file_", ".zip");
 			System.out.println("Backing up to: " + f);
 			BackupThread backup = new BackupThread(this, source, new FileBackup(f));
 			backup.start();
 			backup.join();
+			if(failed)
+				return;
 			InstallThread install = new InstallThread(this, backup.getTarget(), target);
 			install.start();
 			install.join();
+			if(!failed)
 			delegate.setFinished();
 		} catch (Exception e) {
-			// TODO: handle exception
+			delegate.setFailed(e);
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void setFeedback(String newStatus) {
-		delegate.setFeedback(newStatus);
+		if(!failed)
+			delegate.setFeedback(newStatus);
 	}
 
 	@Override
@@ -57,6 +63,7 @@ public class MigrationThread extends Thread implements ProgressFeedback{
 
 	@Override
 	public void setFailed(Exception e) {
-		e.printStackTrace();
+		failed = true;
+		delegate.setFailed(e);
 	}
 }
