@@ -9,8 +9,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Shell;
 
 import de.beepublished.client.BeePublishedClient;
+import de.beepublished.client.ConfirmDialog;
 import de.beepublished.client.HostedBackup;
 import de.beepublished.client.InstallThread;
 import de.beepublished.client.ProgressFeedback;
@@ -121,7 +123,10 @@ public class InstallContent extends Composite implements ProgressFeedback {
 			InstallThread install = new InstallThread(InstallContent.this, new HostedBackup(), target);
 			install.start();
 		} catch (Exception ex){
-			// TODO add error dialog
+			ConfirmDialog t = new ConfirmDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			t.setDialogTitle("Error");
+			t.setDialogText("Please check your selected values!");
+			t.open();
 		}
 	}
 }

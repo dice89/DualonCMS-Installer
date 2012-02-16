@@ -9,8 +9,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Shell;
 
 import de.beepublished.client.BeePublishedClient;
+import de.beepublished.client.ConfirmDialog;
 import de.beepublished.client.MigrationThread;
 import de.beepublished.client.ProgressFeedback;
 import de.beepublished.client.WebServer;
@@ -131,8 +133,10 @@ public class MigrateContent extends Composite implements ProgressFeedback {
 			MigrationThread migrate = new MigrationThread(this, source, target);
 			migrate.start();
 		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+			ConfirmDialog t = new ConfirmDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			t.setDialogTitle("Error");
+			t.setDialogText("Please check your selected values!");
+			t.open();
 		}
 	}
 }
