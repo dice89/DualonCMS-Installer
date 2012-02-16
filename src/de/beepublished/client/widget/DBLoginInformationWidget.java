@@ -38,7 +38,6 @@ public class DBLoginInformationWidget extends Composite {
 		lblDatenbankname.setText("Host");
 		
 		inputHost = new Text(grpDbLoginInformation, SWT.BORDER);
-		inputHost.setText("localhost");
 		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDatenbankname_1 = new Label(grpDbLoginInformation, SWT.NONE);
@@ -46,7 +45,6 @@ public class DBLoginInformationWidget extends Composite {
 		lblDatenbankname_1.setText("Name");
 		
 		inputName = new Text(grpDbLoginInformation, SWT.BORDER);
-		inputName.setText("dualoncms");
 		inputName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblUser = new Label(grpDbLoginInformation, SWT.NONE);
@@ -54,14 +52,13 @@ public class DBLoginInformationWidget extends Composite {
 		lblUser.setText("User");
 		
 		inputUser = new Text(grpDbLoginInformation, SWT.BORDER);
-		inputUser.setText("root");
 		inputUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPasswort = new Label(grpDbLoginInformation, SWT.NONE);
 		lblPasswort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblPasswort.setText("Passwort");
 		
-		inputPasswort = new Text(grpDbLoginInformation, SWT.BORDER);
+		inputPasswort = new Text(grpDbLoginInformation, SWT.BORDER | SWT.PASSWORD);
 		inputPasswort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}

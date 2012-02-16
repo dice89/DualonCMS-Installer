@@ -47,7 +47,6 @@ public class FTPLoginInformationWidget extends Composite {
 		lblHost.setText("Host");
 		
 		inputHost = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputHost.setText("localhost");
 		//inputHost.addVerifyListener(verification);
 		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -55,7 +54,6 @@ public class FTPLoginInformationWidget extends Composite {
 		lblPort.setText("Port");
 		
 		inputPort = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputPort.setText("21");
 		//inputPort.addVerifyListener(verification);
 		inputPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -63,15 +61,13 @@ public class FTPLoginInformationWidget extends Composite {
 		lblUsername.setText("UserName");
 		
 		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputUserName.setText("newuser");
 		//inputUserName.addVerifyListener(verification);
 		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPassword = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblPassword.setText("Password");
 		
-		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputPassword.setText("xampp");
+		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER | SWT.PASSWORD);
 		//inputPassword.addVerifyListener(verification);
 		inputPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -80,7 +76,6 @@ public class FTPLoginInformationWidget extends Composite {
 		lblDualonRoot.setText("Dualon Root");
 		
 		inputRoot = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputRoot.setText("dualon-cms");
 		inputRoot.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
 	}

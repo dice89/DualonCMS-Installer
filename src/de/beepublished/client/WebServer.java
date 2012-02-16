@@ -11,7 +11,7 @@ import de.beepublished.client.pageInformation.WebPageInformationImpl;
 public class WebServer implements WebEndPoint {
 
 	public static WebServer deserialize(String serialization){
-		String[] values = serialization.split(";");
+		String[] values = serialization.split(";",11);
 		return new WebServer(values[0], FTPLoginInformationImpl.deserialize(values), DBLoginInformationImpl.deserialize(values), WebPageInformationImpl.deserialize(values));
 	}
 	

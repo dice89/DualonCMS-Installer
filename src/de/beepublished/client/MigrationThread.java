@@ -24,6 +24,7 @@ public class MigrationThread extends Thread implements ProgressFeedback{
 	@Override
 	public void run() {
 		try{
+			delegate.setStarted();
 			failed = false;
 			File f = File.createTempFile("tmp_file_", ".zip");
 			System.out.println("Backing up to: " + f);

@@ -41,7 +41,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 	@Override
 	public void run() {
 		try{
-			delegate.setFeedback("starting backup...");
+			delegate.setStarted();
 			WebManager.getWebManager().backupCMS(this, source.getDbInformation(), source.getPageInformation());
 			
 			while(!finished){
