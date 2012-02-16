@@ -1,14 +1,12 @@
 package de.beepublished.client.widget;
 
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.SWT;
-
-import de.beepublished.client.WebServer;
-import de.beepublished.client.db.DBLoginInformation;
-
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+
+import de.beepublished.client.WebServer;
 
 public class EditWebPointComposite extends Composite {
 	

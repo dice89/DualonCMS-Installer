@@ -1,21 +1,19 @@
 package de.beepublished.client.widget;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.ProgressBar;
-
-import de.beepublished.client.MigrationThread;
-import de.beepublished.client.NewUI;
-import de.beepublished.client.ProgressFeedback;
-import de.beepublished.client.WebServer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ProgressBar;
+
+import de.beepublished.client.BeePublishedClient;
+import de.beepublished.client.MigrationThread;
+import de.beepublished.client.ProgressFeedback;
+import de.beepublished.client.WebServer;
 
 public class MigrateContent extends Composite implements ProgressFeedback {
 
@@ -68,7 +66,7 @@ public class MigrateContent extends Composite implements ProgressFeedback {
 	}
 	
 	public void updateComboBox(){
-		String[] cbValues = NewUI.endPointManager.getForComboBox();
+		String[] cbValues = BeePublishedClient.endPointManager.getForComboBox();
 		targetServerCombo.setItems(cbValues);
 		sourceServerCombo.setItems(cbValues);
 	}
@@ -128,8 +126,8 @@ public class MigrateContent extends Composite implements ProgressFeedback {
 	
 	public void doAction(){
 		try{
-			WebServer source = NewUI.endPointManager.getSelectedServer(sourceServerCombo);
-			WebServer target = NewUI.endPointManager.getSelectedServer(targetServerCombo);
+			WebServer source = BeePublishedClient.endPointManager.getSelectedServer(sourceServerCombo);
+			WebServer target = BeePublishedClient.endPointManager.getSelectedServer(targetServerCombo);
 			MigrationThread migrate = new MigrationThread(this, source, target);
 			migrate.start();
 		} catch (Exception e) {

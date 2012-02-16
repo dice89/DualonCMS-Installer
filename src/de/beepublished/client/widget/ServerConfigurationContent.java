@@ -1,16 +1,14 @@
 package de.beepublished.client.widget;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
 
-import de.beepublished.client.EndPointManager;
-import de.beepublished.client.NewUI;
+import de.beepublished.client.BeePublishedClient;
 import de.beepublished.client.WebServer;
 import de.beepublished.client.db.DBLoginInformationImpl;
 import de.beepublished.client.ftp.FTPLoginInformationImpl;
@@ -42,12 +40,12 @@ public class ServerConfigurationContent extends Composite implements SelectionLi
 			public void widgetSelected(SelectionEvent e) {
 				// create new WebServer
 				WebServer newServer = new WebServer("New WebServer", new FTPLoginInformationImpl("", 21, "", "", ""), new DBLoginInformationImpl("", "", "", ""), new WebPageInformationImpl(""));
-				NewUI.endPointManager.addEndPoint(newServer);
+				BeePublishedClient.endPointManager.addEndPoint(newServer);
 				editWebPointComposite.setServer(newServer);
 				
 				// select new web server in combo box
-				combo.setItems(NewUI.endPointManager.getForComboBox());
-				combo.select(NewUI.endPointManager.getCount()-1);
+				combo.setItems(BeePublishedClient.endPointManager.getForComboBox());
+				combo.select(BeePublishedClient.endPointManager.getCount()-1);
 				
 			}
 		});
@@ -62,30 +60,30 @@ public class ServerConfigurationContent extends Composite implements SelectionLi
 	}
 	
 	public void onWebServerDeleted(WebServer webServer){
-		NewUI.endPointManager.removeEndPoint(webServer);
+		BeePublishedClient.endPointManager.removeEndPoint(webServer);
 		
-		if(NewUI.endPointManager.getCount() == 0){
+		if(BeePublishedClient.endPointManager.getCount() == 0){
 			WebServer next =new WebServer("", new FTPLoginInformationImpl("", 21, "", "", ""), new DBLoginInformationImpl("", "", "", ""), new WebPageInformationImpl(""));
-			NewUI.endPointManager.addEndPoint(next);
+			BeePublishedClient.endPointManager.addEndPoint(next);
 		}
-		combo.setItems(NewUI.endPointManager.getForComboBox());
+		combo.setItems(BeePublishedClient.endPointManager.getForComboBox());
 		combo.select(0);
-		editWebPointComposite.setServer((WebServer) NewUI.endPointManager.getAtIndex(0)); 
+		editWebPointComposite.setServer((WebServer) BeePublishedClient.endPointManager.getAtIndex(0)); 
 		
-		NewUI.endPointManager.exportSettings("settings.bps.txt");
+		BeePublishedClient.endPointManager.exportSettings("settings.bps.txt");
 		
 	}
 	
 	public void onWebServerUpdated(WebServer webServer){
 		int selected = combo.getSelectionIndex();
-		combo.setItems(NewUI.endPointManager.getForComboBox());
+		combo.setItems(BeePublishedClient.endPointManager.getForComboBox());
 		combo.select(selected);
-		NewUI.endPointManager.exportSettings("settings.bps.txt");
+		BeePublishedClient.endPointManager.exportSettings("settings.bps.txt");
 	}
 
 	@Override
 	public void widgetSelected(SelectionEvent e) {		
-		WebServer s = (WebServer) NewUI.endPointManager.getAtIndex(((Combo) e.getSource()).getSelectionIndex());
+		WebServer s = (WebServer) BeePublishedClient.endPointManager.getAtIndex(((Combo) e.getSource()).getSelectionIndex());
 		editWebPointComposite.setServer(s);
 	}
 
@@ -96,7 +94,7 @@ public class ServerConfigurationContent extends Composite implements SelectionLi
 	}
 	
 	public void updateComboBox(){
-		String[] cbValues = NewUI.endPointManager.getForComboBox();
+		String[] cbValues = BeePublishedClient.endPointManager.getForComboBox();
 		combo.setItems(cbValues);
 		combo.setItems(cbValues);
 	}

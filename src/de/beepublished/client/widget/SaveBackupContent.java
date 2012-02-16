@@ -1,24 +1,20 @@
 package de.beepublished.client.widget;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ProgressBar;
 
 import de.beepublished.client.BackupThread;
+import de.beepublished.client.BeePublishedClient;
 import de.beepublished.client.FileBackup;
-import de.beepublished.client.FileEndPoint;
-import de.beepublished.client.NewUI;
 import de.beepublished.client.ProgressFeedback;
 import de.beepublished.client.WebServer;
-import org.eclipse.swt.events.SelectionAdapter;
 
 public class SaveBackupContent extends Composite implements ProgressFeedback {
 
@@ -71,7 +67,7 @@ public class SaveBackupContent extends Composite implements ProgressFeedback {
 	}
 	
 	public void updateComboBox(){
-		String[] cbValues = NewUI.endPointManager.getForComboBox();
+		String[] cbValues = BeePublishedClient.endPointManager.getForComboBox();
 		sourceServerCombo.setItems(cbValues);
 	}
 
@@ -130,7 +126,7 @@ public class SaveBackupContent extends Composite implements ProgressFeedback {
 	
 	public void doAction(){
 		try{
-			WebServer source = NewUI.endPointManager.getSelectedServer(sourceServerCombo);
+			WebServer source = BeePublishedClient.endPointManager.getSelectedServer(sourceServerCombo);
 			FileBackup target = (FileBackup) fileTarget.getFile();
 			BackupThread thread = new BackupThread(this, source, target);
 			thread.start();

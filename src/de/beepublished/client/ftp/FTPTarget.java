@@ -13,8 +13,6 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilters;
 import org.apache.commons.net.ftp.FTPReply;
 
-import sun.misc.FpUtils;
-
 
 public class FTPTarget {
 	

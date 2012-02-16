@@ -12,7 +12,7 @@ public class Console implements ProgressFeedback{
 	private ArrayList<WebServer> servers;
 
 	public Console(String[] args) {
-		
+		try{
 		argAction = args[1];
 		argConfig = args[2];
 		argSource = args[3];
@@ -55,6 +55,9 @@ public class Console implements ProgressFeedback{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

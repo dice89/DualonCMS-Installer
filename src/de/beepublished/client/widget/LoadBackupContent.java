@@ -1,24 +1,20 @@
 package de.beepublished.client.widget;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Button;
-
-import de.beepublished.client.FileBackup;
-import de.beepublished.client.HostedBackup;
-import de.beepublished.client.InstallThread;
-import de.beepublished.client.NewUI;
-import de.beepublished.client.ProgressFeedback;
-import de.beepublished.client.WebServer;
-
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ProgressBar;
+
+import de.beepublished.client.BeePublishedClient;
+import de.beepublished.client.FileBackup;
+import de.beepublished.client.InstallThread;
+import de.beepublished.client.ProgressFeedback;
+import de.beepublished.client.WebServer;
 
 public class LoadBackupContent extends Composite implements ProgressFeedback {
 
@@ -72,7 +68,7 @@ public class LoadBackupContent extends Composite implements ProgressFeedback {
 	}
 	
 	public void updateComboBox(){
-		String[] cbValues = NewUI.endPointManager.getForComboBox();
+		String[] cbValues = BeePublishedClient.endPointManager.getForComboBox();
 		targetServerCombo.setItems(cbValues);
 	}
 
@@ -132,7 +128,7 @@ public class LoadBackupContent extends Composite implements ProgressFeedback {
 	public void doAction(){
 		try{
 			FileBackup backup = (FileBackup) fileComposite.getFile();
-			WebServer target = NewUI.endPointManager.getSelectedServer(targetServerCombo);
+			WebServer target = BeePublishedClient.endPointManager.getSelectedServer(targetServerCombo);
 			InstallThread install = new InstallThread(this, backup, target);
 			install.start();
 		} catch (Exception e) {
