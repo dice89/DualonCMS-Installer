@@ -35,15 +35,15 @@ public class LoadBackupContent extends Composite implements ProgressFeedback {
 		super(parent, style);
 		
 		targetServerCombo = new Combo(this, SWT.NONE);
-		targetServerCombo.setBounds(356, 93, 250, 23);
+		targetServerCombo.setBounds(10, 84, 261, 23);
 		
 		Label sourceFileLabel = new Label(this, SWT.NONE);
-		sourceFileLabel.setBounds(42, 72, 80, 15);
+		sourceFileLabel.setBounds(10, 10, 80, 15);
 		sourceFileLabel.setText("Source file:");
 		
 		Label targetServerLabel = new Label(this, SWT.NONE);
 		targetServerLabel.setText("Target server:");
-		targetServerLabel.setBounds(356, 72, 80, 15);
+		targetServerLabel.setBounds(10, 63, 80, 15);
 		
 		loadBackupButton = new Button(this, SWT.NONE);
 		loadBackupButton.addSelectionListener(new SelectionAdapter() {
@@ -52,18 +52,18 @@ public class LoadBackupContent extends Composite implements ProgressFeedback {
 				doAction();
 			}
 		});
-		loadBackupButton.setBounds(42, 140, 100, 25);
+		loadBackupButton.setBounds(10, 113, 100, 25);
 		loadBackupButton.setText("Load backup");
 
 		progressBar = new ProgressBar(this, SWT.INDETERMINATE);
-		progressBar.setBounds(42, 199, 564, 17);
+		progressBar.setBounds(10, 144, 420, 17);
 		progressBar.setVisible(false);
 		
 		labelFeedback = new Label(this, SWT.NONE);
-		labelFeedback.setBounds(42, 222, 250, 15);
+		labelFeedback.setBounds(10, 167, 420, 15);
 		
 		fileComposite = new FileComposite(this, SWT.NONE);
-		fileComposite.setBounds(42, 93, 261, 26);
+		fileComposite.setBounds(10, 31, 261, 26);
 		fileComposite.setLoad();
 	}
 	

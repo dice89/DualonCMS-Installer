@@ -5,8 +5,6 @@ import org.apache.http.message.BasicNameValuePair;
 import de.beepublished.client.http.webservice.services.LightweightService;
 import de.beepublished.client.http.webservice.services.ServiceResponse;
 
-
-
 public class  REST_CMS_Installation extends LightweightService {
 	
 	public  REST_CMS_Installation(String homeUrl, String dBHost, String dBName, String dBPw, String dBLogin, String uri){
@@ -18,7 +16,6 @@ public class  REST_CMS_Installation extends LightweightService {
 		methodKeyValuePairs.add(new BasicNameValuePair("DBLogin", dBLogin));
 		methodKeyValuePairs.add(new BasicNameValuePair("HomeUrl", homeUrl));
 	}
-
 
 	@Override
 	public Class<? extends ServiceResponse> getResponseClass() {

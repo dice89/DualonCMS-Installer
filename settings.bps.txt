@@ -1,2 +1,2 @@
-LocalServer;localhost;21;ftpUser;ftpUser;DualonCMS;localhost;dualoncms;root;;http://localhost/DualonCMS
+LocalServer change;localhost;21;ftpUser;ftpUser;DualonCMS;localhost;dualoncms;root;;http://localhost/DualonCMS
 Second Server;localhost;21;ftpUser;ftpUser;DualonCMS2;localhost;dualoncms2;root;;http://localhost/DualonCMS2

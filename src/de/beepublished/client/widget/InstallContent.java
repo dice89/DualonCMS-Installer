@@ -39,22 +39,22 @@ public class InstallContent extends Composite implements ProgressFeedback {
 				doAction();
 			}
 		});
-		installButton.setBounds(42, 140, 100, 25);
+		installButton.setBounds(10, 60, 100, 25);
 		installButton.setText("Install");
 		
 		Label label = new Label(this, SWT.NONE);
 		label.setText("Target server:");
-		label.setBounds(42, 72, 80, 15);
+		label.setBounds(10, 10, 80, 15);
 		
 		targetServerCombo = new Combo(this, SWT.NONE);
-		targetServerCombo.setBounds(42, 93, 250, 23);
+		targetServerCombo.setBounds(10, 31, 250, 23);
 
 		progressBar = new ProgressBar(this, SWT.INDETERMINATE);
-		progressBar.setBounds(42, 199, 564, 17);
+		progressBar.setBounds(10, 91, 420, 17);
 		progressBar.setVisible(false);
 		
 		labelFeedback = new Label(this, SWT.NONE);
-		labelFeedback.setBounds(42, 222, 250, 15);
+		labelFeedback.setBounds(10, 114, 250, 15);
 	}
 	
 	public void updateComboBox(){

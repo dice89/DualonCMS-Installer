@@ -5,7 +5,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 
+import de.beepublished.client.ConfirmDialog;
+import de.beepublished.client.ModalYesNoDialog;
 import de.beepublished.client.WebServer;
 
 public class EditWebPointComposite extends Composite {
@@ -50,20 +53,30 @@ public class EditWebPointComposite extends Composite {
 				currentWebServer.setPageInfo(pageWidget.getPageInformation());
 				
 				((ServerConfigurationContent) parent).onWebServerUpdated(currentWebServer);
+				
+				ConfirmDialog t = new ConfirmDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				t.setDialogTitle("Success");
+				t.setDialogText("Server saved");
+				t.open();
 			}
 		});
-		btnNewButton.setBounds(170, 417, 270, 25);
-		btnNewButton.setText("Save Profile");
+		btnNewButton.setBounds(345, 417, 95, 25);
+		btnNewButton.setText("Save Server");
 		
 		btnDeleteProfile = new Button(this, SWT.NONE);
 		btnDeleteProfile.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				((ServerConfigurationContent) parent).onWebServerDeleted(currentWebServer);
+				
+				ModalYesNoDialog t = new ModalYesNoDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				t.setDialogTitle("Do you want to delete the server?");
+				int result = t.open();
+				if(result == ModalYesNoDialog.YES)
+					((ServerConfigurationContent) parent).onWebServerDeleted(currentWebServer);
 			}
 		});
-		btnDeleteProfile.setBounds(10, 417, 95, 25);
-		btnDeleteProfile.setText("Delete Profile");
+		btnDeleteProfile.setBounds(244, 417, 95, 25);
+		btnDeleteProfile.setText("Delete Server");
 	}
 
 	@Override

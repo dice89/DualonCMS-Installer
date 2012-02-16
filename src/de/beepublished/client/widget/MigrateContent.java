@@ -34,18 +34,18 @@ public class MigrateContent extends Composite implements ProgressFeedback {
 		super(parent, style);
 		
 		sourceServerCombo = new Combo(this, SWT.NONE);
-		sourceServerCombo.setBounds(42, 93, 250, 23);
+		sourceServerCombo.setBounds(10, 31, 250, 23);
 		
 		targetServerCombo = new Combo(this, SWT.NONE);
-		targetServerCombo.setBounds(356, 93, 250, 23);
+		targetServerCombo.setBounds(10, 85, 250, 23);
 		
 		Label sourceServerLabel = new Label(this, SWT.NONE);
-		sourceServerLabel.setBounds(42, 72, 80, 15);
+		sourceServerLabel.setBounds(10, 10, 80, 15);
 		sourceServerLabel.setText("Source server:");
 		
 		Label targetServerLabel = new Label(this, SWT.NONE);
 		targetServerLabel.setText("Target server:");
-		targetServerLabel.setBounds(356, 72, 80, 15);
+		targetServerLabel.setBounds(10, 60, 80, 15);
 		
 		migrateButton = new Button(this, SWT.NONE);
 		migrateButton.addSelectionListener(new SelectionAdapter() {
@@ -54,15 +54,15 @@ public class MigrateContent extends Composite implements ProgressFeedback {
 				doAction();
 			}
 		});
-		migrateButton.setBounds(42, 140, 100, 25);
+		migrateButton.setBounds(10, 114, 100, 25);
 		migrateButton.setText("Migrate");
 		
 		progressBar = new ProgressBar(this, SWT.INDETERMINATE);
-		progressBar.setBounds(42, 199, 564, 17);
+		progressBar.setBounds(10, 145, 430, 17);
 		progressBar.setVisible(false);
 		
 		labelFeedback = new Label(this, SWT.NONE);
-		labelFeedback.setBounds(42, 222, 250, 15);
+		labelFeedback.setBounds(10, 168, 430, 15);
 	}
 	
 	public void updateComboBox(){

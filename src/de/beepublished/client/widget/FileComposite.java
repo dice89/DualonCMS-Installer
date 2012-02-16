@@ -12,6 +12,8 @@ import de.beepublished.client.FileBackup;
 import de.beepublished.client.FileEndPoint;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 
 public class FileComposite extends Composite {
 	
@@ -28,6 +30,12 @@ public class FileComposite extends Composite {
 		super(parent, style);
 		
 		text = new Text(this, SWT.BORDER);
+		text.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				doAction();
+			}
+		});
 		text.setBounds(1, 1, 215, 23);
 		
 		Button button = new Button(this, SWT.NONE);

@@ -59,17 +59,6 @@ public class ProfileNameWidget extends Composite {
 	}
 	
 	public WebPageInformation getPageInformation(){
-		
 		return new WebPageInformationImpl(txtHttplocalhostdualoncms.getText());
-		/*
-		return new WebPageInformation() {
-			
-			@Override
-			public String getPageRoot() {
-				return txtHttplocalhostdualoncms.getText();
-			}
-		};
-		
-		*/
 	}
 }

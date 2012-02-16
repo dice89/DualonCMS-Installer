@@ -66,10 +66,10 @@ public class BeePublishedClient {
 	 */
 	protected void createContents() {
 		shell = new Shell();
-		shell.setSize(800, 600);
-		shell.setText("SWT Application");
+		shell.setSize(489, 615);
+		shell.setText("BeePublished Administration Client");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
-		shell.setMinimumSize(800, 600);
+		shell.setMinimumSize(489, 615);
 		
 		endPointManager = new EndPointManager();
 		endPointManager.importSettings("settings.bps.txt");

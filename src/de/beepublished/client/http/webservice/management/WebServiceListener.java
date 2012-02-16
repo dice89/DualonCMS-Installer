@@ -5,8 +5,6 @@ import de.beepublished.client.http.webservice.dao.REST_CMS_Installation_response
 import de.beepublished.client.http.webservice.services.ServiceException;
 import de.beepublished.client.http.webservice.services.ServiceFileStreamResponse;
 
-
-
 public interface WebServiceListener {
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response);
 	public void onRestZipDownloadFailed(ServiceException e);
@@ -16,6 +14,5 @@ public interface WebServiceListener {
 	
 	public void onRestBackupSuccess(REST_CMS_Backup_response response);
 	public void onRestBackupFailed(ServiceException e);
-
 
 }
