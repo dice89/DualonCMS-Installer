@@ -37,7 +37,7 @@ public class WebpageInformationWidget extends Composite {
 		grpWebpageInformation.setText("Webpage Information");
 		
 		Label lblWebRoot = new Label(grpWebpageInformation, SWT.NONE);
-		lblWebRoot.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblWebRoot.setLayoutData(new GridData(75, SWT.DEFAULT));
 		lblWebRoot.setText("Web Root");
 		
 		txtHttplocalhostdualoncms = new Text(grpWebpageInformation, SWT.BORDER);

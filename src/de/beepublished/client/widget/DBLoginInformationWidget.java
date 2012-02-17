@@ -34,29 +34,26 @@ public class DBLoginInformationWidget extends Composite {
 		grpDbLoginInformation.setLayout(new GridLayout(2, false));
 		
 		Label lblDatenbankname = new Label(grpDbLoginInformation, SWT.NONE);
-		lblDatenbankname.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblDatenbankname.setLayoutData(new GridData(75, SWT.DEFAULT));
 		lblDatenbankname.setText("Host");
 		
 		inputHost = new Text(grpDbLoginInformation, SWT.BORDER);
 		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblDatenbankname_1 = new Label(grpDbLoginInformation, SWT.NONE);
-		lblDatenbankname_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDatenbankname_1.setText("Name");
 		
 		inputName = new Text(grpDbLoginInformation, SWT.BORDER);
 		inputName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblUser = new Label(grpDbLoginInformation, SWT.NONE);
-		lblUser.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblUser.setText("User");
 		
 		inputUser = new Text(grpDbLoginInformation, SWT.BORDER);
 		inputUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblPasswort = new Label(grpDbLoginInformation, SWT.NONE);
-		lblPasswort.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblPasswort.setText("Passwort");
+		lblPasswort.setText("Password");
 		
 		inputPasswort = new Text(grpDbLoginInformation, SWT.BORDER | SWT.PASSWORD);
 		inputPasswort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

@@ -3,6 +3,8 @@ package de.beepublished.client.widget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -107,7 +109,7 @@ public class InstallContent extends Composite implements ProgressFeedback {
 			public void run() {
 				progressBar.setVisible(false);
 				installButton.setEnabled(true);
-				labelFeedback.setText(e.getLocalizedMessage());
+				labelFeedback.setText(e.toString() + " " + e.getLocalizedMessage());
 			}
 		});
 	}
@@ -123,7 +125,14 @@ public class InstallContent extends Composite implements ProgressFeedback {
 			InstallThread install = new InstallThread(InstallContent.this, new HostedBackup(), target);
 			install.start();
 		} catch (Exception ex){
-			ConfirmDialog t = new ConfirmDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			
+			// calculate popup position
+			Rectangle rec = getParent().getBounds();
+			Point popupPosition = getParent().toDisplay(0, 0) ;
+			popupPosition.x += (rec.width /2) - (182 / 2);
+			popupPosition.y += (rec.height / 2) - (114 / 2);
+			
+			ConfirmDialog t = new ConfirmDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL,popupPosition);
 			t.setDialogTitle("Error");
 			t.setDialogText("Please check your selected values!");
 			t.open();

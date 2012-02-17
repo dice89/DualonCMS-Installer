@@ -3,6 +3,7 @@ package de.beepublished.client;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -18,15 +19,17 @@ public class ConfirmDialog extends Dialog {
 	protected Shell shlTitle;
 	private String title = "TITLE";
 	private String text = "TEXT";
+	private Point position;
 
 	/**
 	 * Create the dialog.
 	 * @param parent
 	 * @param style
 	 */
-	public ConfirmDialog(Shell parent, int style) {
+	public ConfirmDialog(Shell parent, int style,Point position) {
 		super(parent, style);
 		setText("SWT Dialog");
+		this.position = position;
 	}
 
 	/**
@@ -51,6 +54,7 @@ public class ConfirmDialog extends Dialog {
 	 */
 	private void createContents() {
 		shlTitle = new Shell(getParent(), getStyle());
+		shlTitle.setLocation(position);
 		shlTitle.setSize(182, 114);
 		shlTitle.setText(title);
 		shlTitle.setLayout(null);

@@ -37,8 +37,8 @@ public class ProfileNameWidget extends Composite {
 		grpWebpageInformation.setText("Profile Name");
 		
 		Label lblWebRoot = new Label(grpWebpageInformation, SWT.NONE);
-		lblWebRoot.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblWebRoot.setText("Server Name");
+		lblWebRoot.setLayoutData(new GridData(75, SWT.DEFAULT));
+		lblWebRoot.setText("Name");
 		
 		txtHttplocalhostdualoncms = new Text(grpWebpageInformation, SWT.BORDER);
 		txtHttplocalhostdualoncms.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

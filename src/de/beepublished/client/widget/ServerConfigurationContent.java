@@ -101,14 +101,19 @@ public class ServerConfigurationContent extends Composite implements SelectionLi
 	
 	public void onWebServerDeleted(WebServer webServer){
 		BeePublishedClient.endPointManager.removeEndPoint(webServer);
-		
+		/*
 		if(BeePublishedClient.endPointManager.getCount() == 0){
 			WebServer next =new WebServer("", new FTPLoginInformationImpl("", 21, "", "", ""), new DBLoginInformationImpl("", "", "", ""), new WebPageInformationImpl(""));
 			BeePublishedClient.endPointManager.addEndPoint(next);
 		}
+		*/
 		combo.setItems(BeePublishedClient.endPointManager.getForComboBox());
-		combo.select(0);
-		editWebPointComposite.setServer((WebServer) BeePublishedClient.endPointManager.getAtIndex(0)); 
+		if(combo.getItemCount() != 0){
+			combo.select(0);
+			editWebPointComposite.setServer((WebServer) BeePublishedClient.endPointManager.getAtIndex(0)); 
+		} else {
+			editWebPointComposite.setServer(null);
+		}
 		
 		BeePublishedClient.endPointManager.exportSettings("settings.bps.txt");
 		

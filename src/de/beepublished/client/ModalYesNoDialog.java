@@ -3,10 +3,13 @@ package de.beepublished.client;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Label;
 
 public class ModalYesNoDialog extends Dialog {
 
@@ -16,15 +19,18 @@ public class ModalYesNoDialog extends Dialog {
 	protected int result;
 	protected Shell shlTitle;
 	private String title = "TITLE";
+	private String message = "MESSAGE";
+	private Point position;
 
 	/**
 	 * Create the dialog.
 	 * @param parent
 	 * @param style
 	 */
-	public ModalYesNoDialog(Shell parent, int style) {
+	public ModalYesNoDialog(Shell parent, int style, Point position) {
 		super(parent, style);
 		setText("SWT Dialog");
+		this.position = position;
 	}
 
 	/**
@@ -36,6 +42,8 @@ public class ModalYesNoDialog extends Dialog {
 		shlTitle.open();
 		shlTitle.layout();
 		Display display = getParent().getDisplay();
+		
+		shlTitle.setLocation(position);
 		while (!shlTitle.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -49,7 +57,7 @@ public class ModalYesNoDialog extends Dialog {
 	 */
 	private void createContents() {
 		shlTitle = new Shell(getParent(), getStyle());
-		shlTitle.setSize(182, 75);
+		shlTitle.setSize(182, 114);
 		shlTitle.setText(title);
 		shlTitle.setLayout(null);
 		
@@ -61,7 +69,7 @@ public class ModalYesNoDialog extends Dialog {
 				shlTitle.dispose();
 			}
 		});
-		btnYes.setBounds(10, 10, 75, 25);
+		btnYes.setBounds(10, 47, 75, 25);
 		btnYes.setText("Yes");
 		
 		Button btnNo = new Button(shlTitle, SWT.NONE);
@@ -72,12 +80,20 @@ public class ModalYesNoDialog extends Dialog {
 				shlTitle.dispose();
 			}
 		});
-		btnNo.setBounds(91, 10, 75, 25);
+		btnNo.setBounds(91, 47, 75, 25);
 		btnNo.setText("No");
+		
+		Label lblNewLabel = new Label(shlTitle, SWT.WRAP);
+		lblNewLabel.setText(message);
+		lblNewLabel.setBounds(10, 10, 156, 31);
 
 	}
 
 	public void setDialogTitle(String string) {
 		title = string;
+	}
+	
+	public void setMessage(String msg){
+		message = msg;
 	}
 }

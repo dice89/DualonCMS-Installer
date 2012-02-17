@@ -3,13 +3,20 @@ package de.beepublished.client.widget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import de.beepublished.client.BeePublishedClient;
 import de.beepublished.client.ConfirmDialog;
 import de.beepublished.client.ModalYesNoDialog;
 import de.beepublished.client.WebServer;
+import de.beepublished.client.db.DBLoginInformationImpl;
+import de.beepublished.client.ftp.FTPLoginInformationImpl;
+import de.beepublished.client.pageInformation.WebPageInformationImpl;
 
 public class EditWebPointComposite extends Composite {
 	
@@ -47,6 +54,11 @@ public class EditWebPointComposite extends Composite {
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if(currentWebServer == null){
+					currentWebServer = new WebServer("", null, null, null);
+					BeePublishedClient.endPointManager.addEndPoint(currentWebServer);
+				}
+				
 				currentWebServer.setName(nameWidget.getName());
 				currentWebServer.setDbInfo(dbWidget.getLoginInformation());
 				currentWebServer.setFtpInfo(ftpWidget.getLoginInformation());
@@ -54,7 +66,13 @@ public class EditWebPointComposite extends Composite {
 				
 				((ServerConfigurationContent) parent).onWebServerUpdated(currentWebServer);
 				
-				ConfirmDialog t = new ConfirmDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				// calculate popup position
+				Rectangle rec = getParent().getBounds();
+				Point popupPosition = getParent().toDisplay(0, 0) ;
+				popupPosition.x += (rec.width /2) - (182 / 2);
+				popupPosition.y += (rec.height / 2) - (114 / 2);
+				
+				ConfirmDialog t = new ConfirmDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL,popupPosition);
 				t.setDialogTitle("Success");
 				t.setDialogText("Server saved");
 				t.open();
@@ -68,8 +86,16 @@ public class EditWebPointComposite extends Composite {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
-				ModalYesNoDialog t = new ModalYesNoDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				t.setDialogTitle("Do you want to delete the server?");
+				// calculate popup position
+				Rectangle rec = getParent().getBounds();
+				Point popupPosition = getParent().toDisplay(0, 0) ;
+				popupPosition.x += (rec.width /2) - (182 / 2);
+				popupPosition.y += (rec.height / 2) - (114 / 2);
+				
+				ModalYesNoDialog t = new ModalYesNoDialog(new Shell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL,popupPosition);
+				t.setDialogTitle("Please confirm");
+				t.setMessage("Do you want to delete the server?");
+				
 				int result = t.open();
 				if(result == ModalYesNoDialog.YES)
 					((ServerConfigurationContent) parent).onWebServerDeleted(currentWebServer);
@@ -90,9 +116,16 @@ public class EditWebPointComposite extends Composite {
 	}
 	
 	private void initializeWithWebServer(){
-		this.nameWidget.initialize(this.currentWebServer.getName());
-		this.dbWidget.initialize(this.currentWebServer.getDbInformation());
-		this.ftpWidget.initialize(this.currentWebServer.getFtpInformation());
-		this.pageWidget.initialize(this.currentWebServer.getPageInformation());
+		if(currentWebServer != null){
+			this.nameWidget.initialize(this.currentWebServer.getName());
+			this.dbWidget.initialize(this.currentWebServer.getDbInformation());
+			this.ftpWidget.initialize(this.currentWebServer.getFtpInformation());
+			this.pageWidget.initialize(this.currentWebServer.getPageInformation());
+		} else {
+			this.nameWidget.initialize("");
+			this.dbWidget.initialize(new DBLoginInformationImpl("", "", "", ""));
+			this.ftpWidget.initialize(new FTPLoginInformationImpl("", 21, "", "", ""));
+			this.pageWidget.initialize(new WebPageInformationImpl(""));
+		}
 	}
 }
