@@ -1,1 +1,1 @@
-New WebServer;;21;;;;;;;;
+TestServer;web200.mis08.de;21;web200f1;testFabi;;localhost;usr_web200_2;web200;PdNO4FNM;http://fabi.direktbankkonten.de

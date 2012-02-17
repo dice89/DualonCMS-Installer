@@ -13,6 +13,8 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilters;
 import org.apache.commons.net.ftp.FTPReply;
 
+import sun.misc.FpUtils;
+
 
 public class FTPTarget {
 	
@@ -35,9 +37,14 @@ public class FTPTarget {
 		}
 	}
 	
-	public boolean login() throws IOException{
-		assert(isConnected());
-		return ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());	
+	public void login(){
+		try{
+			boolean loginSuccess = ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());
+			ftpClient.enterLocalPassiveMode();
+			//ftpClient.enterRemotePassiveMode();
+		} catch (Exception e) {
+			throw new RuntimeException("could not login to ftp", e);
+		}
 	}
 	
 	public void logout() throws IOException{
@@ -132,17 +139,16 @@ public class FTPTarget {
 	}
 	
 	public void downloadDirectory(File localTargetDirectory, String remoteDirectory) throws IOException{
-		ftpClient.enterLocalPassiveMode();
 		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 		
 		if(!remoteDirectory.equals("")){
 			System.out.println(ftpClient.changeWorkingDirectory(remoteDirectory));
-			if(!firsttimedownload){
-				System.out.println(localTargetDirectory.mkdirs());
-			}
 			firsttimedownload = false;
-		
 		}
+		if(!firsttimedownload){
+			System.out.println(localTargetDirectory.mkdirs());
+		}
+		
 		FTPFile[] files = ftpClient.listFiles("", FTPFileFilters.ALL);
 		
 		try{
