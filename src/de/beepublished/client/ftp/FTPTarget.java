@@ -49,18 +49,24 @@ public class FTPTarget {
 		ftpClient.disconnect();
 	}
 	
-	public void uploadFile(String localFilePath, String remoteFilePath) throws FileNotFoundException, IOException{	
-		assert(this.isConnected());
-		File f = new File(localFilePath);
-		
-		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-		
-		while(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f))){
-			System.err.println(ftpClient.getReplyString());
-			System.out.println("File not stored! Do it again!");
+	public void uploadFile(String localFilePath, String remoteFilePath) throws FileNotFoundException{	
+		try{
+			if(!isConnected()){
+				connect();
+				login();
+			}
+			
+			File f = new File(localFilePath);
+			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+			
+			while(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f))){
+				System.err.println(ftpClient.getReplyString());
+				System.out.println("File not stored! Do it again!");
+			}
+		} catch (IOException e) {
+			System.out.println("retry upload...");
+			uploadFile(localFilePath, remoteFilePath);
 		}
-		
-		
 	}
 	
 	public void changeWorkingDirectory(String path) throws IOException{
