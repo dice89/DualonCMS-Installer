@@ -1,6 +1,14 @@
 package de.beepublished.client.http.webservice.management;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -154,17 +162,50 @@ public class WebManager {
 	
 	
 	@SuppressWarnings("deprecation")
-	private static HttpClient createHttpClient() {
-		HttpClient httpClient;
-		//create an HTTP scheme
-		SchemeRegistry schemeReg = new SchemeRegistry();
-		schemeReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-		//create a thread-safe HTTP connection manager and client
-		ThreadSafeClientConnManager connMgr = new ThreadSafeClientConnManager(new BasicHttpParams(), schemeReg);
-		//create the HTTP client out of the thread-safe connection manager and set the proxy
-		httpClient = new DefaultHttpClient(connMgr, new BasicHttpParams());
-		return httpClient;
-	}
+    private static HttpClient createHttpClient() {
+          HttpClient httpClient;
+          //create an HTTP scheme
+          SchemeRegistry schemeReg = new SchemeRegistry();
+          schemeReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+          //create a thread-safe HTTP connection manager and client
+          ThreadSafeClientConnManager connMgr = new ThreadSafeClientConnManager(new BasicHttpParams(), schemeReg);
+          //create the HTTP client out of the thread-safe connection manager and set the proxy
+          httpClient = new DefaultHttpClient(connMgr, new BasicHttpParams());
+          setProxyViaFile(httpClient);
+          return httpClient;
+    }
+    
+    private static void setProxyViaFile(HttpClient httpClient){
+          FileReader freader = null;
+          BufferedReader breader = null;
+          File f = null;
+          String input = null;
+          
+          f = new File("proxysettings.bps.txt");
+          
+          try {
+                 freader = new FileReader(f);
+                 breader = new BufferedReader(freader);
+                 input = breader.readLine();
+          } catch (FileNotFoundException e) {
+                 e.printStackTrace();
+                 return;
+          } catch (IOException e) {
+                 e.printStackTrace();
+                 return;
+          }
+          
+          if(input != null){
+                 int proxysetted = Integer.parseInt(input.substring(0,input.indexOf("#")));
+                 String proxytext= input.substring(input.indexOf("#")+1, input.lastIndexOf("#"));
+                 int proxyport = Integer.parseInt(input.substring(input.lastIndexOf("#")+1, input.length()));
+                 if(proxysetted != 0){
+                        HttpHost proxy = new HttpHost(proxytext, proxyport);
+                        httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy); 
+                 }
+                 
+          }
+    }
 
 }
 
