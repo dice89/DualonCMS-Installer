@@ -84,6 +84,7 @@ public class InstallThread extends Thread implements WebServiceListener {
 			while(!finished){
 				Thread.sleep(100);
 			}
+			System.out.println("installed");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			delegate.setFailed(ex);

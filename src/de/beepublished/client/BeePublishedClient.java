@@ -2,6 +2,7 @@ package de.beepublished.client;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,11 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+import de.beepublished.client.db.DBLoginInformation;
 import de.beepublished.client.db.DBLoginInformationImpl;
+import de.beepublished.client.ftp.FTPLoginInformation;
 import de.beepublished.client.ftp.FTPLoginInformationImpl;
+import de.beepublished.client.pageInformation.WebPageInformation;
 import de.beepublished.client.pageInformation.WebPageInformationImpl;
 import de.beepublished.client.widget.CreateWebPointDialog;
 
@@ -76,7 +80,60 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 			}
 		}
 	}
-
+	public void saveEndpoint(WebServer w){
+		this.saveEndpointInternal(w);
+		
+		this.setup();
+	}
+	
+	private void saveEndpointInternal(WebServer t){
+		// begin
+		try{
+		
+	    	File f = new File("setting.bps.txt");
+			PrintWriter inputStream = new PrintWriter(f);new FileInputStream(f);
+			List<EndPoint> pointsQuelle = managerQuelle.getEndPoints();
+			List<EndPoint> pointsZiele = managerZiel.getEndPoints();
+					
+			ArrayList<WebServer> result = new ArrayList<WebServer>();
+					
+				
+			for(EndPoint p : pointsQuelle){
+				if(p instanceof WebServer){
+					if(!result.contains((WebServer) p)){
+						result.add((WebServer) p);
+					}
+				}
+			}
+					
+			for(EndPoint p : pointsZiele){
+				if(p instanceof WebServer){
+					if(!result.contains((WebServer) p)){
+						result.add((WebServer) p);
+					}
+				}
+			}
+			
+			if(!result.contains((WebServer) t)){
+				result.add((WebServer)t);
+			}
+			
+					
+			for(WebServer server : result){
+				String serialization = server.serialize();
+				System.out.println(serialization);
+				inputStream.println(serialization);
+			}
+					
+			inputStream.flush();
+			inputStream.close();
+		
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		// end
+	}
+	
 	/**
 	 * Open the window.
 	 */
@@ -208,7 +265,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		btnCreateNewServerprofile.setText("Create new Serverprofile");
 		comboQuelle.addSelectionListener(this);
 		
-		createWebPointDialogSource = new CreateWebPointDialog(grpQuelle, SWT.NONE);
+		createWebPointDialogSource = new CreateWebPointDialog(grpQuelle, SWT.NONE, this);
 		createWebPointDialogSource.setVisible(false);
 		
 		buttonAction = new Button(shlBeepublishedClient, SWT.NONE);
@@ -246,7 +303,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		});
 		btnCreateNewServerprofileTarget.setText("Create new Serverprofile");
 		
-		createWebPointDialogTarget = new CreateWebPointDialog(grpZiele, SWT.NONE);
+		createWebPointDialogTarget = new CreateWebPointDialog(grpZiele, SWT.NONE, this);
 		createWebPointDialogTarget.setVisible(false);
 		Menu menu = new Menu(shlBeepublishedClient, SWT.BAR);
 		shlBeepublishedClient.setMenuBar(menu);
@@ -372,7 +429,24 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 		setup();
 	}
 	
-	private void setup(){
+	
+	
+	public void setup(){
+	
+		
+		
+		managerQuelle = new EndPointManager(ADDITION_SOURCE);
+		managerZiel = new EndPointManager(ADDITION_TARGET);
+		try{
+	    	List<WebServer> server = WebServerImporter.importWebserver("setting.bps.txt");
+	    	for(WebServer s : server){
+	    		managerQuelle.addEndPoint(s);
+				managerZiel.addEndPoint(s);
+			}
+		} catch (Exception e) { }
+
+		managerQuelle.addEndPoint(new HostedBackup());
+		
 		comboQuelle.setItems(managerQuelle.getForComboBox());
 		comboZiel.setItems(managerZiel.getForComboBox());
 	}
@@ -506,7 +580,7 @@ public class BeePublishedClient implements SelectionListener, ValidationFeedback
 			    String fileName = dialog.open();
 			    if(fileName != null){
 			    	managerZiel.addEndPoint(new FileBackup(new File(fileName)));
-
+			    	
 			    	comboZiel.setItems(managerZiel.getForComboBox());
 			    	comboZiel.select(comboZiel.getItemCount()-2);
 			    }

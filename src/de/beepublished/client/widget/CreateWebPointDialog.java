@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import de.beepublished.client.BeePublishedClient;
 import de.beepublished.client.WebServer;
 
 public class CreateWebPointDialog extends Composite {
@@ -31,7 +32,7 @@ public class CreateWebPointDialog extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public CreateWebPointDialog(Composite parent, int style) {
+	public CreateWebPointDialog(Composite parent, int style, final BeePublishedClient test) {
 		super(parent, style);
 		/////
 		
@@ -56,6 +57,8 @@ public class CreateWebPointDialog extends Composite {
 		webpageInformationWidget.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		Button btnNewButton = new Button(grpCreateNewEndpoint, SWT.NONE);
+		
+		result = new WebServer(inputName.getText(), loginInformationWidget_1.getLoginInformation(), loginInformationWidget.getLoginInformation(), webpageInformationWidget.getPageInformation());
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -63,6 +66,9 @@ public class CreateWebPointDialog extends Composite {
 				result.setDbInfo(loginInformationWidget.getLoginInformation());
 				result.setFtpInfo(loginInformationWidget_1.getLoginInformation());
 				result.setPageInfo(webpageInformationWidget.getPageInformation());
+				test.saveEndpoint(result);
+				
+				
 			}
 		});
 		GridData gd_btnNewButton = new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1);
