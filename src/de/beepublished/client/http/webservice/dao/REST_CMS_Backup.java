@@ -12,9 +12,7 @@ public class REST_CMS_Backup extends LightweightService {
 		serviceURL = uri;
 		methodKeyValuePairs.add(new BasicNameValuePair("DBPw", dBPw));
 		methodKeyValuePairs.add(new BasicNameValuePair("DBLogin", dBLogin));
-
 	}
-
 
 	@Override
 	public Class<? extends ServiceResponse> getResponseClass() {

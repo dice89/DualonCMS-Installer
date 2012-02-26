@@ -7,11 +7,6 @@ import java.util.NoSuchElementException;
 
 import org.apache.http.message.BasicNameValuePair;
 
-
-
-
-
-
 /**
  * Lightweight Service aka Rest
  * 

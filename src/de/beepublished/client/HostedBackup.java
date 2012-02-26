@@ -42,36 +42,31 @@ public class HostedBackup implements FileEndPoint {
 	}
 
 	@Override
-	public void process() {
-		try {
+	public void process() throws Exception {			
+		FTPTarget target = new FTPTarget(new FTPLoginInformationImpl("beepublished.de", 21, "f006089b", "ZmFZHS3ckXrAWSSY", ""));
+		target.connect();
+		target.login();
 			
-			FTPTarget target = new FTPTarget(new FTPLoginInformationImpl("beepublished.de", 21, "f006089b", "ZmFZHS3ckXrAWSSY", ""));
-			target.connect();
-			target.login();
+		target.setBinaryFileType();
+		this.backupFile = File.createTempFile("tmp_installation_hosted_download", ".zip");
+		target.downloadFile("installationfinalBeePublished.bpb.zip", backupFile);
 			
-			target.setBinaryFileType();
-			this.backupFile = File.createTempFile("tmp_installation_hosted_download", ".zip");
-			target.downloadFile("installationfinalBeePublished.bpb.zip", backupFile);
-			
-			target.logout();
-			target.disconnect();
+		target.logout();
+		target.disconnect();
 			
 			
-			// setup temp directory
-			File extracted = File.createTempFile("tmp_installation", "");
-			extracted.delete();
-			extracted.mkdir();
+		// setup temp directory
+		File extracted = File.createTempFile("tmp_installation", "");
+		extracted.delete();
+		extracted.mkdir();
 			
-			ZipEngine.unzip(backupFile, extracted);
+		ZipEngine.unzip(backupFile, extracted);
+		
+		filesRoot = new File(extracted.getAbsolutePath()+"/files/");
+		dbFile = new File(extracted.getAbsolutePath()+"/db/cake.sql");
 			
-			filesRoot = new File(extracted.getAbsolutePath()+"/files/");
-			dbFile = new File(extracted.getAbsolutePath()+"/db/cake.sql");
-			
-			assert(filesRoot.isDirectory());
-			assert(dbFile.isFile());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		assert(filesRoot.isDirectory());
+		assert(dbFile.isFile());
 	}
 
 	@Override

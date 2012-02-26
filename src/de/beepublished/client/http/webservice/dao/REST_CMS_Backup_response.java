@@ -6,7 +6,6 @@ import de.beepublished.client.http.webservice.services.ServiceResponse;
 
 public class REST_CMS_Backup_response  extends ServiceResponse {
 	
-	
 	@Element(name="RC", required =false)
 	protected int responseCode;
 	
@@ -27,6 +26,5 @@ public class REST_CMS_Backup_response  extends ServiceResponse {
 	public String getSqlurl() {
 		return sqlurl;
 	}
-	
 	
 }

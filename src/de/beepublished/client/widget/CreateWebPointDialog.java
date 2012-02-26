@@ -66,7 +66,7 @@ public class CreateWebPointDialog extends Composite {
 				result.setDbInfo(loginInformationWidget.getLoginInformation());
 				result.setFtpInfo(loginInformationWidget_1.getLoginInformation());
 				result.setPageInfo(webpageInformationWidget.getPageInformation());
-				test.saveEndpoint(result);
+			
 				
 				
 			}

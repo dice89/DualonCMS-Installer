@@ -6,5 +6,5 @@ public interface FileEndPoint extends EndPoint {
 	public File getFiles();
 	public File getSQLDump();
 	public File getBackupFile();
-	public void process();
+	public void process() throws Exception;
 }

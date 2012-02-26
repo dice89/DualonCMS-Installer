@@ -13,7 +13,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPFileFilters;
 import org.apache.commons.net.ftp.FTPReply;
 
-import sun.misc.FpUtils;
+
 
 
 public class FTPTarget {
@@ -37,9 +37,18 @@ public class FTPTarget {
 		}
 	}
 	
-	public boolean login() throws IOException{
-		assert(isConnected());
-		return ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());	
+	public void login() throws Exception{
+		try{
+			boolean loginSuccess = ftpClient.login(loginInformation.getUserName(), loginInformation.getPassword());
+			int replyCode = ftpClient.getReplyCode();
+			ftpClient.enterLocalPassiveMode();
+			
+			if(!loginSuccess || !FTPReply.isPositiveCompletion(replyCode)){
+				throw new Exception("Wrong login Data");
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("could not login to ftp", e);
+		}
 	}
 	
 	public void logout() throws IOException{
@@ -51,18 +60,24 @@ public class FTPTarget {
 		ftpClient.disconnect();
 	}
 	
-	public void uploadFile(String localFilePath, String remoteFilePath) throws FileNotFoundException, IOException{	
-		assert(this.isConnected());
-		File f = new File(localFilePath);
-		
-		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-		
-		while(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f))){
-			System.err.println(ftpClient.getReplyString());
-			System.out.println("File not stored! Do it again!");
+	public void uploadFile(String localFilePath, String remoteFilePath) throws FileNotFoundException{	
+		try{
+			if(!isConnected()){
+				connect();
+				login();
+			}
+			
+			File f = new File(localFilePath);
+			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+			
+			while(!ftpClient.storeFile(remoteFilePath, new FileInputStream(f))){
+				System.err.println(ftpClient.getReplyString());
+				System.out.println("File not stored! Do it again!");
+			}
+		} catch (Exception e) {
+			System.out.println("retry upload...");
+			uploadFile(localFilePath, remoteFilePath);
 		}
-		
-		
 	}
 	
 	public void changeWorkingDirectory(String path) throws IOException{
@@ -72,7 +87,7 @@ public class FTPTarget {
 		}
 	}
 	
-	public void uploadFolder(File localFolder, String remoteFolderPath) throws FileNotFoundException, IOException{
+	public void uploadFolder(File localFolder, String remoteFolderPath) throws FileNotFoundException, IOException, Exception{
 		assert(ftpClient.isConnected());
 
 		System.out.println(localFolder.getName()+" started");
@@ -82,8 +97,10 @@ public class FTPTarget {
 		if(!firsttime){
 			ftpClient.makeDirectory(localFolder.getName());
 			ftpClient.changeWorkingDirectory(localFolder.getName());
+			this.checkreplyCode(ftpClient.getReplyCode());
 		}else{
 			ftpClient.changeWorkingDirectory(remoteFolderPath);
+			this.checkreplyCode(ftpClient.getReplyCode());
 		}
 		
 		firsttime = false;
@@ -94,10 +111,16 @@ public class FTPTarget {
 			if(f.isDirectory()){
 				this.uploadFolder(f, f.getAbsolutePath());
 				ftpClient.changeToParentDirectory();
+				this.checkreplyCode(ftpClient.getReplyCode());
 			}	
 		}
 		System.out.println(localFolder.getName()+" uploaded");
 
+	}
+	
+	
+	private void checkreplyCode(int code) throws Exception {
+		if(! FTPReply.isPositiveCompletion(code)) throw new Exception("FTP Reply not Valid");
 	}
 	
 	/**
@@ -128,17 +151,16 @@ public class FTPTarget {
 	}
 	
 	public void downloadDirectory(File localTargetDirectory, String remoteDirectory) throws IOException{
-		ftpClient.enterLocalPassiveMode();
 		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 		
 		if(!remoteDirectory.equals("")){
 			System.out.println(ftpClient.changeWorkingDirectory(remoteDirectory));
-			if(!firsttimedownload){
-				System.out.println(localTargetDirectory.mkdirs());
-			}
 			firsttimedownload = false;
-		
 		}
+		if(!firsttimedownload){
+			System.out.println(localTargetDirectory.mkdirs());
+		}
+		
 		FTPFile[] files = ftpClient.listFiles("", FTPFileFilters.ALL);
 		
 		try{

@@ -41,7 +41,7 @@ public class BackupThread extends Thread implements WebServiceListener{
 	@Override
 	public void run() {
 		try{
-			delegate.setFeedback("starting backup...");
+			delegate.setStarted();
 			WebManager.getWebManager().backupCMS(this, source.getDbInformation(), source.getPageInformation());
 			
 			while(!finished){
@@ -59,8 +59,12 @@ public class BackupThread extends Thread implements WebServiceListener{
 	@Override
 	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
 		try {
-			delegate.setFeedback("downloading db...");
-			WebManager.getWebManager().downloadFile("", File.createTempFile("temp", ".sql").getAbsolutePath(), response.getSqlurl(), this);
+			if(response.getResponseCode() != 0) {
+				delegate.setFailed(new Exception("Wrong Returncode, probably wrong parameters!"));
+			} else {	
+				delegate.setFeedback("downloading db...");
+				WebManager.getWebManager().downloadFile("", File.createTempFile("temp", ".sql").getAbsolutePath(), response.getSqlurl(), this);
+			}
 		} catch (IOException e) {
 			delegate.setFailed(e);
 			e.printStackTrace();

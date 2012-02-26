@@ -32,14 +32,30 @@ public class InstallThread extends Thread implements WebServiceListener {
 		try {
 			delegate.setStarted();
 			
-			delegate.setFeedback("unzip...");
+			/*delegate.setFeedback("unzip...");
 			source.process();
 
 			delegate.setFeedback("connect to ftp...");
 			FTPTarget ftpTarget = new FTPTarget(target.getFtpInformation());
-			ftpTarget.connect();
-			ftpTarget.login();
 			
+			try {
+				ftpTarget.connect();
+			} catch (Exception e){
+				delegate.setFailed(e);
+				this.destroy();
+				
+			}
+			
+			try {
+				ftpTarget.login();
+			} catch (Exception e){
+				delegate.setFailed(e);
+				//this.destroy();
+				
+			}
+			
+			
+			try{
 			delegate.setFeedback("upload files...");
 			ftpTarget.uploadFolder(source.getFiles(),target.getFtpInformation().getFtpUploadRoot());
 			delegate.setFeedback("upload db...");
@@ -52,17 +68,18 @@ public class InstallThread extends Thread implements WebServiceListener {
 			ftpTarget.login();
 			if(!target.getFtpInformation().getFtpUploadRoot().equals(""))
 				ftpTarget.changeWorkingDirectory(target.getFtpInformation().getFtpUploadRoot());
+			
 			ftpTarget.changeWorkingDirectory("app");
 			ftpTarget.changeWorkingDirectory("webroot");
-			try{
+			
 			ftpTarget.changeCHMOD("CHMOD 777 uploads");
 			} catch (Exception e){
-				e.printStackTrace();
+				delegate.setFailed(e);
 			}
 			
 			
 			delegate.setFeedback("change CHMOD other folders");
-			
+			try{
 			ftpTarget.logout();
 			ftpTarget.disconnect();
 			
@@ -74,12 +91,16 @@ public class InstallThread extends Thread implements WebServiceListener {
 			
 			
 			ftpTarget.changetmpMODS();
+			} catch (Exception e){
+				delegate.setFailed(e);
+			}
+			*/
+			delegate.setFeedback("install cms... WebService is called");
 			
-			delegate.setFeedback("install cms...");
-			
-			System.out.println("installa");
+		
 			
 			WebManager.getWebManager().installCMS(target.getDbInformation(), target.getPageInformation(), this);
+			
 			
 			while(!finished){
 				Thread.sleep(100);
@@ -94,8 +115,13 @@ public class InstallThread extends Thread implements WebServiceListener {
 	@Override
 	public void onRestInstallationSuccess(
 			REST_CMS_Installation_response response) {
-		delegate.setFinished();		
-		finished = true;
+		if(response.getResponseCode() != 0) {
+				delegate.setFailed(new Exception("Wrong DB!"));
+		} else {
+			delegate.setFinished();		
+			finished = true;
+		}
+		
 	}
 
 	@Override
@@ -106,17 +132,17 @@ public class InstallThread extends Thread implements WebServiceListener {
 
 	@Override
 	public void onRestBackupSuccess(REST_CMS_Backup_response response) {
-		throw new RuntimeException("should not happen :D");
+		throw new RuntimeException("Failure probably wront Root location");
 	}
 
 	@Override
 	public void onRestBackupFailed(ServiceException e) {
-		throw new RuntimeException("should not happen :D");
+		throw new RuntimeException("Failure probably wrong Root location");
 	}
 	
 	@Override
 	public void onRestZipDownloadSuccess(ServiceFileStreamResponse response) {
-		throw new RuntimeException("should not happen :D");
+		throw new RuntimeException("Failure while downloading");
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import de.beepublished.client.BeePublishedClient;
 import de.beepublished.client.pageInformation.WebPageInformation;
 import de.beepublished.client.pageInformation.WebPageInformationImpl;
 
-public class WebpageInformationWidget extends Composite {
+public class ProfileNameWidget extends Composite {
 	private Text txtHttplocalhostdualoncms;
 
 	/**
@@ -23,11 +23,12 @@ public class WebpageInformationWidget extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public WebpageInformationWidget(Composite parent, int style) {
+	public ProfileNameWidget(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FormLayout());
 		setFont(BeePublishedClient.fontStandard);
 		Group grpWebpageInformation = new Group(this, SWT.NONE);
+		grpWebpageInformation.setFont(BeePublishedClient.fontStandard);
 		grpWebpageInformation.setLayout(new GridLayout(2, false));
 		FormData fd_grpWebpageInformation = new FormData();
 		fd_grpWebpageInformation.bottom = new FormAttachment(100);
@@ -35,18 +36,15 @@ public class WebpageInformationWidget extends Composite {
 		fd_grpWebpageInformation.top = new FormAttachment(0);
 		fd_grpWebpageInformation.left = new FormAttachment(0);
 		grpWebpageInformation.setLayoutData(fd_grpWebpageInformation);
-		grpWebpageInformation.setText("Webpage Information");
-		grpWebpageInformation.setFont(BeePublishedClient.fontStandard);
+		grpWebpageInformation.setText("Profile Name");
 		
 		Label lblWebRoot = new Label(grpWebpageInformation, SWT.NONE);
 		lblWebRoot.setLayoutData(new GridData(75, SWT.DEFAULT));
-		lblWebRoot.setText("Web Root");
+		lblWebRoot.setText("Name");
 		lblWebRoot.setFont(BeePublishedClient.fontStandard);
-		
 		txtHttplocalhostdualoncms = new Text(grpWebpageInformation, SWT.BORDER);
-		txtHttplocalhostdualoncms.setFont(BeePublishedClient.fontStandard);
 		txtHttplocalhostdualoncms.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
+		txtHttplocalhostdualoncms.setFont(BeePublishedClient.fontStandard);
 	}
 
 	@Override
@@ -54,22 +52,15 @@ public class WebpageInformationWidget extends Composite {
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
-	public void initialize(WebPageInformation web){
-		txtHttplocalhostdualoncms.setText(web.getPageRoot());
+	public void initialize(String name){
+		txtHttplocalhostdualoncms.setText(name);
+	}
+	
+	public String getName(){
+		return txtHttplocalhostdualoncms.getText();
 	}
 	
 	public WebPageInformation getPageInformation(){
-		
 		return new WebPageInformationImpl(txtHttplocalhostdualoncms.getText());
-		/*
-		return new WebPageInformation() {
-			
-			@Override
-			public String getPageRoot() {
-				return txtHttplocalhostdualoncms.getText();
-			}
-		};
-		
-		*/
 	}
 }

@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import de.beepublished.client.BeePublishedClient;
 import de.beepublished.client.ftp.FTPLoginInformation;
 import de.beepublished.client.ftp.FTPLoginInformationImpl;
 
@@ -38,51 +39,55 @@ public class FTPLoginInformationWidget extends Composite {
 		//verification = new InputVerification();
 		
 		setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+		setFont(BeePublishedClient.fontStandard);
 		Group grpFtpLoginInformation = new Group(this, SWT.NONE);
 		grpFtpLoginInformation.setText("FTP Login Information");
 		grpFtpLoginInformation.setLayout(new GridLayout(2, false));
-		
+		grpFtpLoginInformation.setFont(BeePublishedClient.fontStandard);
 		Label lblHost = new Label(grpFtpLoginInformation, SWT.RIGHT);
+		lblHost.setAlignment(SWT.LEFT);
+		lblHost.setLayoutData(new GridData(75, SWT.DEFAULT));
 		lblHost.setText("Host");
+		lblHost.setFont(BeePublishedClient.fontStandard);
 		
 		inputHost = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputHost.setText("localhost");
 		//inputHost.addVerifyListener(verification);
 		inputHost.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		inputHost.setFont(BeePublishedClient.fontStandard);
 		
 		Label lblPort = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblPort.setText("Port");
+		lblPort.setFont(BeePublishedClient.fontStandard);
 		
 		inputPort = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputPort.setText("21");
 		//inputPort.addVerifyListener(verification);
 		inputPort.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+		inputPort.setFont(BeePublishedClient.fontStandard);
 		Label lblUsername = new Label(grpFtpLoginInformation, SWT.RIGHT);
-		lblUsername.setText("UserName");
+		lblUsername.setText("User");
+		lblUsername.setFont(BeePublishedClient.fontStandard);
 		
 		inputUserName = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputUserName.setText("newuser");
 		//inputUserName.addVerifyListener(verification);
 		inputUserName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		inputUserName.setFont(BeePublishedClient.fontStandard);
 		
 		Label lblPassword = new Label(grpFtpLoginInformation, SWT.RIGHT);
 		lblPassword.setText("Password");
+		lblPassword.setFont(BeePublishedClient.fontStandard);
 		
-		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputPassword.setText("xampp");
+		inputPassword = new Text(grpFtpLoginInformation, SWT.BORDER | SWT.PASSWORD);
 		//inputPassword.addVerifyListener(verification);
 		inputPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		inputPassword.setFont(BeePublishedClient.fontStandard);
 		
 		lblDualonRoot = new Label(grpFtpLoginInformation, SWT.NONE);
-		lblDualonRoot.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDualonRoot.setText("Dualon Root");
+		lblDualonRoot.setText("FTP Root");
+		lblDualonRoot.setFont(BeePublishedClient.fontStandard);
 		
 		inputRoot = new Text(grpFtpLoginInformation, SWT.BORDER);
-		inputRoot.setText("dualon-cms");
 		inputRoot.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
+		inputRoot.setFont(BeePublishedClient.fontStandard);
 	}
 	
 	public void initialize(FTPLoginInformation ftpInfo){
